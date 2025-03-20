@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2019",
+    "target": "es2020",
+    "module": "es2020",
     "allowJs": true,
     "esModuleInterop": true,
-    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -19,7 +19,9 @@
     "resolveJsonModule": true,
     "checkJs": false
   },
-  "include": ["src/"],
+  "include": [
+    "src/"
+  ],
   "exclude": [
     "**/__tests__",
     "**/__fixtures__",
