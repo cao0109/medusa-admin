@@ -1,4 +1,3 @@
-import clsx from "clsx"
 import React, {
   ChangeEventHandler,
   FocusEventHandler,
@@ -6,10 +5,12 @@ import React, {
   useImperativeHandle,
   useRef,
 } from "react"
+import InputHeader, { InputHeaderProps } from "../../fundamentals/input-header"
+
+import clsx from "clsx"
 import InputError from "../../atoms/input-error"
 import MinusIcon from "../../fundamentals/icons/minus-icon"
 import PlusIcon from "../../fundamentals/icons/plus-icon"
-import InputHeader, { InputHeaderProps } from "../../fundamentals/input-header"
 
 export type InputProps = Omit<React.ComponentPropsWithRef<"input">, "prefix"> &
   InputHeaderProps & {
@@ -21,6 +22,7 @@ export type InputProps = Omit<React.ComponentPropsWithRef<"input">, "prefix"> &
     onFocus?: FocusEventHandler<HTMLInputElement>
     errors?: { [x: string]: unknown }
     prefix?: React.ReactNode
+    suffix?: React.ReactNode
     props?: React.HTMLAttributes<HTMLDivElement>
   }
 
@@ -39,6 +41,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputProps>(
       tooltipContent,
       tooltip,
       prefix,
+      suffix,
       errors,
       props,
       className,
@@ -114,6 +117,9 @@ const InputField = React.forwardRef<HTMLInputElement, InputProps>(
             required={required}
             {...fieldProps}
           />
+          {suffix ? (
+            <span className="mx-2xsmall text-grey-40">{suffix}</span>
+          ) : null}
 
           {deletable && (
             <button
@@ -132,6 +138,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputProps>(
                 onMouseDown={(e) => e.preventDefault()}
                 className="mr-2 h-4 w-4 cursor-pointer rounded-soft text-grey-50 outline-none hover:bg-grey-10 focus:bg-grey-20"
                 type="button"
+                tabIndex={-1}
               >
                 <MinusIcon size={16} />
               </button>
@@ -140,6 +147,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputProps>(
                 onClick={onNumberIncrement}
                 className="h-4 w-4 cursor-pointer rounded-soft text-grey-50 outline-none hover:bg-grey-10 focus:bg-grey-20"
                 type="button"
+                tabIndex={-1}
               >
                 <PlusIcon size={16} />
               </button>
@@ -151,5 +159,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputProps>(
     )
   }
 )
+
+InputField.displayName = "InputField"
 
 export default InputField

@@ -1,13 +1,14 @@
 import { useAdminRegions } from "medusa-react"
-import React, { useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import Fade from "../../../../components/atoms/fade-wrapper"
 import Button from "../../../../components/fundamentals/button"
 import PlusIcon from "../../../../components/fundamentals/icons/plus-icon"
 import RadioGroup from "../../../../components/organisms/radio-group"
 import Section from "../../../../components/organisms/section"
-import { useAnalytics } from "../../../../context/analytics"
 import useToggleState from "../../../../hooks/use-toggle-state"
+import { useAnalytics } from "../../../../providers/analytics-provider"
 import NewRegion from "../new"
 import RegionCard from "./region-card"
 
@@ -16,9 +17,10 @@ type Props = {
 }
 
 const RegionOverview = ({ id }: Props) => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { trackRegions } = useAnalytics()
-  const { regions, isLoading } = useAdminRegions(undefined, {
+  const { regions } = useAdminRegions(undefined, {
     onSuccess: ({ regions, count }) => {
       trackRegions({ regions: regions.map((r) => r.name), count })
     },
@@ -26,6 +28,18 @@ const RegionOverview = ({ id }: Props) => {
   const [selectedRegion, setSelectedRegion] = React.useState<
     string | undefined
   >(id)
+
+  const handleChange = useCallback(
+    (id: string) => {
+      if (id !== selectedRegion) {
+        setSelectedRegion(id)
+        navigate(`/a/settings/regions/${id}`, {
+          replace: true,
+        })
+      }
+    },
+    [navigate, selectedRegion]
+  )
 
   useEffect(() => {
     if (id) {
@@ -35,33 +49,14 @@ const RegionOverview = ({ id }: Props) => {
     if (!id && regions && regions.length > 0) {
       handleChange(regions[0].id)
     }
-  }, [id, regions])
-
-  useEffect(() => {
-    if (isLoading) {
-      return
-    }
-
-    if (!selectedRegion && regions && regions.length > 0) {
-      navigate(`/a/settings/regions/${regions[0].id}`, {
-        replace: true,
-      })
-    }
-  }, [regions, isLoading, selectedRegion])
-
-  const handleChange = (id: string) => {
-    if (id !== selectedRegion) {
-      setSelectedRegion(id)
-      navigate(`/a/settings/regions/${id}`)
-    }
-  }
+  }, [handleChange, id, regions])
 
   const { state, toggle, close } = useToggleState()
 
   return (
     <>
       <Section
-        title="Regions"
+        title={t("region-overview-regions", "Regions")}
         customActions={
           <div>
             <Button
@@ -77,7 +72,10 @@ const RegionOverview = ({ id }: Props) => {
         className="h-full"
       >
         <p className="text-base-regular mt-2xsmall text-grey-50">
-          Manage the markets that you will operate within.
+          {t(
+            "region-overview-manage-the-markets-that-you-will-operate-within",
+            "Manage the markets that you will operate within."
+          )}
         </p>
         <div className="mt-large">
           <RadioGroup.Root value={selectedRegion} onValueChange={handleChange}>

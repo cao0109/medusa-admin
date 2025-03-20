@@ -7,6 +7,7 @@ import {
   useAdminOrderEditUpdateLineItem,
 } from "medusa-react"
 import clsx from "clsx"
+import { useTranslation } from "react-i18next"
 
 import ImagePlaceholder from "../../../../components/fundamentals/image-placeholder"
 import { formatAmountWithSymbol } from "../../../../utils/prices"
@@ -39,6 +40,7 @@ const OrderEditLine = ({
   customerId,
   regionId,
 }: OrderEditLineProps) => {
+  const { t } = useTranslation()
   const notification = useNotification()
   const { pop, push } = React.useContext(LayeredModalContext)
 
@@ -81,8 +83,11 @@ const OrderEditLine = ({
   const onDuplicate = async () => {
     if (!item.variant) {
       notification(
-        "Warning",
-        "Cannot duplicate an item without a variant",
+        t("order-line-warning", "Warning"),
+        t(
+          "order-line-cannot-duplicate-an-item-without-a-variant",
+          "Cannot duplicate an item without a variant"
+        ),
         "warning"
       )
       return
@@ -94,7 +99,11 @@ const OrderEditLine = ({
         quantity: item.quantity,
       })
     } catch (e) {
-      notification("Error", "Failed to duplicate item", "error")
+      notification(
+        t("order-line-error", "Error"),
+        t("order-line-failed-to-duplicate-item", "Failed to duplicate item"),
+        "error"
+      )
     }
   }
 
@@ -111,9 +120,17 @@ const OrderEditLine = ({
       } else {
         await removeItem()
       }
-      notification("Success", "Item removed", "success")
+      notification(
+        t("order-line-success", "Success"),
+        t("order-line-item-removed", "Item removed"),
+        "success"
+      )
     } catch (e) {
-      notification("Error", "Failed to remove item", "error")
+      notification(
+        t("order-line-error", "Error"),
+        t("order-line-failed-to-remove-item", "Failed to remove item"),
+        "error"
+      )
     }
   }
 
@@ -122,14 +139,25 @@ const OrderEditLine = ({
     try {
       await onRemove()
       await addLineItem({ variant_id: newVariantId, quantity: item.quantity })
-      notification("Success", "Item added", "success")
+      notification(
+        t("order-line-success", "Success"),
+        t("order-line-item-added", "Item added"),
+        "success"
+      )
     } catch (e) {
-      notification("Error", "Failed to replace the item", "error")
+      notification(
+        t("order-line-error", "Error"),
+        t(
+          "order-line-failed-to-replace-the-item",
+          "Failed to replace the item"
+        ),
+        "error"
+      )
     }
   }
 
   const replaceProductVariantScreen = {
-    title: "Replace Product Variants",
+    title: t("order-line-replace-product-variants", "Replace Product Variants"),
     onBack: pop,
     view: (
       <AddProductVariant
@@ -144,17 +172,17 @@ const OrderEditLine = ({
 
   const actions = [
     !isLocked && {
-      label: "Replace with other item",
+      label: t("order-line-replace-with-other-item", "Replace with other item"),
       onClick: () => push(replaceProductVariantScreen),
       icon: <RefreshIcon size="20" />,
     },
     {
-      label: "Duplicate item",
+      label: t("order-line-duplicate-item", "Duplicate item"),
       onClick: onDuplicate,
       icon: <DuplicateIcon size="20" />,
     },
     !isLocked && {
-      label: "Remove item",
+      label: t("order-line-remove-item", "Remove item"),
       onClick: onRemove,
       variant: "danger",
       icon: <TrashIcon size="20" />,
@@ -165,7 +193,10 @@ const OrderEditLine = ({
     <Tooltip
       side="top"
       open={isLocked ? undefined : false}
-      content="This line item is part of a fulfillment and cannot be edited. Cancel the fulfillment to edit the line item."
+      content={t(
+        "order-line-line-item-cannot-be-edited",
+        "This line item is part of a fulfillment and cannot be edited. Cancel the fulfillment to edit the line item."
+      )}
     >
       <div className="mx-[-5px] mb-1 flex h-[64px] justify-between rounded-rounded py-2 px-[5px] hover:bg-grey-5">
         <div className="flex-grow-1 flex justify-center space-x-4">
@@ -204,13 +235,13 @@ const OrderEditLine = ({
             <div className="flex items-center">
               {isNew && (
                 <div className="mr-2 flex h-[24px] w-[42px] flex-shrink-0 items-center justify-center rounded-rounded bg-blue-10 text-small text-blue-500">
-                  New
+                  {t("order-line-new", "New")}
                 </div>
               )}
 
               {isModified && (
                 <div className="mr-2 flex h-[24px] w-[68px] flex-shrink-0 items-center justify-center rounded-rounded bg-orange-10 text-small text-orange-500">
-                  Modified
+                  {t("order-line-modified", "Modified")}
                 </div>
               )}
 

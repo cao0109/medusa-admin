@@ -22,7 +22,9 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   })
   return (
     <div
-      className={clsx("inter-small-regular flex items-center", className)}
+      className={clsx("inter-small-regular flex items-center", className, {
+        "cursor-pointer hover:bg-grey-5": !!props.onClick,
+      })}
       {...props}
     >
       <div className={clsx("h-1.5 w-1.5 self-center rounded-full", dotClass)} />

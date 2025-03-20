@@ -1,5 +1,5 @@
 import { Store } from "@medusajs/medusa"
-import React, { createContext, useContext } from "react"
+import { createContext, useContext } from "react"
 import LayeredModal, {
   LayeredModalContext,
 } from "../../../../../components/molecules/modal/layered-modal"

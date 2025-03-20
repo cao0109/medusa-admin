@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import AmountField from "react-currency-input-field"
 import { currencies } from "../../../utils/currencies"
 import InputError from "../../atoms/input-error"

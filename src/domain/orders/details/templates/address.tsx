@@ -1,5 +1,4 @@
 import { Address } from "@medusajs/medusa"
-import React from "react"
 
 type FormattedAddressProps = {
   title: string

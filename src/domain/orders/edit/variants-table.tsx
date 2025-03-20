@@ -1,15 +1,19 @@
-import { useAdminVariants } from "medusa-react"
+import { useAdminVariants, useAdminVariantsInventory } from "medusa-react"
 import React, { useEffect, useMemo, useState } from "react"
 import { usePagination, useRowSelect, useTable } from "react-table"
-import { ProductVariant } from "@medusajs/medusa"
+import { InventoryLevelDTO, ProductVariant } from "@medusajs/medusa"
 import clsx from "clsx"
-
+import pluralize from "pluralize"
+import { useTranslation } from "react-i18next"
 import { useDebounce } from "../../../hooks/use-debounce"
 import ImagePlaceholder from "../../../components/fundamentals/image-placeholder"
 import Table from "../../../components/molecules/table"
 import IndeterminateCheckbox from "../../../components/molecules/indeterminate-checkbox"
 import { formatAmountWithSymbol } from "../../../utils/prices"
 import TableContainer from "../../../components/organisms/table-container"
+import Tooltip from "../../../components/atoms/tooltip"
+import useStockLocations from "../../../hooks/use-stock-locations"
+import Skeleton from "../../../components/atoms/skeleton"
 
 const PAGE_SIZE = 12
 
@@ -22,6 +26,7 @@ type Props = {
 }
 
 const VariantsTable: React.FC<Props> = (props) => {
+  const { t } = useTranslation()
   const { isReplace, regionId, currencyCode, customerId, setSelectedVariants } =
     props
 
@@ -46,71 +51,114 @@ const VariantsTable: React.FC<Props> = (props) => {
     }
   }, [count])
 
+  const VariantInventoryCell = ({ row: { original } }) => {
+    const { getLocationNameById } = useStockLocations()
+
+    const { variant, isLoading } = useAdminVariantsInventory(original.id)
+
+    if (isLoading) {
+      return (
+        <div className="flex justify-end">
+          <Skeleton isLoading={true}>
+            <div className="h-[20px] w-[50px]" />
+          </Skeleton>
+        </div>
+      )
+    }
+
+    if (!isLoading && !variant?.inventory?.length) {
+      return <div className="text-right">{original.inventory_quantity}</div>
+    }
+
+    const { inventory } = variant
+
+    const total = inventory[0].location_levels.reduce(
+      (sum: number, location_level: InventoryLevelDTO) =>
+        (sum += location_level.stocked_quantity),
+      0
+    )
+
+    const LocationTooltip = (
+      <>
+        {inventory[0].location_levels.map(
+          (location_level: InventoryLevelDTO) => (
+            <div key={location_level.id} className="font-normal">
+              <span className="font-semibold">
+                {location_level.stocked_quantity}
+              </span>
+              {t("variants-table-location", " in {{location}}", {
+                location: getLocationNameById(location_level.location_id),
+              })}
+            </div>
+          )
+        )}
+      </>
+    )
+
+    return (
+      <Tooltip content={LocationTooltip} side="top" className="translate-x-1/4">
+        <div className="text-right">
+          {total} in {inventory[0].location_levels.length}{" "}
+          {pluralize("location", inventory[0].location_levels.length)}
+        </div>
+      </Tooltip>
+    )
+  }
+
+  const ProductCell = ({ row: { original } }) => {
+    return (
+      <div className="flex items-center">
+        <div className="my-1.5 mr-4 flex h-[40px] w-[30px] items-center">
+          {original.product.thumbnail ? (
+            <img
+              src={original.product.thumbnail}
+              className="h-full rounded-soft object-cover"
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
+        </div>
+        <div className="flex max-w-[200px] flex-col">
+          <Tooltip
+            content={
+              <span className="font-normal">{original.product.title}</span>
+            }
+            maxWidth={400}
+          >
+            <div className="truncate">
+              {original.sku ?? original.product.title}
+            </div>
+          </Tooltip>
+          <span className="text-grey-50">{original.title}</span>
+        </div>
+      </div>
+    )
+  }
+
   const columns = useMemo(() => {
     return [
       {
         Header: (
-          <div className="text-small font-semibold text-gray-500">Name</div>
-        ),
-        accessor: "title",
-        Cell: ({ row: { original } }) => {
-          return (
-            <div className="flex items-center">
-              <div className="my-1.5 mr-4 flex h-[40px] w-[30px] items-center">
-                {original.product.thumbnail ? (
-                  <img
-                    src={original.product.thumbnail}
-                    className="h-full rounded-soft object-cover"
-                  />
-                ) : (
-                  <ImagePlaceholder />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <span>{original.product.title}</span>
-                {original.title}
-              </div>
-            </div>
-          )
-        },
-      },
-      {
-        Header: (
-          <div className="text-small font-semibold text-gray-500">SKU</div>
+          <div className="text-small font-semibold text-gray-500">
+            {t("edit-product", "Product")}
+          </div>
         ),
         accessor: "sku",
-        Cell: ({ row: { original } }) => <div>{original.sku}</div>,
-      },
-      {
-        Header: (
-          <div className="text-small font-semibold text-gray-500">Options</div>
-        ),
-        accessor: "options",
-        Cell: ({ row: { original } }) => {
-          const options = original.options?.map(({ value }) => value).join(", ")
-
-          return (
-            <div title={options} className="max-w-[160px] truncate">
-              <span>{options}</span>
-            </div>
-          )
-        },
+        Cell: ProductCell,
       },
       {
         Header: (
           <div className="text-right text-small font-semibold text-gray-500">
-            In Stock
+            {t("edit-in-stock", "In Stock")}
           </div>
         ),
         accessor: "inventory_quantity",
-        Cell: ({ row: { original } }) => (
-          <div className="text-right">{original.inventory_quantity}</div>
-        ),
+        Cell: VariantInventoryCell,
       },
       {
         Header: (
           <div className="text-right text-small font-semibold text-gray-500">
-            Price
+            {t("edit-price", "Price")}
           </div>
         ),
         accessor: "amount",
@@ -252,7 +300,7 @@ const VariantsTable: React.FC<Props> = (props) => {
         count: count!,
         offset: offset,
         pageSize: offset + table.rows.length,
-        title: "Products",
+        title: t("edit-products", "Products"),
         currentPage: table.state.pageIndex + 1,
         pageCount: table.pageCount,
         nextPage: handleNext,
@@ -264,7 +312,10 @@ const VariantsTable: React.FC<Props> = (props) => {
       <Table
         immediateSearchFocus
         enableSearch
-        searchPlaceholder="Search Product Variants..."
+        searchPlaceholder={t(
+          "edit-search-product-variants",
+          "Search Product Variants..."
+        )}
         searchValue={query}
         handleSearch={handleSearch}
         {...table.getTableProps()}

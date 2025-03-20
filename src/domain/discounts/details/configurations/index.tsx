@@ -1,8 +1,10 @@
 import { Discount } from "@medusajs/medusa"
-import React, { useState } from "react"
+import React from "react"
+import { useTranslation } from "react-i18next"
 import EditIcon from "../../../../components/fundamentals/icons/edit-icon"
 import NumberedItem from "../../../../components/molecules/numbered-item"
 import BodyCard from "../../../../components/organisms/body-card"
+import useToggleState from "../../../../hooks/use-toggle-state"
 import EditConfigurations from "./edit-configurations"
 import useDiscountConfigurations from "./use-discount-configurations"
 
@@ -11,18 +13,22 @@ type ConfigurationsProps = {
 }
 
 const Configurations: React.FC<ConfigurationsProps> = ({ discount }) => {
+  const { t } = useTranslation()
   const configurations = useDiscountConfigurations(discount)
-  const [showModal, setShowModal] = useState(false)
+  const { state, open, close } = useToggleState()
 
   return (
     <>
       <BodyCard
-        title={"Configurations"}
+        title={t("configurations-configurations", "Configurations")}
         className="min-h-[200px]"
         actionables={[
           {
-            label: "Edit configurations",
-            onClick: () => setShowModal(true),
+            label: t(
+              "configurations-edit-configurations",
+              "Edit configurations"
+            ),
+            onClick: open,
             icon: <EditIcon size={20} />,
           },
         ]}
@@ -47,12 +53,8 @@ const Configurations: React.FC<ConfigurationsProps> = ({ discount }) => {
           ))}
         </div>
       </BodyCard>
-      {showModal && (
-        <EditConfigurations
-          discount={discount}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+
+      <EditConfigurations discount={discount} onClose={close} open={state} />
     </>
   )
 }

@@ -24,7 +24,6 @@ const SigninInput = React.forwardRef(
       placeholder,
       name,
       key,
-      required,
       onChange,
       onFocus,
       className,
@@ -52,20 +51,17 @@ const SigninInput = React.forwardRef(
     return (
       <div
         className={clsx(
-          "mb-xsmall h-[48px] w-[320px] overflow-hidden rounded-rounded border last:mb-0",
+          "h-[40px] w-[300px] overflow-hidden rounded-rounded border",
           "inter-base-regular bg-grey-5 placeholder:text-grey-40",
           "focus-within:border-violet-60 focus-within:shadow-input",
           "flex items-center",
           {
-            "pointer-events-none text-grey-40 focus-within:border-none focus-within:shadow-none":
+            "pointer-events-none pl-xsmall text-grey-40 focus-within:border-none focus-within:shadow-none":
               props.readOnly,
           },
           className
         )}
       >
-        {props.readOnly && (
-          <LockIcon size={16} className="ml-base text-grey-40" />
-        )}
         <input
           className={clsx(
             "remove-number-spinner w-full bg-transparent py-3 px-4 leading-base outline-none outline-0",
@@ -87,13 +83,19 @@ const SigninInput = React.forwardRef(
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="px-4 text-grey-40 focus:text-violet-60 focus:outline-none"
+            tabIndex={-1}
           >
-            {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+            {showPassword ? <EyeIcon size={16} /> : <EyeOffIcon size={16} />}
           </button>
+        )}
+        {props.readOnly && (
+          <LockIcon size={16} className="mr-base text-grey-40" />
         )}
       </div>
     )
   }
 )
+
+SigninInput.displayName = "SigninInput"
 
 export default SigninInput

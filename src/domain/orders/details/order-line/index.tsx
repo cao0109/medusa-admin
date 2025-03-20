@@ -1,14 +1,25 @@
 import { LineItem } from "@medusajs/medusa"
-import React from "react"
+import { ReservationItemDTO } from "@medusajs/types"
+
 import ImagePlaceholder from "../../../../components/fundamentals/image-placeholder"
 import { formatAmountWithSymbol } from "../../../../utils/prices"
+import { useFeatureFlag } from "../../../../providers/feature-flag-provider"
+import ReservationIndicator from "../../components/reservation-indicator/reservation-indicator"
 
 type OrderLineProps = {
   item: LineItem
   currencyCode: string
+  reservations?: ReservationItemDTO[]
+  isAllocatable?: boolean
 }
 
-const OrderLine = ({ item, currencyCode }: OrderLineProps) => {
+const OrderLine = ({
+  item,
+  currencyCode,
+  reservations,
+  isAllocatable = true,
+}: OrderLineProps) => {
+  const { isFeatureEnabled } = useFeatureFlag()
   return (
     <div className="mx-[-5px] mb-1 flex h-[64px] justify-between rounded-rounded py-2 px-[5px] hover:bg-grey-5">
       <div className="flex justify-center space-x-4">
@@ -32,7 +43,7 @@ const OrderLine = ({ item, currencyCode }: OrderLineProps) => {
           )}
         </div>
       </div>
-      <div className="flex  items-center">
+      <div className="flex items-center">
         <div className="mr-3 flex small:space-x-2 medium:space-x-4 large:space-x-6">
           <div className="inter-small-regular text-grey-50">
             {formatAmountWithSymbol({
@@ -45,7 +56,10 @@ const OrderLine = ({ item, currencyCode }: OrderLineProps) => {
           <div className="inter-small-regular text-grey-50">
             x {item.quantity}
           </div>
-          <div className="inter-small-regular text-grey-90">
+          {isFeatureEnabled("inventoryService") && isAllocatable && (
+            <ReservationIndicator reservations={reservations} lineItem={item} />
+          )}
+          <div className="inter-small-regular min-w-[55px] text-right text-grey-90">
             {formatAmountWithSymbol({
               amount: item.total ?? 0,
               currency: currencyCode,

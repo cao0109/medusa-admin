@@ -7,7 +7,7 @@ import Button from "../../fundamentals/button"
 import CrossIcon from "../../fundamentals/icons/cross-icon"
 import Checkbox from "../../atoms/checkbox"
 
-/******************** TYPES ********************/
+/** ****************** TYPES ********************/
 
 type Field = {
   id: string
@@ -36,7 +36,7 @@ type FieldMenuItemProps = {
   onChange: () => void
 }
 
-/******************** COMPONENTS ********************/
+/** ****************** COMPONENTS ********************/
 
 /**
  * Table field chip component.
@@ -76,7 +76,7 @@ function FieldMenuItem(props: FieldMenuItemProps) {
   )
 }
 
-/******************** CONTAINERS ********************/
+/** ****************** CONTAINERS ********************/
 
 /**
  * The dropdown menu for selecting currently active table fields.

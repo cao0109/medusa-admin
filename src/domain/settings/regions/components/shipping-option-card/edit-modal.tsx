@@ -1,7 +1,12 @@
 import { ShippingOption } from "@medusajs/medusa"
 import { useAdminUpdateShippingOption } from "medusa-react"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import {
+  getMetadataFormValues,
+  getSubmittableMetadata,
+} from "../../../../../components/forms/general/metadata-form"
 import Button from "../../../../../components/fundamentals/button"
 import Modal from "../../../../../components/molecules/modal"
 import useNotification from "../../../../../hooks/use-notification"
@@ -18,6 +23,7 @@ type Props = {
 }
 
 const EditModal = ({ open, onClose, option }: Props) => {
+  const { t } = useTranslation()
   const form = useForm<ShippingOptionFormType>({
     defaultValues: getDefaultValues(option),
   })
@@ -32,8 +38,10 @@ const EditModal = ({ open, onClose, option }: Props) => {
   } = form
 
   useEffect(() => {
-    reset(getDefaultValues(option))
-  }, [option])
+    if (open) {
+      reset(getDefaultValues(option))
+    }
+  }, [option, reset, open])
 
   const closeAndReset = () => {
     reset(getDefaultValues(option))
@@ -48,14 +56,26 @@ const EditModal = ({ open, onClose, option }: Props) => {
         requirements: getRequirementsData(data),
         admin_only: !data.store_option,
         amount: data.amount!,
+        metadata: getSubmittableMetadata(data.metadata),
       },
       {
         onSuccess: () => {
-          notification("Success", "Shipping option updated", "success")
+          notification(
+            t("shipping-option-card-success", "Success"),
+            t(
+              "shipping-option-card-shipping-option-updated",
+              "Shipping option updated"
+            ),
+            "success"
+          )
           closeAndReset()
         },
         onError: (error) => {
-          notification("Error", getErrorMessage(error), "error")
+          notification(
+            t("shipping-option-card-error", "Error"),
+            getErrorMessage(error),
+            "error"
+          )
         },
       }
     )
@@ -65,14 +85,24 @@ const EditModal = ({ open, onClose, option }: Props) => {
     <Modal open={open} handleClose={closeAndReset}>
       <Modal.Body>
         <Modal.Header handleClose={closeAndReset}>
-          <h1 className="inter-xlarge-semibold">Edit Shipping Option</h1>
+          <h1 className="inter-xlarge-semibold">
+            {t(
+              "shipping-option-card-edit-shipping-option",
+              "Edit Shipping Option"
+            )}
+          </h1>
         </Modal.Header>
         <form onSubmit={onSubmit}>
           <Modal.Content>
             <div>
-              <p className="inter-base-semibold">Fulfillment Method</p>
+              <p className="inter-base-semibold">
+                {t(
+                  "shipping-option-card-fulfillment-method",
+                  "Fulfillment Method"
+                )}
+              </p>
               <p className="inter-base-regular text-grey-50">
-                {option.data.id} via {option.provider_id}
+                {option.data.id as string} via {option.provider_id}
               </p>
             </div>
             <div className="my-xlarge h-px w-full bg-grey-20" />
@@ -85,7 +115,7 @@ const EditModal = ({ open, onClose, option }: Props) => {
           <Modal.Footer>
             <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button variant="secondary" size="small" onClick={closeAndReset}>
-                Cancel
+                {t("shipping-option-card-cancel", "Cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -94,7 +124,7 @@ const EditModal = ({ open, onClose, option }: Props) => {
                 loading={isLoading}
                 disabled={isLoading || !isDirty}
               >
-                Save and close
+                {t("shipping-option-card-save-and-close", "Save and close")}
               </Button>
             </div>
           </Modal.Footer>
@@ -133,6 +163,7 @@ const getDefaultValues = (option: ShippingOption): ShippingOptionFormType => {
         : null,
     },
     amount: option.amount,
+    metadata: getMetadataFormValues(option.metadata),
   }
 }
 

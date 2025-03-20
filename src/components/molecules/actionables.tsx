@@ -41,32 +41,34 @@ const Actionables: React.FC<ActionablesProps> = ({
             )}
           </DropdownMenu.Trigger>
 
-          <DropdownMenu.Content
-            sideOffset={5}
-            className="z-30 min-w-[200px] rounded-rounded border border-grey-20 bg-grey-0 p-xsmall shadow-dropdown"
-          >
-            {actions.map((action, i) => {
-              return (
-                <DropdownMenu.Item className="mb-1 last:mb-0" key={i}>
-                  {
-                    <Button
-                      variant="ghost"
-                      size="small"
-                      className={clsx("flex w-full justify-start", {
-                        "text-rose-50": action?.variant === "danger",
-                        "pointer-events-none select-none opacity-50":
-                          action?.disabled,
-                      })}
-                      onClick={action?.onClick}
-                    >
-                      {action.icon}
-                      {action.label}
-                    </Button>
-                  }
-                </DropdownMenu.Item>
-              )
-            })}
-          </DropdownMenu.Content>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              sideOffset={5}
+              className="z-50 min-w-[200px] rounded-rounded border border-grey-20 bg-grey-0 p-xsmall shadow-dropdown"
+            >
+              {actions.map((action, i) => {
+                return (
+                  <DropdownMenu.Item className="mb-1 last:mb-0" key={i}>
+                    {
+                      <Button
+                        variant="ghost"
+                        size="small"
+                        className={clsx("flex w-full justify-start", {
+                          "text-rose-50": action?.variant === "danger",
+                          "pointer-events-none select-none opacity-50":
+                            action?.disabled,
+                        })}
+                        onClick={action?.onClick}
+                      >
+                        {action.icon}
+                        {action.label}
+                      </Button>
+                    }
+                  </DropdownMenu.Item>
+                )
+              })}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
     )

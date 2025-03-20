@@ -1,9 +1,16 @@
 import clsx from "clsx"
 import type { Identifier, XYCoord } from "dnd-core"
-import React, { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { useDrag, useDrop } from "react-dnd"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import Tooltip from "../../../../../components/atoms/tooltip"
+import { CustomsFormType } from "../../../../../components/forms/product/customs-form"
+import { DimensionsFormType } from "../../../../../components/forms/product/dimensions-form"
+import CreateFlowVariantForm, {
+  CreateFlowVariantFormType,
+} from "../../../../../components/forms/product/variant-form/create-flow-variant-form"
+import { VariantOptionValueType } from "../../../../../components/forms/product/variant-form/variant-select-options-form"
 import Button from "../../../../../components/fundamentals/button"
 import CheckCircleFillIcon from "../../../../../components/fundamentals/icons/check-circle-fill-icon"
 import EditIcon from "../../../../../components/fundamentals/icons/edit-icon"
@@ -13,15 +20,12 @@ import TrashIcon from "../../../../../components/fundamentals/icons/trash-icon"
 import Actionables from "../../../../../components/molecules/actionables"
 import IconTooltip from "../../../../../components/molecules/icon-tooltip"
 import Modal from "../../../../../components/molecules/modal"
+import LayeredModal, {
+  LayeredModalContext,
+} from "../../../../../components/molecules/modal/layered-modal"
 import useImperativeDialog from "../../../../../hooks/use-imperative-dialog"
 import useToggleState from "../../../../../hooks/use-toggle-state"
 import { DragItem } from "../../../../../types/shared"
-import { CustomsFormType } from "../../../components/customs-form"
-import { DimensionsFormType } from "../../../components/dimensions-form"
-import CreateFlowVariantForm, {
-  CreateFlowVariantFormType,
-} from "../../../components/variant-form/create-flow-variant-form"
-import { VariantOptionValueType } from "../../../components/variant-form/variant-select-options-form"
 
 const ItemTypes = {
   CARD: "card",
@@ -52,6 +56,7 @@ const NewVariant = ({
   productDimensions,
   productCustoms,
 }: Props) => {
+  const { t } = useTranslation()
   const { state, toggle, close } = useToggleState()
   const localForm = useForm<CreateFlowVariantFormType>({
     defaultValues: source,
@@ -81,7 +86,10 @@ const NewVariant = ({
     if (!saved) {
       localForm.setError("options", {
         type: "deps",
-        message: "A variant with these options already exists.",
+        message: t(
+          "new-variant-a-variant-with-these-options-already-exists",
+          "A variant with these options already exists."
+        ),
       })
       return
     }
@@ -93,8 +101,11 @@ const NewVariant = ({
 
   const onDelete = async () => {
     const confirmed = await warning({
-      text: "Are you sure you want to delete this variant?",
-      heading: "Delete Variant",
+      text: t(
+        "new-variant-are-you-sure-you-want-to-delete-this-variant",
+        "Are you sure you want to delete this variant?"
+      ),
+      heading: t("new-variant-delete-variant", "Delete Variant"),
     })
 
     if (confirmed) {
@@ -156,6 +167,7 @@ const NewVariant = ({
   })
 
   drag(drop(ref))
+  const layeredModalContext = useContext(LayeredModalContext)
 
   return (
     <>
@@ -163,7 +175,7 @@ const NewVariant = ({
         ref={preview}
         data-handler-id={handlerId}
         className={clsx(
-          "grid h-16 translate-y-0 translate-x-0 grid-cols-[32px_1fr_90px_100px_48px] rounded-rounded py-xsmall pl-xsmall pr-base transition-all focus-within:bg-grey-5 hover:bg-grey-5",
+          "grid h-16 translate-x-0 translate-y-0 grid-cols-[32px_1fr_90px_100px_48px] rounded-rounded py-xsmall pl-xsmall pr-base transition-all focus-within:bg-grey-5 hover:bg-grey-5",
           {
             "opacity-50": isDragging,
           }
@@ -205,12 +217,12 @@ const NewVariant = ({
             forceDropdown
             actions={[
               {
-                label: "Edit",
+                label: t("new-variant-edit", "Edit"),
                 icon: <EditIcon size={20} />,
                 onClick: toggle,
               },
               {
-                label: "Delete",
+                label: t("new-variant-delete", "Delete"),
                 icon: <TrashIcon size={20} />,
                 onClick: onDelete,
                 variant: "danger",
@@ -227,12 +239,15 @@ const NewVariant = ({
           />
         </div>
       </div>
-
-      <Modal open={state} handleClose={closeAndReset}>
+      <LayeredModal
+        context={layeredModalContext}
+        open={state}
+        handleClose={closeAndReset}
+      >
         <Modal.Body>
           <Modal.Header handleClose={closeAndReset}>
             <h1 className="inter-xlarge-semibold">
-              Edit Variant
+              {t("new-variant-edit-variant", "Edit Variant")}
               {source.general.title && (
                 <span className="inter-xlarge-regular ml-xsmall text-grey-50">
                   ({source.general.title})
@@ -255,7 +270,7 @@ const NewVariant = ({
                 type="button"
                 onClick={closeAndReset}
               >
-                Cancel
+                {t("new-variant-cancel", "Cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -263,12 +278,12 @@ const NewVariant = ({
                 type="button"
                 onClick={onUpdate}
               >
-                Save and close
+                {t("new-variant-save-and-close", "Save and close")}
               </Button>
             </div>
           </Modal.Footer>
         </Modal.Body>
-      </Modal>
+      </LayeredModal>
     </>
   )
 }
@@ -279,7 +294,6 @@ const VariantValidity = ({
   productDimensions,
 }: Pick<Props, "source" | "productCustoms" | "productDimensions">) => {
   const {
-    prices,
     options,
     dimensions,
     customs,
@@ -320,8 +334,6 @@ const VariantValidity = ({
     )
   }
 
-  const validPrices = prices?.prices.some((p) => p.amount !== null)
-
   const validDimensions =
     Object.values(productDimensions).every((value) => !!value) ||
     Object.values(dimensions).every((value) => !!value)
@@ -331,13 +343,7 @@ const VariantValidity = ({
 
   const barcodeValidity = !!barcode || !!upc || !!ean
 
-  if (
-    !sku ||
-    !validCustoms ||
-    !validDimensions ||
-    !barcodeValidity ||
-    !validPrices
-  ) {
+  if (!sku || !validCustoms || !validDimensions || !barcodeValidity) {
     return (
       <IconTooltip
         type="warning"
@@ -349,7 +355,6 @@ const VariantValidity = ({
               fields:
             </p>
             <ul className="list-inside list-disc">
-              {!validPrices && <li>Pricing</li>}
               {!validDimensions && <li>Dimensions</li>}
               {!validCustoms && <li>Customs</li>}
               {!inventory_quantity && <li>Inventory quantity</li>}

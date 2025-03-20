@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react"
+import { PropsWithChildren } from "react"
 import Spinner from "../../atoms/spinner"
 import { TablePagination } from "./pagination"
 import { PagingProps } from "./types"

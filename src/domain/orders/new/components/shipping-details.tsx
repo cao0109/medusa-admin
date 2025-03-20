@@ -1,14 +1,15 @@
 import qs from "query-string"
-import React, { useContext, useEffect, useMemo, useState } from "react"
-import Spinner from "../../../../components/atoms/spinner"
+import { useContext, useEffect, useMemo, useState } from "react"
+import { Controller, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+
+import { useAdminCustomer } from "medusa-react"
+
 import Button from "../../../../components/fundamentals/button"
 import AddressForm, {
   AddressType,
 } from "../../../../components/templates/address-form"
 import Medusa from "../../../../services/api"
-
-import { useAdminCustomer } from "medusa-react"
-import { Controller, useWatch } from "react-hook-form"
 import LockIcon from "../../../../components/fundamentals/icons/lock-icon"
 import InputField from "../../../../components/molecules/input"
 import { SteppedContext } from "../../../../components/molecules/modal/stepped-modal"
@@ -18,9 +19,11 @@ import { Option } from "../../../../types/shared"
 import isNullishObject from "../../../../utils/is-nullish-object"
 import mapAddressToForm from "../../../../utils/map-address-to-form"
 import { nestedForm } from "../../../../utils/nested-form"
+import { isValidEmail } from "../../../../utils/email"
 import { useNewOrderForm } from "../form"
 
 const ShippingDetails = () => {
+  const { t } = useTranslation()
   const [addNew, setAddNew] = useState(false)
   const { disableNextPage, enableNextPage } = useContext(SteppedContext)
 
@@ -55,7 +58,7 @@ const ShippingDetails = () => {
     name: "customer_id",
   })
 
-  const { customer, isLoading } = useAdminCustomer(customerId?.value!, {
+  const { customer } = useAdminCustomer(customerId?.value!, {
     enabled: !!customerId?.value,
   })
 
@@ -70,13 +73,15 @@ const ShippingDetails = () => {
       ({ country_code }) =>
         !country_code || validCountryCodes.includes(country_code)
     )
-  }, [customer])
+  }, [customer, validCountries])
 
   const onCustomerSelect = (val: Option) => {
     const email = /\(([^()]*)\)$/.exec(val?.label)
 
     if (email) {
       form.setValue("email", email[1])
+    } else {
+      form.setValue("email", "")
     }
   }
 
@@ -102,23 +107,17 @@ const ShippingDetails = () => {
     name: "email",
   })
 
-  useEffect(() => {
-    if (!email) {
-      disableNextPage()
-    } else {
-      enableNextPage()
-    }
-  }, [email])
-
   const shippingAddress = useWatch({
     control: form.control,
     name: "shipping_address",
   })
 
-  const [requiredFields, setRequiredFields] = useState(false)
-
+  /**
+   * Effect used to enable next step.
+   * A user can go to the next step if valid email is provided and all required address info is filled.
+   */
   useEffect(() => {
-    if (!email) {
+    if (!email || !isValidEmail(email)) {
       disableNextPage()
       return
     }
@@ -133,21 +132,38 @@ const ShippingDetails = () => {
         !shippingAddress.postal_code
       ) {
         disableNextPage()
-        setRequiredFields(true)
       } else {
         enableNextPage()
       }
-    } else {
-      enableNextPage()
-      setRequiredFields(false)
     }
   }, [shippingAddress, email])
+
+  useEffect(() => {
+    // reset shipping address info when a different customer is selected
+    // or when "Create new" is clicked
+    form.setValue("shipping_address.first_name", "")
+    form.setValue("shipping_address.last_name", "")
+    form.setValue("shipping_address.phone", "")
+    form.setValue("shipping_address.address_1", "")
+    form.setValue("shipping_address.address_2", "")
+    form.setValue("shipping_address.city", "")
+    form.setValue("shipping_address.country_code", null)
+    form.setValue("shipping_address.province", "")
+    form.setValue("shipping_address.postal_code", "")
+  }, [customerId?.value, addNew])
+
+  useEffect(() => {
+    setAddNew(false)
+  }, [customerId?.value])
 
   return (
     <div className="flex min-h-[705px] flex-col gap-y-8">
       <div>
         <span className="inter-base-semibold">
-          Customer and shipping details
+          {t(
+            "components-customer-and-shipping-details",
+            "Customer and shipping details"
+          )}
         </span>
         <Controller
           control={form.control}
@@ -156,7 +172,10 @@ const ShippingDetails = () => {
             return (
               <Select
                 className="mt-4"
-                label="Find existing customer"
+                label={t(
+                  "components-find-existing-customer",
+                  "Find existing customer"
+                )}
                 options={[]}
                 enableSearch
                 value={value || null}
@@ -173,30 +192,33 @@ const ShippingDetails = () => {
       </div>
 
       <div className="flex flex-col gap-y-4">
-        <span className="inter-base-semibold">Email</span>
+        <span className="inter-base-semibold">
+          {t("components-email", "Email")}
+        </span>
         <InputField
           {...form.register("email")}
-          label="Email"
+          label={t("components-email", "Email")}
           placeholder="lebron@james.com"
           disabled={!!customerId}
           required
           // @ts-ignore
           prefix={
-            !!customerId ? (
+            customerId ? (
               <LockIcon size={16} className="text-grey-40" />
             ) : undefined
           }
-          tabIndex={!!customerId ? -1 : 0}
+          tabIndex={customerId ? -1 : 0}
         />
       </div>
 
-      {isLoading ? (
+      {validAddresses.length && !addNew ? (
         <div>
-          <Spinner variant="primary" />
-        </div>
-      ) : validAddresses.length && !addNew ? (
-        <div>
-          <span className="inter-base-semibold">Choose existing addresses</span>
+          <span className="inter-base-semibold">
+            {t(
+              "components-choose-existing-addresses",
+              "Choose existing addresses"
+            )}
+          </span>
           <Controller
             control={form.control}
             name="shipping_address_id"
@@ -232,7 +254,7 @@ const ShippingDetails = () => {
               className="w-[112px] border border-grey-20"
               onClick={onCreateNew}
             >
-              Create new
+              {t("components-create-new", "Create new")}
             </Button>
           </div>
         </div>
@@ -242,7 +264,6 @@ const ShippingDetails = () => {
             form={nestedForm(form, "shipping_address")}
             countryOptions={validCountries}
             type={AddressType.SHIPPING}
-            required={requiredFields}
           />
         </div>
       )}

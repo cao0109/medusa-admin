@@ -1,7 +1,8 @@
 import { Discount } from "@medusajs/medusa"
 import { useAdminDeleteDiscount, useAdminUpdateDiscount } from "medusa-react"
-import React, { useState } from "react"
+import React from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import Badge from "../../../../components/fundamentals/badge"
 import EditIcon from "../../../../components/fundamentals/icons/edit-icon"
 import TrashIcon from "../../../../components/fundamentals/icons/trash-icon"
@@ -10,35 +11,51 @@ import StatusSelector from "../../../../components/molecules/status-selector"
 import BodyCard from "../../../../components/organisms/body-card"
 import useImperativeDialog from "../../../../hooks/use-imperative-dialog"
 import useNotification from "../../../../hooks/use-notification"
+import useToggleState from "../../../../hooks/use-toggle-state"
 import { getErrorMessage } from "../../../../utils/error-messages"
 import { formatAmountWithSymbol } from "../../../../utils/prices"
 import EditGeneral from "./edit-general"
+import { TFunction } from "i18next"
 
 type GeneralProps = {
   discount: Discount
 }
 
 const General: React.FC<GeneralProps> = ({ discount }) => {
+  const { t } = useTranslation()
   const dialog = useImperativeDialog()
   const navigate = useNavigate()
   const notification = useNotification()
   const updateDiscount = useAdminUpdateDiscount(discount.id)
   const deletediscount = useAdminDeleteDiscount(discount.id)
-  const [showmModal, setShowModal] = useState(false)
 
   const onDelete = async () => {
     const shouldDelete = await dialog({
-      heading: "Delete Promotion",
-      text: "Are you sure you want to delete this promotion?",
+      heading: t("general-delete-promotion", "Delete Promotion"),
+      text: t(
+        "general-confirm-delete-promotion",
+        "Are you sure you want to delete this promotion?"
+      ),
     })
     if (shouldDelete) {
       deletediscount.mutate(undefined, {
         onSuccess: () => {
-          notification("Success", "Promotion deleted successfully", "success")
+          notification(
+            t("general-success", "Success"),
+            t(
+              "general-promotion-deleted-successfully",
+              "Promotion deleted successfully"
+            ),
+            "success"
+          )
           navigate("/a/discounts/")
         },
         onError: (err) => {
-          notification("Error", getErrorMessage(err), "error")
+          notification(
+            t("general-error", "Error"),
+            getErrorMessage(err),
+            "error"
+          )
         },
       })
     }
@@ -51,28 +68,41 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
       },
       {
         onSuccess: ({ discount: { is_disabled } }) => {
-          const pastTense = !is_disabled ? "published" : "drafted"
           notification(
-            "Success",
-            `Discount ${pastTense} successfully`,
+            t("general-success", "Success"),
+            !is_disabled
+              ? t(
+                  "general-discount-published-successfully",
+                  "Discount published successfully"
+                )
+              : t(
+                  "general-discount-drafted-successfully",
+                  "Discount drafted successfully"
+                ),
             "success"
           )
         },
         onError: (err) => {
-          notification("Error", getErrorMessage(err), "error")
+          notification(
+            t("general-error", "Error"),
+            getErrorMessage(err),
+            "error"
+          )
         },
       }
     )
   }
 
+  const { state, open, close } = useToggleState()
+
   const actionables: ActionType[] = [
     {
-      label: "Edit general information",
-      onClick: () => setShowModal(true),
+      label: t("general-edit-general-information", "Edit general information"),
+      onClick: open,
       icon: <EditIcon size={20} />,
     },
     {
-      label: "Delete discount",
+      label: t("general-delete-discount", "Delete discount"),
       onClick: onDelete,
       variant: "danger",
       icon: <TrashIcon size={20} />,
@@ -93,15 +123,15 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               <span>
                 <Badge variant="default">
                   <span className="inter-small-regular text-grey-90">
-                    {"Template discount"}
+                    {t("general-template-discount", "Template discount")}
                   </span>
                 </Badge>
               </span>
             )}
             <StatusSelector
               isDraft={discount?.is_disabled}
-              activeState="Published"
-              draftState="Draft"
+              activeState={t("general-published", "Published")}
+              draftState={t("general-draft", "Draft")}
               onChange={onStatusChange}
             />
           </div>
@@ -109,9 +139,9 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
       >
         <div className="flex">
           <div className="border-l border-grey-20 pl-6">
-            {getPromotionDescription(discount)}
+            {getPromotionDescription(discount, t)}
             <span className="inter-small-regular text-grey-50">
-              Discount Amount
+              {t("general-discount-amount", "Discount Amount")}
             </span>
           </div>
           <div className="ml-12 border-l border-grey-20 pl-6">
@@ -119,7 +149,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               {discount.regions.length.toLocaleString("en-US")}
             </h2>
             <span className="inter-small-regular text-grey-50">
-              Valid Regions
+              {t("general-valid-regions", "Valid Regions")}
             </span>
           </div>
           <div className="ml-12 border-l border-grey-20 pl-6">
@@ -127,19 +157,18 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               {discount.usage_count.toLocaleString("en-US")}
             </h2>
             <span className="inter-small-regular text-grey-50">
-              Total Redemptions
+              {t("general-total-redemptions", "Total Redemptions")}
             </span>
           </div>
         </div>
       </BodyCard>
-      {showmModal && (
-        <EditGeneral discount={discount} onClose={() => setShowModal(false)} />
-      )}
+
+      <EditGeneral discount={discount} onClose={close} open={state} />
     </>
   )
 }
 
-const getPromotionDescription = (discount: Discount) => {
+const getPromotionDescription = (discount: Discount, t: TFunction) => {
   switch (discount.rule.type) {
     case "fixed":
       return (
@@ -166,10 +195,12 @@ const getPromotionDescription = (discount: Discount) => {
       )
     case "free_shipping":
       return (
-        <h2 className="inter-xlarge-regular text-grey-90">{`FREE SHIPPING`}</h2>
+        <h2 className="inter-xlarge-regular text-grey-90">
+          {t("general-free-shipping", "FREE SHIPPING")}
+        </h2>
       )
     default:
-      return "Unknown discount type"
+      return t("general-unknown-discount-type", "Unknown discount type")
   }
 }
 

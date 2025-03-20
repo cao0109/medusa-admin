@@ -1,5 +1,4 @@
 import clsx from "clsx"
-import React from "react"
 import SectionCollapsible from "../section-collapsible"
 import { useAdminDiscounts } from "medusa-react"
 import useKeyboardNavigationList from "../use-keyboard-navigation-list"

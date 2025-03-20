@@ -9,7 +9,7 @@ const Regions = () => {
 
   return (
     <div className="flex h-full flex-col gap-y-xsmall">
-      <BackButton label="Back to Settings" path="/a/settings" />
+      <BackButton label="Back to settings" path="/a/settings" />
       <div className="grid grid-cols-1 gap-xsmall pb-xlarge medium:grid-cols-3">
         <div className="h-full w-full">
           <RegionOverview id={regId} />

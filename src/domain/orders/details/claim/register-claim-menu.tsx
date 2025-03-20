@@ -1,15 +1,19 @@
-import { ClaimReason, Order } from "@medusajs/medusa"
-import { useAdminCreateClaim } from "medusa-react"
+import { ClaimReason, Order, StockLocationDTO } from "@medusajs/medusa"
+import { useAdminStockLocations, useAdminCreateClaim } from "medusa-react"
 import { useEffect } from "react"
-import { useForm, useWatch } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import Spinner from "../../../../components/atoms/spinner"
 import Button from "../../../../components/fundamentals/button"
 import Modal from "../../../../components/molecules/modal"
 import LayeredModal, {
   useLayeredModal,
 } from "../../../../components/molecules/modal/layered-modal"
+import Select from "../../../../components/molecules/select/next-select/select"
 import { AddressPayload } from "../../../../components/templates/address-form"
 import useImperativeDialog from "../../../../hooks/use-imperative-dialog"
 import useNotification from "../../../../hooks/use-notification"
+import { useFeatureFlag } from "../../../../providers/feature-flag-provider"
 import { getErrorMessage } from "../../../../utils/error-messages"
 import { nestedForm } from "../../../../utils/nested-form"
 import ClaimTypeForm, {
@@ -35,6 +39,10 @@ export type CreateClaimFormType = {
   return_items: ItemsToReturnFormType
   additional_items: ItemsToSendFormType
   return_shipping: ShippingFormType
+  selected_location?: {
+    value: string
+    label: string
+  }
   replacement_shipping: ShippingFormType
   shipping_address: AddressPayload
   claim_type: ClaimTypeFormType
@@ -49,6 +57,29 @@ type Props = {
 const RegisterClaimMenu = ({ order, onClose }: Props) => {
   const context = useLayeredModal()
   const { mutate, isLoading } = useAdminCreateClaim(order.id)
+  const { t } = useTranslation()
+
+  const { isFeatureEnabled } = useFeatureFlag()
+  const isLocationFulfillmentEnabled =
+    isFeatureEnabled("inventoryService") &&
+    isFeatureEnabled("stockLocationService")
+
+  const {
+    stock_locations,
+    refetch: refetchLocations,
+    isLoading: isLoadingLocations,
+  } = useAdminStockLocations(
+    {},
+    {
+      enabled: isLocationFulfillmentEnabled,
+    }
+  )
+
+  useEffect(() => {
+    if (isLocationFulfillmentEnabled) {
+      refetchLocations()
+    }
+  }, [isLocationFulfillmentEnabled, refetchLocations])
 
   const form = useForm<CreateClaimFormType>({
     defaultValues: getDefaultClaimValues(order),
@@ -58,6 +89,7 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
     reset,
     formState: { isDirty },
     setError,
+    control,
   } = form
 
   const notification = useNotification()
@@ -77,8 +109,14 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
 
     if (isDirty) {
       shouldClose = await dialog({
-        heading: "Are you sure you want to close?",
-        text: "You have unsaved changes, are you sure you want to close?",
+        heading: t(
+          "claim-are-you-sure-you-want-to-close",
+          "Are you sure you want to close?"
+        ),
+        text: t(
+          "claim-you-have-unsaved-changes-are-you-sure-you-want-to-close",
+          "You have unsaved changes, are you sure you want to close?"
+        ),
       })
     }
 
@@ -91,6 +129,7 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
     const type = data.claim_type.type
     const returnShipping = data.return_shipping
     const refundAmount = data.refund_amount?.amount
+    const returnLocation = data.selected_location?.value
 
     const replacementShipping =
       type === "replace" && data.replacement_shipping.option
@@ -126,7 +165,10 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
           `return_items.items.${index}.return_reason_details`,
           {
             type: "manual",
-            message: "Please select a reason",
+            message: t(
+              "claim-please-select-a-reason",
+              "Please select a reason"
+            ),
           },
           { shouldFocus: true }
         )
@@ -140,7 +182,10 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
         `replacement_shipping.option`,
         {
           type: "manual",
-          message: "A shipping method for replacement items is required",
+          message: t(
+            "claim-a-shipping-method-for-replacement-items-is-required",
+            "A shipping method for replacement items is required"
+          ),
         },
         { shouldFocus: true }
       )
@@ -184,6 +229,7 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
                 province: data.shipping_address.province || undefined,
               }
             : undefined,
+        return_location_id: returnLocation,
         shipping_methods: replacementShipping
           ? [replacementShipping]
           : undefined,
@@ -191,14 +237,24 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
       {
         onSuccess: () => {
           notification(
-            "Successfully created claim",
-            `A claim for order #${order.display_id} was successfully created`,
+            t("claim-successfully-created-claim", "Successfully created claim"),
+            t(
+              "claim-created",
+              "A claim for order #{{display_id}} was successfully created",
+              {
+                display_id: order.display_id,
+              }
+            ),
             "success"
           )
           handleClose()
         },
         onError: (err) => {
-          notification("Error creating claim", getErrorMessage(err), "error")
+          notification(
+            t("claim-error-creating-claim", "Error creating claim"),
+            getErrorMessage(err),
+            "error"
+          )
         },
       }
     )
@@ -223,7 +279,9 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
     >
       <Modal.Body>
         <Modal.Header handleClose={onCancel}>
-          <h1 className="inter-xlarge-semibold">Create Claim</h1>
+          <h1 className="inter-xlarge-semibold">
+            {t("claim-create-claim", "Create Claim")}
+          </h1>
         </Modal.Header>
         <form onSubmit={onSubmit} data-testid="register-claim-form">
           <Modal.Content>
@@ -239,6 +297,49 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
                 isReturn={true}
                 isClaim={true}
               />
+
+              {isLocationFulfillmentEnabled && (
+                <div className="mb-8">
+                  <h3 className="inter-base-semibold ">
+                    {t("claim-location", "Location")}
+                  </h3>
+                  <p className="inter-base-regular text-grey-50">
+                    {t(
+                      "claim-choose-which-location-you-want-to-return-the-items-to",
+                      "Choose which location you want to return the items to."
+                    )}
+                  </p>
+                  {isLoadingLocations ? (
+                    <Spinner />
+                  ) : (
+                    <Controller
+                      control={control}
+                      name={"selected_location"}
+                      render={({ field: { value, onChange } }) => {
+                        return (
+                          <Select
+                            className="mt-2"
+                            placeholder={t(
+                              "claim-select-location-to-return-to",
+                              "Select Location to Return to"
+                            )}
+                            value={value}
+                            isMulti={false}
+                            onChange={onChange}
+                            options={
+                              stock_locations?.map((sl: StockLocationDTO) => ({
+                                label: sl.name,
+                                value: sl.id,
+                              })) || []
+                            }
+                          />
+                        )
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+
               <ClaimTypeForm form={nestedForm(form, "claim_type")} />
               {watchedType === "replace" && (
                 <>
@@ -273,14 +374,14 @@ const RegisterClaimMenu = ({ order, onClose }: Props) => {
                   type="button"
                   onClick={onCancel}
                 >
-                  Cancel
+                  {t("claim-cancel", "Cancel")}
                 </Button>
                 <Button
                   variant="primary"
                   size="small"
                   disabled={!isDirty || isLoading || watchedItems?.length < 1}
                 >
-                  Submit and close
+                  {t("claim-submit-and-close", "Submit and close")}
                 </Button>
               </div>
             </div>

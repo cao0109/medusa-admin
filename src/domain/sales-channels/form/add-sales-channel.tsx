@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { useAdminCreateSalesChannel } from "medusa-react"
+import { useTranslation } from "react-i18next"
 
 import Button from "../../../components/fundamentals/button"
 
@@ -22,25 +23,32 @@ type GeneralProps = {
  */
 function General(props: GeneralProps) {
   const { name, description, setName, setDescription } = props
+  const { t } = useTranslation()
 
   return (
     <div className="my-base flex flex-col gap-y-base">
       <div className="flex-1">
         <InputField
-          label="Title"
+          label={t("form-title", "Title")}
           type="string"
           name="name"
-          placeholder="Website, app, Amazon, physical store POS, facebook product feed..."
+          placeholder={t(
+            "form-website-app-amazon-physical-store-pos-facebook-product-feed",
+            "Website, app, Amazon, physical store POS, facebook product feed..."
+          )}
           value={name}
           onChange={(ev) => setName(ev.target.value)}
         />
       </div>
       <div className="flex-1">
         <InputField
-          label="Description"
+          label={t("form-description", "Description")}
           type="string"
           name="description"
-          placeholder="Available products at our website, app..."
+          placeholder={t(
+            "form-available-products-at-our-website-app",
+            "Available products at our website, app..."
+          )}
           value={description}
           onChange={(ev) => setDescription(ev.target.value)}
         />
@@ -68,11 +76,11 @@ function AddProducts() {
         <PlusIcon size={20} />
         Add Products
       </Button>
-      {/*{showModal && (*/}
+      {/* {showModal && (*/}
       {/*  <SalesChannelAvaliableProductsModal*/}
       {/*    handleClose={() => setShowModal(false)}*/}
       {/*  />*/}
-      {/*)}*/}
+      {/* )}*/}
     </div>
   )
 }
@@ -188,10 +196,10 @@ const AddSalesChannelModal = ({ onClose }: AddSalesChannelModalProps) => {
                   setDescription={setDescription}
                 />
               </Accordion.Item>
-              {/*TODO: add a modal for initially selecting products*/}
-              {/*<Accordion.Item title="Products" value="products">*/}
+              {/* TODO: add a modal for initially selecting products*/}
+              {/* <Accordion.Item title="Products" value="products">*/}
               {/*  <AddProducts />*/}
-              {/*</Accordion.Item>*/}
+              {/* </Accordion.Item>*/}
             </Accordion>
           </div>
         </div>

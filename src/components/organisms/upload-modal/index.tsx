@@ -1,19 +1,23 @@
-import React, { ReactNode, useState } from "react"
 import clsx from "clsx"
+import { ReactNode, useState } from "react"
+import { useHref } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
-import Modal from "../../molecules/modal"
+import Tooltip from "../../atoms/tooltip"
 import Button from "../../fundamentals/button"
+import CheckCircleIcon from "../../fundamentals/icons/check-circle-icon"
+import CrossIcon from "../../fundamentals/icons/cross-icon"
+import DownloadIcon from "../../fundamentals/icons/download-icon"
 import FileIcon from "../../fundamentals/icons/file-icon"
 import TrashIcon from "../../fundamentals/icons/trash-icon"
-import DownloadIcon from "../../fundamentals/icons/download-icon"
-import XCircleIcon from "../../fundamentals/icons/x-circle-icon"
-import CheckCircleIcon from "../../fundamentals/icons/check-circle-icon"
-import WarningCircle from "../../fundamentals/icons/warning-circle"
-import CrossIcon from "../../fundamentals/icons/cross-icon"
+import WarningCircleIcon from "../../fundamentals/icons/warning-circle"
+import Modal from "../../molecules/modal"
 
 type FileSummaryProps = {
   name: string
   size: number
+  hasError?: boolean
+  errorMessage?: string
   action: ReactNode
   progress?: number
   status?: string
@@ -23,7 +27,7 @@ type FileSummaryProps = {
  * Render an upload file summary (& upload progress).
  */
 function FileSummary(props: FileSummaryProps) {
-  const { action, name, progress, size, status } = props
+  const { action, name, progress, size, status, hasError, errorMessage } = props
 
   const formattedSize =
     size / 1024 < 10
@@ -32,32 +36,46 @@ function FileSummary(props: FileSummaryProps) {
 
   return (
     <div className="relative">
-      <div
-        style={{ width: `${progress}%` }}
-        className="absolute h-full bg-grey-5 transition-width duration-150 ease-in-out"
-      />
-      <div className="border-1 relative mt-6 flex items-center rounded-xl border">
-        <div className="m-4">
-          <FileIcon size={30} fill={progress ? "#9CA3AF" : "#2DD4BF"} />
-        </div>
-
-        <div className="my-6 flex-1">
-          <div className="text-small leading-5 text-grey-90">{name}</div>
-          <div className="text-xsmall leading-4 text-grey-50">
-            {status || formattedSize}
+      <Tooltip
+        side="top"
+        maxWidth={320}
+        open={hasError ? undefined : false}
+        content={
+          hasError && errorMessage ? (
+            <span className="font-normal text-rose-500">{errorMessage}</span>
+          ) : null
+        }
+      >
+        <div
+          style={{ width: `${progress}%` }}
+          className="absolute h-full bg-grey-5 transition-width duration-150 ease-in-out"
+        />
+        <div className="border-1 relative mt-6 flex items-center rounded-xl border">
+          <div className="m-4">
+            <FileIcon size={30} fill={progress ? "#9CA3AF" : "#2DD4BF"} />
           </div>
-        </div>
 
-        <div className="m-6">{action}</div>
-      </div>
+          <div className="my-6 flex-1">
+            <div className="text-small leading-5 text-grey-90">{name}</div>
+            <div
+              className={clsx("text-xsmall leading-4 text-grey-50", {
+                "text-rose-500": hasError,
+              })}
+            >
+              {status || formattedSize}
+            </div>
+          </div>
+
+          <div className="m-6">{action}</div>
+        </div>
+      </Tooltip>
     </div>
   )
 }
 
 type UploadSummaryProps = {
-  creations: number
-  updates: number
-  rejections?: number
+  creations?: number
+  updates?: number
   type: string
 }
 
@@ -65,25 +83,20 @@ type UploadSummaryProps = {
  * Render a batch update request summary.
  */
 function UploadSummary(props: UploadSummaryProps) {
-  const { creations, updates, rejections, type } = props
+  const { creations, updates, type } = props
+  const { t } = useTranslation()
   return (
     <div className="flex gap-6">
       <div className="flex items-center text-small text-grey-90">
         <CheckCircleIcon color="#9CA3AF" className="mr-2" />
-        <span className="font-semibold"> {creations}&nbsp;</span> new {type}
+        <span className="font-semibold"> {creations || 0}&nbsp;</span>{" "}
+        {t("upload-modal-new", "new")} {type}
       </div>
-      {updates && (
-        <div className="flex items-center text-small text-grey-90">
-          <WarningCircle fill="#9CA3AF" className="mr-2" />
-          <span className="font-semibold">{updates}&nbsp;</span> updates
-        </div>
-      )}
-      {rejections && (
-        <div className="flex items-center text-small text-grey-90">
-          <XCircleIcon color="#9CA3AF" className="mr-2" />
-          <span className="font-semibold">{rejections}&nbsp;</span> rejections
-        </div>
-      )}
+      <div className="flex items-center text-small text-grey-90">
+        <WarningCircleIcon fill="#9CA3AF" className="mr-2" />
+        <span className="font-semibold">{updates || 0}&nbsp;</span>{" "}
+        {t("upload-modal-updates", "updates")}
+      </div>
     </div>
   )
 }
@@ -96,6 +109,7 @@ type DropAreaProps = {
  * Component handles an CSV file drop.
  */
 function DropArea(props: DropAreaProps) {
+  const { t } = useTranslation()
   const [isDragOver, setIsDragOver] = useState(false)
 
   const handleFileDrop = (e) => {
@@ -129,11 +143,11 @@ function DropArea(props: DropAreaProps) {
       )}
     >
       <span className="text-small text-grey-50">
-        Drop your file here, or
+        {t("upload-modal-drop-your-file-here-or", "Drop your file here, or")}
         <a className="text-violet-60">
           <label className="cursor-pointer" htmlFor="upload-form-file">
             {" "}
-            click to browse.
+            {t("upload-modal-click-to-browse", "click to browse.")}
           </label>
           <input
             type="file"
@@ -146,7 +160,10 @@ function DropArea(props: DropAreaProps) {
         </a>
       </span>
       <span className="text-small text-grey-40">
-        Only .csv files are supported.
+        {t(
+          "upload-modal-only-csv-files-are-supported",
+          "Only .csv files are supported."
+        )}
       </span>
     </div>
   )
@@ -155,11 +172,13 @@ function DropArea(props: DropAreaProps) {
 type UploadModalProps = {
   type: string
   status?: string
+  hasError?: boolean
+  errorMessage?: string
   fileTitle: string
   description1Text: string
   description2Title: string
   description2Text: string
-  templateLink: string
+  onDownloadTemplate: () => any
   canImport?: boolean
   progress?: number
   onClose: () => void
@@ -183,13 +202,15 @@ function UploadModal(props: UploadModalProps) {
     onClose,
     onSubmit,
     onFileRemove,
-    templateLink,
-    progress,
+    onDownloadTemplate,
     summary,
+    hasError,
+    errorMessage,
     status,
     type,
   } = props
   const [uploadFile, setUploadFile] = useState<File>()
+  const { t } = useTranslation()
 
   const { name, size } = uploadFile || {}
 
@@ -217,7 +238,9 @@ function UploadModal(props: UploadModalProps) {
           </div>
 
           <div className="inter-large-semibold mb-1 text-base text-grey-90">
-            Import {fileTitle}
+            {t("upload-modal-import-file-title", "Import {{fileTitle}}", {
+              fileTitle,
+            })}
           </div>
 
           <p className="mb-4 text-base text-grey-50">{description1Text}</p>
@@ -237,6 +260,8 @@ function UploadModal(props: UploadModalProps) {
               size={size!}
               name={name!}
               status={status}
+              hasError={hasError}
+              errorMessage={errorMessage}
               // progress={progress}
               // TODO: change this to actual progress once this we can track upload
               progress={100}
@@ -260,8 +285,7 @@ function UploadModal(props: UploadModalProps) {
             action={
               <a
                 className="h-6 w-6 cursor-pointer"
-                href={templateLink}
-                download
+                onClick={onDownloadTemplate}
               >
                 <DownloadIcon stroke="#9CA3AF" />
               </a>
@@ -279,17 +303,17 @@ function UploadModal(props: UploadModalProps) {
                 size="small"
                 onClick={onClose}
               >
-                Cancel
+                {t("upload-modal-cancel", "Cancel")}
               </Button>
 
               <Button
                 size="small"
-                disabled={!canImport}
+                disabled={!canImport || hasError}
                 variant="primary"
                 className="text-small"
                 onClick={onSubmit}
               >
-                Import List
+                {t("upload-modal-import-list", "Import List")}
               </Button>
             </div>
           </div>

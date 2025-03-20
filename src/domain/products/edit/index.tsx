@@ -2,28 +2,28 @@ import { useAdminProduct } from "medusa-react"
 import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
+import WidgetContainer from "../../../components/extensions/widget-container"
+import ProductAttributesSection from "../../../components/organisms/product-attributes-section"
+import ProductGeneralSection from "../../../components/organisms/product-general-section"
+import ProductMediaSection from "../../../components/organisms/product-media-section"
+import ProductRawSection from "../../../components/organisms/product-raw-section"
+import ProductThumbnailSection from "../../../components/organisms/product-thumbnail-section"
+import ProductVariantsSection from "../../../components/organisms/product-variants-section"
+import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorStatus } from "../../../utils/get-error-status"
-import AttributesSection from "./sections/attributes"
-import GeneralSection from "./sections/general"
-import MediaSection from "./sections/media"
-import RawSection from "./sections/raw"
-import ThumbnailSection from "./sections/thumbnail"
-import VariantsSection from "./sections/variants"
 
 const Edit = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
+  const { getWidgets } = useWidgets()
+
   const { product, status, error } = useAdminProduct(id || "")
 
   if (error) {
-    let message = "An unknown error occurred"
-
     const errorStatus = getErrorStatus(error)
 
     if (errorStatus) {
-      message = errorStatus.message
-
       // If the product is not found, redirect to the 404 page
       if (errorStatus.status === 404) {
         navigate("/404")
@@ -36,7 +36,6 @@ const Edit = () => {
   }
 
   if (status === "loading" || !product) {
-    // temp, perhaps use skeletons?
     return (
       <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center">
         <Spinner variant="secondary" />
@@ -51,16 +50,38 @@ const Edit = () => {
         label="Back to Products"
         className="mb-xsmall"
       />
-      <div className="grid grid-cols-12 gap-x-base">
-        <div className="col-span-8 flex flex-col gap-y-xsmall">
-          <GeneralSection product={product} />
-          <VariantsSection product={product} />
-          <AttributesSection product={product} />
-          <RawSection product={product} />
-        </div>
-        <div className="col-span-4 flex flex-col gap-y-xsmall">
-          <ThumbnailSection product={product} />
-          <MediaSection product={product} />
+      <div className="flex flex-col gap-y-xsmall">
+        {getWidgets("product.details.before").map((w, i) => {
+          return (
+            <WidgetContainer
+              key={i}
+              injectionZone={"product.details.before"}
+              widget={w}
+              entity={product}
+            />
+          )
+        })}
+        <div className="grid grid-cols-12 gap-x-base">
+          <div className="col-span-8 flex flex-col gap-y-xsmall">
+            <ProductGeneralSection product={product} />
+            <ProductVariantsSection product={product} />
+            <ProductAttributesSection product={product} />
+            {getWidgets("product.details.after").map((w, i) => {
+              return (
+                <WidgetContainer
+                  key={i}
+                  injectionZone={"product.details.after"}
+                  widget={w}
+                  entity={product}
+                />
+              )
+            })}
+            <ProductRawSection product={product} />
+          </div>
+          <div className="col-span-4 flex flex-col gap-y-xsmall">
+            <ProductThumbnailSection product={product} />
+            <ProductMediaSection product={product} />
+          </div>
         </div>
       </div>
     </div>

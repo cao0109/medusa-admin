@@ -1,6 +1,6 @@
 import { Region } from "@medusajs/medusa"
 import { useAdminShippingOptions } from "medusa-react"
-import React from "react"
+import { useTranslation } from "react-i18next"
 import Section from "../../../../../components/organisms/section"
 import useToggleState from "../../../../../hooks/use-toggle-state"
 import ShippingOptionCard from "../../components/shipping-option-card"
@@ -11,6 +11,7 @@ type Props = {
 }
 
 const ReturnShippingOptions = ({ region }: Props) => {
+  const { t } = useTranslation()
   const { shipping_options: returnShippingOptions } = useAdminShippingOptions({
     region_id: region.id,
     is_return: true,
@@ -21,17 +22,23 @@ const ReturnShippingOptions = ({ region }: Props) => {
   return (
     <>
       <Section
-        title="Return Shipping Options"
+        title={t(
+          "return-shipping-options-return-shipping-options",
+          "Return Shipping Options"
+        )}
         actions={[
           {
-            label: "Add Option",
+            label: t("return-shipping-options-add-option", "Add Option"),
             onClick: toggle,
           },
         ]}
       >
         <div className="flex flex-col gap-y-large">
           <p className="inter-base-regular text-grey-50">
-            Enter specifics about available regional return shipment methods.
+            {t(
+              "return-shipping-options-enter-specifics-about-available-regional-return-shipment-methods",
+              "Enter specifics about available regional return shipment methods."
+            )}
           </p>
           <div className="flex flex-col gap-y-small">
             {returnShippingOptions?.map((option) => {

@@ -1,6 +1,6 @@
 import { useAdminProductTags } from "medusa-react"
-import React, { useState } from "react"
-import Spinner from "../../../../../../components/atoms/spinner"
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import Modal from "../../../../../../components/molecules/modal"
 import { SelectableTable } from "../../../../../../components/templates/selectable-table"
 import useQueryFilters from "../../../../../../hooks/use-query-filters"
@@ -17,6 +17,7 @@ import DetailsConditionFooter from "./details-condition-footer"
 const DetailsTagConditionSelector = ({
   onClose,
 }: AddConditionSelectorProps) => {
+  const { t } = useTranslation()
   const params = useQueryFilters(defaultQueryProps)
 
   const { conditions } = useConditions()
@@ -48,7 +49,10 @@ const DetailsTagConditionSelector = ({
           options={{
             enableSearch: true,
             immediateSearchFocus: true,
-            searchPlaceholder: "Search by tag...",
+            searchPlaceholder: t(
+              "details-condition-tables-search-by-tag",
+              "Search by tag..."
+            ),
           }}
           resourceName="Tags"
           totalCount={count || 0}

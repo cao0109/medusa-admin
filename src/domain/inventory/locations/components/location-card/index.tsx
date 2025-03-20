@@ -1,27 +1,29 @@
+import { StockLocationDTO } from "@medusajs/types"
+import { useAdminDeleteStockLocation } from "medusa-react"
 import React from "react"
-import { StockLocationDTO } from "@medusajs/medusa"
+import { useTranslation } from "react-i18next"
 import IconBadge from "../../../../../components/fundamentals/icon-badge"
 import BuildingsIcon from "../../../../../components/fundamentals/icons/buildings-icon"
-import { countryLookup } from "../../../../../utils/countries"
+import EditIcon from "../../../../../components/fundamentals/icons/edit-icon"
+import TrashIcon from "../../../../../components/fundamentals/icons/trash-icon"
 import Actionables, {
   ActionType,
 } from "../../../../../components/molecules/actionables"
-import EditIcon from "../../../../../components/fundamentals/icons/edit-icon"
-import TrashIcon from "../../../../../components/fundamentals/icons/trash-icon"
+import useImperativeDialog from "../../../../../hooks/use-imperative-dialog"
+import useNotification from "../../../../../hooks/use-notification"
 import useToggleState from "../../../../../hooks/use-toggle-state"
+import { useFeatureFlag } from "../../../../../providers/feature-flag-provider"
+import { countryLookup } from "../../../../../utils/countries"
+import { getErrorMessage } from "../../../../../utils/error-messages"
 import LocationEditModal from "../../edit"
 import SalesChannelsSection from "../sales-channels-section"
-import useImperativeDialog from "../../../../../hooks/use-imperative-dialog"
-import { useAdminDeleteStockLocation } from "medusa-react"
-import useNotification from "../../../../../hooks/use-notification"
-import { getErrorMessage } from "../../../../../utils/error-messages"
-import { useFeatureFlag } from "../../../../../context/feature-flag"
 
 type Props = {
   location: StockLocationDTO
 }
 
 const LocationCard: React.FC<Props> = ({ location }) => {
+  const { t } = useTranslation()
   const { mutate: deleteLocation } = useAdminDeleteStockLocation(location.id)
 
   const dialog = useImperativeDialog()
@@ -36,18 +38,32 @@ const LocationCard: React.FC<Props> = ({ location }) => {
 
   const onDelete = async () => {
     const shouldDelete = await dialog({
-      heading: "Delete Location",
-      text: "Are you sure you want to delete this location",
+      heading: t("location-card-delete-location", "Delete Location"),
+      text: t(
+        "location-card-confirm-delete",
+        "Are you sure you want to delete this location. This will also delete all inventory levels and reservations associated with this location."
+      ),
       extraConfirmation: true,
       entityName: location.name,
     })
     if (shouldDelete) {
       deleteLocation(undefined, {
         onSuccess: () => {
-          notification("Success", "Location deleted successfully", "success")
+          notification(
+            t("location-card-success", "Success"),
+            t(
+              "location-card-location-deleted-successfully",
+              "Location deleted successfully"
+            ),
+            "success"
+          )
         },
         onError: (err) => {
-          notification("Error", getErrorMessage(err), "error")
+          notification(
+            t("location-card-error", "Error"),
+            getErrorMessage(err),
+            "error"
+          )
         },
       })
     }
@@ -55,13 +71,13 @@ const LocationCard: React.FC<Props> = ({ location }) => {
 
   const DropdownActions: ActionType[] = [
     {
-      label: "Edit details",
+      label: t("location-card-edit-details", "Edit details"),
       onClick: openLocationEdit,
       variant: "normal",
       icon: <EditIcon size="20px" />,
     },
     {
-      label: "Delete",
+      label: t("location-card-delete", "Delete"),
       onClick: onDelete,
       variant: "danger",
       icon: <TrashIcon size="20px" />,
@@ -70,7 +86,7 @@ const LocationCard: React.FC<Props> = ({ location }) => {
 
   return (
     <div className="my-base rounded-rounded border border-grey-20 bg-grey-0">
-      <div className="flex items-center px-6 py-base">
+      <div className="flex items-center py-base px-6">
         <IconBadge>
           <BuildingsIcon />
         </IconBadge>
@@ -88,9 +104,12 @@ const LocationCard: React.FC<Props> = ({ location }) => {
         </div>
       </div>
       {isFeatureEnabled("sales_channels") && (
-        <div className="border-t border-solid border-grey-20 px-6 py-base">
+        <div className="border-t border-solid border-grey-20 py-base px-6">
           <h2 className="inter-small-semibold text-gray-500">
-            Connected sales channels
+            {t(
+              "location-card-connected-sales-channels",
+              "Connected sales channels"
+            )}
           </h2>
           <SalesChannelsSection location={location} />
         </div>

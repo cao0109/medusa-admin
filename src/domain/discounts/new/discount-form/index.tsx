@@ -1,12 +1,14 @@
-import * as React from "react"
 import { useWatch } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import MetadataForm from "../../../../components/forms/general/metadata-form"
 import Button from "../../../../components/fundamentals/button"
 import CrossIcon from "../../../../components/fundamentals/icons/cross-icon"
 import FocusModal from "../../../../components/molecules/modal/focus-modal"
 import Accordion from "../../../../components/organisms/accordion"
 import useNotification from "../../../../hooks/use-notification"
 import { getErrorMessage } from "../../../../utils/error-messages"
+import { nestedForm } from "../../../../utils/nested-form"
 import { DiscountRuleType } from "../../types"
 import { useDiscountForm } from "./form/discount-form-context"
 import { DiscountFormValues } from "./form/mappers"
@@ -24,7 +26,8 @@ type DiscountFormProps = {
 const DiscountForm = ({ closeForm }: DiscountFormProps) => {
   const navigate = useNavigate()
   const notification = useNotification()
-  const { handleSubmit, handleReset, control } = useDiscountForm()
+  const { handleSubmit, handleReset, control, form } = useDiscountForm()
+  const { t } = useTranslation()
 
   const { onSaveAsActive, onSaveAsInactive } = useFormActions()
 
@@ -44,7 +47,11 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
         handleReset()
       })
       .catch((error) => {
-        notification("Error", getErrorMessage(error), "error")
+        notification(
+          t("discount-form-error", "Error"),
+          getErrorMessage(error),
+          "error"
+        )
       })
   }
 
@@ -54,7 +61,11 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
       closeFormModal()
       handleReset()
     } catch (error) {
-      notification("Error", getErrorMessage(error), "error")
+      notification(
+        t("discount-form-error", "Error"),
+        getErrorMessage(error),
+        "error"
+      )
     }
   }
 
@@ -82,7 +93,7 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
               variant="ghost"
               className="rounded-rounded border"
             >
-              Save as draft
+              {t("discount-form-save-as-draft", "Save as draft")}
             </Button>
             <Button
               size="small"
@@ -90,7 +101,7 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
               onClick={handleSubmit(submitCTA)}
               className="rounded-rounded"
             >
-              Publish discount
+              {t("discount-form-publish-discount", "Publish discount")}
             </Button>
           </div>
         </div>
@@ -98,7 +109,9 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
       <FocusModal.Main>
         <div className="mb-[25%] flex justify-center">
           <div className="w-full max-w-[700px] pt-16">
-            <h1 className="inter-xlarge-semibold">Create new discount</h1>
+            <h1 className="inter-xlarge-semibold">
+              {t("discount-form-create-new-discount", "Create new discount")}
+            </h1>
             <Accordion
               className="pt-7 text-grey-90"
               defaultValue={["promotion-type"]}
@@ -106,23 +119,27 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
             >
               <Accordion.Item
                 forceMountContent
-                title="Discount type"
+                title={t("discount-form-discount-type", "Discount type")}
                 required
-                tooltip="Select a discount type"
+                tooltip={t(
+                  "discount-form-select-a-discount-type",
+                  "Select a discount type"
+                )}
                 value="promotion-type"
               >
                 <DiscountType />
                 {discountType === DiscountRuleType.FIXED && (
                   <div className="mt-xlarge">
                     <h3 className="inter-base-semibold">
-                      Allocation<span className="text-rose-50">*</span>
+                      {t("discount-form-allocation", "Allocation")}
+                      <span className="text-rose-50">*</span>
                     </h3>
                     <DiscountAllocation />
                   </div>
                 )}
               </Accordion.Item>
               <Accordion.Item
-                title="General"
+                title={t("discount-form-general", "General")}
                 required
                 value="general"
                 forceMountContent
@@ -131,20 +148,42 @@ const DiscountForm = ({ closeForm }: DiscountFormProps) => {
               </Accordion.Item>
               <Accordion.Item
                 forceMountContent
-                title="Configuration"
+                title={t("discount-form-configuration", "Configuration")}
                 value="configuration"
-                description="Discount code applies from you hit the publish button and forever if left untouched."
+                description={t(
+                  "discount-form-discount-code-application-disclaimer",
+                  "Discount code applies from when you hit the publish button and forever if left untouched."
+                )}
               >
                 <Configuration />
               </Accordion.Item>
               <Accordion.Item
                 forceMountContent
-                title="Conditions"
-                description="Discount code apply to all products if left untouched."
+                title={t("discount-form-conditions", "Conditions")}
+                description={t(
+                  "discount-form-discount-code-apply-to-all-products-if-left-untouched",
+                  "Discount code apply to all products if left untouched."
+                )}
                 value="conditions"
-                tooltip="Add conditions to your Discount"
+                tooltip={t(
+                  "discount-form-add-conditions-to-your-discount",
+                  "Add conditions to your Discount"
+                )}
               >
                 <DiscountNewConditions />
+              </Accordion.Item>
+              <Accordion.Item
+                title={t("discount-form-metadata", "Metadata")}
+                subtitle={t(
+                  "discount-form-metadata-usage-description",
+                  "Metadata allows you to add additional information to your discount."
+                )}
+                value="metadata"
+                forceMountContent
+              >
+                <div className="mt-small">
+                  <MetadataForm form={nestedForm(form, "metadata")} />
+                </div>
               </Accordion.Item>
             </Accordion>
           </div>

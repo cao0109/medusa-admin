@@ -1,5 +1,4 @@
-import * as React from "react"
-import { FeatureFlagContext } from "../../../../context/feature-flag"
+import { useFeatureFlag } from "../../../../providers/feature-flag-provider"
 
 const orderRelations = [
   "customer",
@@ -8,19 +7,28 @@ const orderRelations = [
   "discounts",
   "discounts.rule",
   "shipping_methods",
+  "shipping_methods.shipping_option",
   "payments",
+  "items",
   "fulfillments",
   "fulfillments.tracking_links",
   "returns",
-  "claims",
-  "swaps",
+  "returns.shipping_method",
+  "returns.shipping_method.shipping_option",
+  "returns.shipping_method.tax_lines",
+  "refunds",
+  "claims.claim_items.item",
+  "claims.fulfillments",
+  "claims.return_order",
+  "claims.additional_items.variant.product.profiles",
   "swaps.return_order",
-  "swaps.additional_items",
+  "swaps.additional_items.variant.product.profiles",
+  "swaps.fulfillments",
+  "returnable_items",
 ]
 
 const useOrdersExpandParam = () => {
-  const { isFeatureEnabled } = React.useContext(FeatureFlagContext)
-
+  const { isFeatureEnabled } = useFeatureFlag()
   const editsEnabled = isFeatureEnabled("order_editing")
 
   if (editsEnabled) {

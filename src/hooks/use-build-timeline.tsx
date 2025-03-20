@@ -12,9 +12,10 @@ import {
   useAdminOrder,
   useAdminOrderEdits,
 } from "medusa-react"
-import { useContext, useMemo } from "react"
-import { FeatureFlagContext } from "../context/feature-flag"
-import { orderReturnableFields } from "../domain/orders/details/utils/order-returnable-fields"
+import { useMemo } from "react"
+import useOrdersExpandParam from "../domain/orders/details/utils/use-admin-expand-paramter"
+import { useFeatureFlag } from "../providers/feature-flag-provider"
+import useStockLocations from "./use-stock-locations"
 
 export interface TimelineEvent {
   id: string
@@ -92,10 +93,12 @@ interface FulfillmentEvent extends TimelineEvent {
 
 export interface ItemsFulfilledEvent extends FulfillmentEvent {
   items: OrderItem[]
+  locationName?: string
 }
 
 export interface ItemsShippedEvent extends FulfillmentEvent {
   items: OrderItem[]
+  locationName?: string
 }
 
 export interface RefundEvent extends TimelineEvent {
@@ -157,15 +160,22 @@ export interface NotificationEvent extends TimelineEvent {
 }
 
 export const useBuildTimeline = (orderId: string) => {
-  const { order, refetch } = useAdminOrder(orderId, {
-    fields: orderReturnableFields,
+  const { orderRelations } = useOrdersExpandParam()
+
+  const {
+    order,
+    refetch,
+    isLoading: isOrderLoading,
+  } = useAdminOrder(orderId, {
+    expand: orderRelations,
   })
 
-  const { order_edits: edits } = useAdminOrderEdits({ order_id: orderId })
+  const { order_edits: edits, isLoading: isOrderEditsLoading } =
+    useAdminOrderEdits({ order_id: orderId })
 
-  const { isFeatureEnabled } = useContext(FeatureFlagContext)
+  const { isFeatureEnabled } = useFeatureFlag()
 
-  const { notes } = useAdminNotes({
+  const { notes, isLoading: isNotesLoading } = useAdminNotes({
     resource_id: orderId,
     limit: 100,
     offset: 0,
@@ -173,8 +183,14 @@ export const useBuildTimeline = (orderId: string) => {
 
   const { notifications } = useAdminNotifications({ resource_id: orderId })
 
+  const { getLocationNameById } = useStockLocations()
+
   const events: TimelineEvent[] | undefined = useMemo(() => {
     if (!order) {
+      return undefined
+    }
+
+    if (isOrderLoading || isNotesLoading || isOrderEditsLoading) {
       return undefined
     }
 
@@ -316,9 +332,12 @@ export const useBuildTimeline = (orderId: string) => {
         id: event.id,
         time: event.created_at,
         type: "fulfilled",
-        items: event.items.map((item) => getLineItem(allItems, item.item_id)),
+        items: event.items.map((item) =>
+          getFulfilmentItem(allItems, edits, item)
+        ),
         noNotification: event.no_notification,
         orderId: order.id,
+        locationName: getLocationNameById(event.location_id),
       } as ItemsFulfilledEvent)
 
       if (event.shipped_at) {
@@ -326,9 +345,12 @@ export const useBuildTimeline = (orderId: string) => {
           id: event.id,
           time: event.shipped_at,
           type: "shipped",
-          items: event.items.map((item) => getLineItem(allItems, item.item_id)),
+          items: event.items.map((item) =>
+            getFulfilmentItem(allItems, edits, item)
+          ),
           noNotification: event.no_notification,
           orderId: order.id,
+          locationName: getLocationNameById(event.location_id),
         } as ItemsShippedEvent)
       }
     }
@@ -336,7 +358,10 @@ export const useBuildTimeline = (orderId: string) => {
     for (const event of order.returns) {
       events.push({
         id: event.id,
-        items: event.items.map((i) => getReturnItems(allItems, i)),
+        items: event.items
+          .map((i) => getReturnItems(allItems, edits, i))
+          // Can be undefined while `edits` is loading
+          .filter((i) => !!i),
         status: event.status,
         currentStatus: event.status,
         time: event.updated_at,
@@ -351,7 +376,10 @@ export const useBuildTimeline = (orderId: string) => {
       if (event.status !== "requested") {
         events.push({
           id: event.id,
-          items: event.items.map((i) => getReturnItems(allItems, i)),
+          items: event.items
+            .map((i) => getReturnItems(allItems, edits, i))
+            // Can be undefined while `edits` is loading
+            .filter((i) => !!i),
           status: "requested",
           time: event.created_at,
           type: "return",
@@ -376,7 +404,7 @@ export const useBuildTimeline = (orderId: string) => {
         type: "exchange",
         newItems: event.additional_items.map((i) => getSwapItem(i)),
         returnItems: event.return_order.items.map((i) =>
-          getReturnItems(allItems, i)
+          getReturnItems(allItems, edits, i)
         ),
         exchangeCartId:
           event.payment_status !== "captured" ? event.cart_id : undefined,
@@ -522,9 +550,21 @@ export const useBuildTimeline = (orderId: string) => {
     events[events.length - 1].first = true
 
     return events
-  }, [order, edits, notes, notifications, isFeatureEnabled])
+  }, [
+    order,
+    edits,
+    notes,
+    notifications,
+    isFeatureEnabled,
+    isOrderLoading,
+    isNotesLoading,
+    isOrderEditsLoading,
+  ])
 
-  return { events, refetch }
+  return {
+    events,
+    refetch,
+  }
 }
 
 function getLineItem(allItems, itemId) {
@@ -542,8 +582,32 @@ function getLineItem(allItems, itemId) {
   }
 }
 
-function getReturnItems(allItems, item) {
-  const line = allItems.find((li) => li.id === item.item_id)
+function findOriginalItemId(edits, originalId) {
+  let currentId = originalId
+
+  edits = edits
+    .filter((e) => !!e.confirmed_at) // only confirmed OEs are cloning line items
+    .sort((a, b) => new Date(a.confirmed_at) - new Date(b.confirmed_at))
+
+  for (const edit of edits) {
+    const clonedItem = edit.items.find((e) => e.original_item_id === currentId)
+    if (clonedItem) {
+      currentId = clonedItem.id
+    } else {
+      break
+    }
+  }
+
+  return currentId
+}
+
+function getReturnItems(allItems, edits, item) {
+  let id = item.item_id
+  if (edits) {
+    id = findOriginalItemId(edits, id)
+  }
+
+  const line = allItems.find((li) => li.id === id)
 
   if (!line) {
     return
@@ -589,4 +653,24 @@ function getWasRefundClaim(claimId, order) {
   }
 
   return claim.type === "refund"
+}
+
+function getFulfilmentItem(allItems, edits, item) {
+  let id = item.item_id
+  if (edits) {
+    id = findOriginalItemId(edits, id)
+  }
+
+  const line = allItems.find((line) => line.id === id)
+
+  if (!line) {
+    return
+  }
+
+  return {
+    title: line.title,
+    quantity: item.quantity,
+    thumbnail: line.thumbnail,
+    variant: { title: line?.variant?.title || "-" },
+  }
 }

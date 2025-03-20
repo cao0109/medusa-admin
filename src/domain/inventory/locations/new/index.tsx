@@ -1,35 +1,46 @@
+import { AdminPostStockLocationsReq, SalesChannel } from "@medusajs/medusa"
+import { useTranslation } from "react-i18next"
+import GeneralForm, { GeneralFormType } from "../components/general-form"
+import MetadataForm, {
+  MetadataFormType,
+  getSubmittableMetadata,
+} from "../../../../components/forms/general/metadata-form"
 import {
-  AdminPostStockLocationsReq,
-  SalesChannel,
   StockLocationAddressDTO,
   StockLocationAddressInput,
-} from "@medusajs/medusa"
+} from "@medusajs/types"
 import {
   useAdminAddLocationToSalesChannel,
   useAdminCreateStockLocation,
 } from "medusa-react"
-import { useForm } from "react-hook-form"
+
+import Accordion from "../../../../components/organisms/accordion"
+import AddressForm from "../components/address-form"
 import Button from "../../../../components/fundamentals/button"
 import CrossIcon from "../../../../components/fundamentals/icons/cross-icon"
+import DeletePrompt from "../../../../components/organisms/delete-prompt"
 import FocusModal from "../../../../components/molecules/modal/focus-modal"
-import Accordion from "../../../../components/organisms/accordion"
-import { useFeatureFlag } from "../../../../context/feature-flag"
-import useNotification from "../../../../hooks/use-notification"
+import React from "react"
+import SalesChannelsForm from "../components/sales-channels-form"
 import { getErrorMessage } from "../../../../utils/error-messages"
 import { nestedForm } from "../../../../utils/nested-form"
-import AddressForm from "../components/address-form"
-import GeneralForm, { GeneralFormType } from "../components/general-form"
-import SalesChannelsForm from "../components/sales-channels-form"
+import { useFeatureFlag } from "../../../../providers/feature-flag-provider"
+import { useForm } from "react-hook-form"
+import useNotification from "../../../../hooks/use-notification"
+import useToggleState from "../../../../hooks/use-toggle-state"
 
 type NewLocationForm = {
   general: GeneralFormType
   address: StockLocationAddressDTO
+  metadata: MetadataFormType
   salesChannels: {
-    channels: SalesChannel[]
+    channels: Omit<SalesChannel, "locations">[]
   }
 }
 
 const NewLocation = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useTranslation()
+  const [accordionValue, setAccordionValue] = React.useState("general")
   const form = useForm<NewLocationForm>({
     defaultValues: {
       general: {
@@ -43,7 +54,16 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
     reValidateMode: "onBlur",
     mode: "onBlur",
   })
-  const { handleSubmit, formState } = form
+  const {
+    handleSubmit,
+    formState: { isDirty },
+  } = form
+
+  const {
+    state: isShowingClosePrompt,
+    open: showClosePrompt,
+    close: closeClosePrompt,
+  } = useToggleState()
 
   const notification = useNotification()
   const { isFeatureEnabled } = useFeatureFlag()
@@ -52,47 +72,73 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
   const { mutateAsync: associateSalesChannel } =
     useAdminAddLocationToSalesChannel()
 
-  const createSalesChannelAssociationPromise = (salesChannelId, locationId) =>
+  const createSalesChannelAssociationPromise = (
+    salesChannelId: string,
+    locationId: string
+  ) =>
     associateSalesChannel({
       sales_channel_id: salesChannelId,
       location_id: locationId,
     })
 
-  const onSubmit = () =>
-    handleSubmit(async (data) => {
-      const { locationPayload, salesChannelsPayload } = createPayload(data)
-      try {
-        const { stock_location } = await createStockLocation(locationPayload)
-        Promise.all(
-          salesChannelsPayload.map((salesChannel) =>
-            createSalesChannelAssociationPromise(
-              salesChannel.id,
-              stock_location.id
-            )
+  const handleClose = () => {
+    if (!isDirty) {
+      onClose()
+    } else {
+      showClosePrompt()
+    }
+  }
+
+  const onSubmit = async (data) => {
+    if (!data.general.name) {
+      setAccordionValue("general")
+      return
+    }
+
+    const addressFields = [data.address.address_1, data.address.country_code]
+    if (addressFields.some(Boolean) && !addressFields.every(Boolean)) {
+      setAccordionValue("general")
+      return
+    }
+
+    const { locationPayload, salesChannelsPayload } = createPayload(data)
+    try {
+      const { stock_location } = await createStockLocation(locationPayload)
+      Promise.all(
+        salesChannelsPayload.map((salesChannel) =>
+          createSalesChannelAssociationPromise(
+            salesChannel.id,
+            stock_location.id
           )
         )
-          .then(() => {
-            notification("Success", "Location added successfully", "success")
-          })
-          .catch(() => {
-            notification(
-              "Error",
-              "Location was created successfully, but there was an error associating sales channels",
-              "error"
-            )
-          })
-          .finally(() => {
-            onClose()
-          })
-      } catch (err) {
-        notification("Error", getErrorMessage(err), "error")
-      }
-    })
-
-  const { isDirty, isValid } = formState
+      )
+        .then(() => {
+          notification(
+            t("new-success", "Success"),
+            t("new-location-added-successfully", "Location added successfully"),
+            "success"
+          )
+        })
+        .catch(() => {
+          notification(
+            t("new-error", "Error"),
+            t(
+              "new-location-created",
+              "Location was created successfully, but there was an error associating sales channels"
+            ),
+            "error"
+          )
+        })
+        .finally(() => {
+          onClose()
+        })
+    } catch (err) {
+      notification(t("new-error", "Error"), getErrorMessage(err), "error")
+    }
+  }
 
   return (
-    <form className="w-full">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <FocusModal>
         <FocusModal.Header>
           <div className="flex w-full justify-between px-8 medium:w-8/12">
@@ -100,19 +146,34 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
               size="small"
               variant="ghost"
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
             >
               <CrossIcon size={20} />
             </Button>
+            {isShowingClosePrompt && (
+              <DeletePrompt
+                heading={t(
+                  "new-cancel-location-changes",
+                  "Are you sure you want to cancel with unsaved changes"
+                )}
+                confirmText={t("new-yes-cancel", "Yes, cancel")}
+                cancelText={t(
+                  "new-no-continue-creating",
+                  "No, continue creating"
+                )}
+                successText={false}
+                handleClose={closeClosePrompt}
+                onDelete={async () => onClose()}
+              />
+            )}
             <div className="flex gap-x-small">
               <Button
                 size="small"
-                variant="secondary"
-                type="button"
-                disabled={!isDirty || !isValid}
-                onClick={onSubmit()}
+                variant="primary"
+                type="submit"
+                disabled={!isDirty}
               >
-                Add location
+                {t("new-add-location", "Add location")}
               </Button>
             </div>
           </div>
@@ -120,20 +181,33 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
         <FocusModal.Main className="no-scrollbar flex w-full justify-center">
           <div className="my-16 max-w-[700px] small:w-4/5 medium:w-7/12 large:w-6/12">
             <h1 className="mb-base px-1 text-xlarge font-semibold text-grey-90">
-              Add new location
+              {t("new-add-new-location", "Add new location")}
             </h1>
-            <Accordion defaultValue={"general"} type="single">
+            <Accordion
+              value={accordionValue}
+              onValueChange={setAccordionValue}
+              type="single"
+            >
               <Accordion.Item
                 value={"general"}
-                title={"General Information"}
+                title={t("new-general-information", "General Information")}
                 required
               >
                 <p className="inter-base-regular text-grey-50">
-                  Specify the details about this location
+                  {t(
+                    "new-location-details",
+                    "Specify the details about this location"
+                  )}
                 </p>
-                <div className="mt-xlarge flex flex-col gap-y-xlarge">
+                <div className="mt-xlarge flex flex-col gap-y-xlarge pb-0.5">
                   <GeneralForm form={nestedForm(form, "general")} />
                   <AddressForm form={nestedForm(form, "address")} />
+                  <div>
+                    <h2 className="inter-base-semibold mb-base">
+                      {t("new-metadata", "Metadata")}
+                    </h2>
+                    <MetadataForm form={nestedForm(form, "metadata")} />
+                  </div>
                 </div>
               </Accordion.Item>
               {isFeatureEnabled("sales_channels") && (
@@ -142,8 +216,10 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
                   title={"Sales Channels"}
                 >
                   <p className="inter-base-regular text-grey-50">
-                    Specify which Sales Channels this location's items can be
-                    purchased through.
+                    {t(
+                      "new-select-location-channel",
+                      "Specify which Sales Channels this location's items can be purchased through."
+                    )}
                   </p>
                   <div className="mt-xlarge flex">
                     <SalesChannelsForm
@@ -167,7 +243,7 @@ const createPayload = (
   locationPayload: AdminPostStockLocationsReq
   salesChannelsPayload: SalesChannel[]
 } => {
-  const { general, address } = data
+  const { general, address, metadata } = data
 
   let addressInput
   if (address.address_1) {
@@ -175,7 +251,11 @@ const createPayload = (
     addressInput.country_code = address.country_code.value
   }
   return {
-    locationPayload: { name: general.name, address: addressInput },
+    locationPayload: {
+      name: general.name,
+      address: addressInput,
+      metadata: getSubmittableMetadata(metadata),
+    },
     salesChannelsPayload: data.salesChannels.channels,
   }
 }

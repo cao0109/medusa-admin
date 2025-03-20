@@ -1,6 +1,6 @@
 import clsx from "clsx"
-import React, { PropsWithChildren } from "react"
-import { useSkeleton } from "../../../context/skeleton"
+import { PropsWithChildren } from "react"
+import { useSkeleton } from "../../../providers/skeleton-provider"
 
 type Props = PropsWithChildren<{
   isLoading?: boolean

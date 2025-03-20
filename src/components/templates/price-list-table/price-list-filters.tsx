@@ -1,5 +1,6 @@
 import clsx from "clsx"
-import React, { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { useTranslation } from "react-i18next"
 import PlusIcon from "../../../components/fundamentals/icons/plus-icon"
 import FilterDropdownContainer from "../../../components/molecules/filter-dropdown/container"
 import FilterDropdownItem from "../../../components/molecules/filter-dropdown/item"
@@ -19,6 +20,7 @@ const PriceListsFilter = ({
   onRemoveTab,
   onSaveTab,
 }) => {
+  const { t } = useTranslation()
   const [tempState, setTempState] = useState(filters)
   const [name, setName] = useState("")
 
@@ -82,7 +84,7 @@ const PriceListsFilter = ({
             )}
           >
             <div className="inter-small-semibold flex h-6 items-center rounded-rounded border border-grey-20 bg-grey-5 px-2">
-              Filters
+              {t("price-list-table-filters", "Filters")}
               <div className="ml-1 flex items-center rounded text-grey-40">
                 <span className="inter-small-semibold text-violet-60">
                   {numberOfFilters ? numberOfFilters : "0"}
@@ -96,14 +98,14 @@ const PriceListsFilter = ({
         }
       >
         <FilterDropdownItem
-          filterTitle="Status"
+          filterTitle={t("price-list-table-status", "Status")}
           options={statusFilters}
           filters={tempState.status.filter}
           open={tempState.status.open}
           setFilter={(v) => setSingleFilter("status", v)}
         />
         <FilterDropdownItem
-          filterTitle="Type"
+          filterTitle={t("price-list-table-type", "Type")}
           options={typeFilters}
           filters={tempState.type.filter}
           open={tempState.type.open}

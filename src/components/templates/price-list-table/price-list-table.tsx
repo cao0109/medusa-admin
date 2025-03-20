@@ -1,6 +1,5 @@
 import { PriceList } from "@medusajs/medusa"
-import { debounce } from "lodash"
-import React, { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Column,
   HeaderGroup,
@@ -12,6 +11,7 @@ import {
   UseSortByColumnProps,
   useTable,
 } from "react-table"
+import { useTranslation } from "react-i18next"
 import { useDebounce } from "../../../hooks/use-debounce"
 import Table, { TableProps } from "../../molecules/table"
 import TableContainer from "../../organisms/table-container"
@@ -122,6 +122,7 @@ export function PriceListTable(props: PriceListTableProps) {
     autoResetPage: false,
   }
 
+  const { t } = useTranslation()
   const table = useTable(tableConfig, useSortBy, usePagination, useRowSelect)
 
   // ********* HANDLERS *********
@@ -165,7 +166,7 @@ export function PriceListTable(props: PriceListTableProps) {
         count: count!,
         offset: queryObject.offset,
         pageSize: queryObject.offset + table.rows.length,
-        title: "Price Lists",
+        title: t("price-list-table-price-lists", "Price Lists"),
         currentPage: table.state.pageIndex + 1,
         pageCount: table.pageCount,
         nextPage: handleNext,

@@ -1,5 +1,5 @@
 import React from "react"
-import { FeatureFlagContext } from "../../context/feature-flag"
+import { useFeatureFlag } from "../../providers/feature-flag-provider"
 
 export type FeatureToggleProps = {
   featureFlag: string
@@ -12,7 +12,7 @@ const FeatureToggle: React.FC<FeatureToggleProps> = ({
   showOnlyWhenDisabled = false,
   children,
 }) => {
-  const { isFeatureEnabled } = React.useContext(FeatureFlagContext)
+  const { isFeatureEnabled } = useFeatureFlag()
 
   const showContent = isFeatureEnabled(featureFlag) === !showOnlyWhenDisabled
   return showContent ? <>{children}</> : null

@@ -1,5 +1,4 @@
 import clsx from "clsx"
-import React from "react"
 import TaxesIcon from "../../fundamentals/icons/taxes-icon"
 import Tooltip from "../tooltip"
 

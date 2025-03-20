@@ -5,8 +5,8 @@ import qs from "qs"
 import React, { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { usePagination, useTable } from "react-table"
-import { useAnalytics } from "../../../context/analytics"
-import { FeatureFlagContext } from "../../../context/feature-flag"
+import { useAnalytics } from "../../../providers/analytics-provider"
+import { useFeatureFlag } from "../../../providers/feature-flag-provider"
 import Table from "../../molecules/table"
 import TableContainer from "../../organisms/table-container"
 import OrderFilters from "../order-filter-dropdown"
@@ -28,12 +28,14 @@ type OrderTableProps = {
 const OrderTable = ({ setContextFilters }: OrderTableProps) => {
   const location = useLocation()
 
-  const { isFeatureEnabled } = React.useContext(FeatureFlagContext)
+  const { isFeatureEnabled } = useFeatureFlag()
   const { trackNumberOfOrders } = useAnalytics()
 
   let hiddenColumns = ["sales_channel"]
   if (isFeatureEnabled("sales_channels")) {
-    defaultQueryProps.expand = defaultQueryProps.expand + ",sales_channel"
+    if (!defaultQueryProps.expand.includes("sales_channel")) {
+      defaultQueryProps.expand = defaultQueryProps.expand + ",sales_channel"
+    }
     hiddenColumns = []
   }
 

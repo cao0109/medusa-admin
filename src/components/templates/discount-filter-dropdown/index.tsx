@@ -1,5 +1,6 @@
 import clsx from "clsx"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import FilterDropdownContainer from "../../../components/molecules/filter-dropdown/container"
 import FilterDropdownItem from "../../../components/molecules/filter-dropdown/item"
 import SaveFilterItem from "../../../components/molecules/filter-dropdown/save-field"
@@ -26,6 +27,7 @@ const DiscountFilters = ({
   submitFilters,
   clearFilters,
 }) => {
+  const { t } = useTranslation()
   const [tempState, setTempState] = useState(filters)
   const [name, setName] = useState("")
 
@@ -88,7 +90,7 @@ const DiscountFilters = ({
             )}
           >
             <div className="inter-small-semibold flex h-6 items-center rounded-rounded border border-grey-20 bg-grey-5 px-2">
-              Filters
+              {t("discount-filter-dropdown-filters", "Filters")}
               <div className="ml-1 flex items-center rounded text-grey-40">
                 <span className="inter-small-semibold text-violet-60">
                   {numberOfFilters ? numberOfFilters : "0"}

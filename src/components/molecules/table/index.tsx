@@ -1,18 +1,17 @@
-import clsx from "clsx"
-import React from "react"
-import { useNavigate } from "react-router-dom"
-import Spinner from "../../atoms/spinner"
-import ArrowLeftIcon from "../../fundamentals/icons/arrow-left-icon"
-import ArrowRightIcon from "../../fundamentals/icons/arrow-right-icon"
-import SortingIcon from "../../fundamentals/icons/sorting-icon"
 import Actionables, { ActionType } from "../../molecules/actionables"
 import FilteringOptions, { FilteringOptionProps } from "./filtering-option"
+
+import React from "react"
+import SortingIcon from "../../fundamentals/icons/sorting-icon"
 import TableSearch from "./table-search"
+import clsx from "clsx"
+import { useNavigate } from "react-router-dom"
 
 type TableRowProps = React.HTMLAttributes<HTMLTableRowElement> & {
   forceDropdown?: boolean
   actions?: ActionType[]
   linkTo?: string
+  clickable?: boolean
 }
 
 type TableCellProps = React.TdHTMLAttributes<HTMLTableCellElement> & {
@@ -30,6 +29,7 @@ export type TableProps = {
   filteringOptions?: FilteringOptionProps[] | React.ReactNode
   tableActions?: React.ReactNode
   enableSearch?: boolean
+  searchClassName?: string
   immediateSearchFocus?: boolean
   searchPlaceholder?: string
   searchValue?: string
@@ -57,6 +57,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
       children,
       tableActions,
       enableSearch,
+      searchClassName,
       immediateSearchFocus,
       searchPlaceholder,
       searchValue,
@@ -77,13 +78,15 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
           {filteringOptions ? (
             <div className="mb-2 flex self-end">
               {Array.isArray(filteringOptions)
-                ? filteringOptions.map((fo) => <FilteringOptions {...fo} />)
+                ? filteringOptions.map((fo, idx) => (
+                    <FilteringOptions {...fo} key={idx} />
+                  ))
                 : filteringOptions}
             </div>
           ) : (
             <span aria-hidden />
           )}
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-xsmall">
             {tableActions && <div>{tableActions}</div>}
             {enableSearch && (
               <TableSearch
@@ -91,6 +94,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
                 placeholder={searchPlaceholder}
                 searchValue={searchValue}
                 onSearch={handleSearch!}
+                className={searchClassName}
               />
             )}
           </div>
@@ -219,7 +223,18 @@ Table.Cell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 )
 
 Table.Row = React.forwardRef<HTMLTableRowElement, TableRowProps>(
-  ({ className, actions, children, linkTo, forceDropdown, ...props }, ref) => {
+  (
+    {
+      className,
+      actions,
+      children,
+      linkTo,
+      forceDropdown,
+      clickable,
+      ...props
+    },
+    ref
+  ) => {
     const navigate = useNavigate()
     return (
       <tr
@@ -227,7 +242,9 @@ Table.Row = React.forwardRef<HTMLTableRowElement, TableRowProps>(
         className={clsx(
           "inter-small-regular border-t border-b border-grey-20 text-grey-90",
           className,
-          { "cursor-pointer hover:bg-grey-5": linkTo !== undefined }
+          {
+            "cursor-pointer hover:bg-grey-5": linkTo !== undefined || clickable,
+          }
         )}
         {...props}
         {...(linkTo && {

@@ -1,21 +1,24 @@
+import { Product } from "@medusajs/medusa"
 import { useAdminProducts } from "medusa-react"
-import React, { useEffect, useState } from "react"
-import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
-import Toaster from "../../../components/declarative-toaster"
-import FormToasterContainer from "../../../components/molecules/form-toaster"
-import { checkForDirtyState } from "../../../utils/form-helpers"
-import {
-  GiftCardFormProvider,
-  useGiftCardForm,
-} from "./form/gift-card-form-context"
-import { giftCardToFormValuesMapper } from "./form/mappers"
-import Denominations from "./sections/denominations"
-import Images from "./sections/images"
-import Information from "./sections/information"
+import WidgetContainer from "../../../components/extensions/widget-container"
+import GiftCardDenominationsSection from "../../../components/organisms/gift-card-denominations-section"
+import ProductAttributesSection from "../../../components/organisms/product-attributes-section"
+import ProductGeneralSection from "../../../components/organisms/product-general-section"
+import ProductMediaSection from "../../../components/organisms/product-media-section"
+import ProductRawSection from "../../../components/organisms/product-raw-section"
+import ProductThumbnailSection from "../../../components/organisms/product-thumbnail-section"
+import { useWidgets } from "../../../providers/widget-provider"
+import { getErrorStatus } from "../../../utils/get-error-status"
 
-const ManageGiftCard = () => {
-  const { products } = useAdminProducts(
+const Manage = () => {
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const { products, error } = useAdminProducts(
     {
       is_giftcard: true,
     },
@@ -24,7 +27,9 @@ const ManageGiftCard = () => {
     }
   )
 
-  const giftCard = products?.[0]
+  const giftCard = products?.[0] as Product | undefined
+
+  const { getWidgets } = useWidgets()
 
   if (!giftCard) {
     return (
@@ -34,72 +39,67 @@ const ManageGiftCard = () => {
     )
   }
 
+  if (error) {
+    const errorStatus = getErrorStatus(error)
+
+    if (errorStatus) {
+      // If the product is not found, redirect to the 404 page
+      if (errorStatus.status === 404) {
+        navigate("/404")
+        return null
+      }
+    }
+
+    // Let the error boundary handle the error
+    throw error
+  }
+
   return (
-    <GiftCardFormProvider
-      giftCard={giftCardToFormValuesMapper(giftCard)}
-      giftCardId={giftCard.id}
-    >
-      <div className="flex flex-col gap-y-large pb-xlarge">
-        <Information giftCard={giftCard} />
-        <Denominations giftCard={giftCard} />
-        <Images />
+    <div className="pb-5xlarge">
+      <BackButton
+        path="/a/gift-cards"
+        label={t("manage-back-to-gift-cards", "Back to Gift Cards")}
+        className="mb-xsmall"
+      />
+      <div className="grid grid-cols-12 gap-x-base">
+        <div className="col-span-8 flex flex-col gap-y-xsmall">
+          {getWidgets("gift_card.details.before").map((w, i) => {
+            return (
+              <WidgetContainer
+                key={i}
+                widget={w}
+                injectionZone={"gift_card.details.before"}
+                entity={giftCard}
+              />
+            )
+          })}
+
+          <ProductGeneralSection product={giftCard} />
+
+          <GiftCardDenominationsSection giftCard={giftCard} />
+
+          <ProductAttributesSection product={giftCard} />
+
+          {getWidgets("gift_card.details.after").map((w, i) => {
+            return (
+              <WidgetContainer
+                key={i}
+                widget={w}
+                injectionZone={"gift_card.details.after"}
+                entity={giftCard}
+              />
+            )
+          })}
+
+          <ProductRawSection product={giftCard} />
+        </div>
+        <div className="col-span-4 flex flex-col gap-y-xsmall">
+          <ProductThumbnailSection product={giftCard} />
+          <ProductMediaSection product={giftCard} />
+        </div>
       </div>
-      <UpdateNotification />
-    </GiftCardFormProvider>
+    </div>
   )
 }
 
-const TOAST_ID = "edit-gc-dirty"
-
-const UpdateNotification = ({ isLoading = false }) => {
-  const {
-    form: { formState },
-    onUpdate,
-    resetForm,
-    additionalDirtyState,
-  } = useGiftCardForm()
-  const [visible, setVisible] = useState(false)
-  const [blocking, setBlocking] = useState(true)
-
-  useEffect(() => {
-    const timeout = setTimeout(setBlocking, 300, false)
-    return () => clearTimeout(timeout)
-  }, [])
-
-  const isDirty = checkForDirtyState(
-    formState.dirtyFields,
-    additionalDirtyState
-  )
-
-  useEffect(() => {
-    if (!blocking) {
-      setVisible(isDirty)
-    }
-
-    return () => {
-      toast.dismiss(TOAST_ID)
-    }
-  }, [isDirty])
-
-  return (
-    <Toaster
-      visible={visible}
-      duration={Infinity}
-      id={TOAST_ID}
-      position="bottom-right"
-    >
-      <FormToasterContainer isLoading={isLoading}>
-        <FormToasterContainer.Actions>
-          <FormToasterContainer.ActionButton onClick={onUpdate}>
-            Save
-          </FormToasterContainer.ActionButton>
-          <FormToasterContainer.DiscardButton onClick={resetForm}>
-            Discard
-          </FormToasterContainer.DiscardButton>
-        </FormToasterContainer.Actions>
-      </FormToasterContainer>
-    </Toaster>
-  )
-}
-
-export default ManageGiftCard
+export default Manage

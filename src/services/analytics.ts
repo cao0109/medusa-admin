@@ -1,29 +1,38 @@
 import { AdminAnalyticsConfigRes } from "@medusajs/medusa"
-import { AnalyticsBrowser } from "@segment/analytics-next"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { WRITE_KEY } from "../components/constants/analytics"
-import { useFeatureFlag } from "../context/feature-flag"
-import { medusaUrl } from "./config"
+import { MEDUSA_BACKEND_URL } from "../constants/medusa-backend-url"
+import { useFeatureFlag } from "../providers/feature-flag-provider"
 
 // API
 
+const ANALYTICS_BASE = "admin/analytics-configs"
+
 const client = axios.create({
-  baseURL: `${medusaUrl}/admin/analytics-configs`,
+  baseURL: MEDUSA_BACKEND_URL,
   withCredentials: true,
 })
 
-// Analytics instance used for tracking one-off events, such as errors and the initial permission request
-export const analytics = AnalyticsBrowser.load({
-  writeKey: WRITE_KEY,
-})
+/**
+ * Returns true if analytics are enabled for the current user.
+ */
+export const analyticsOptIn = async () => {
+  const res = await getAnalyticsConfig().catch(() => undefined)
+
+  // Don't track if we have no config to ensure we have permission
+  if (!res) {
+    return false
+  }
+
+  return !res.analytics_config.opt_out
+}
 
 /**
  * Fetches the analytics config for the current user.
  */
 export const getAnalyticsConfig =
   async (): Promise<AdminAnalyticsConfigRes> => {
-    const { data } = await client.get("/")
+    const { data } = await client.get(ANALYTICS_BASE)
     return data
   }
 
@@ -38,7 +47,7 @@ type CreateConfigPayload = {
 export const createAnalyticsConfig = async (
   payload: CreateConfigPayload
 ): Promise<AdminAnalyticsConfigRes> => {
-  const { data } = await client.post("/", payload)
+  const { data } = await client.post(ANALYTICS_BASE, payload)
   return data
 }
 
@@ -53,7 +62,7 @@ type UpdateConfigPayload = {
 export const updateAnalyticsConfig = async (
   payload: UpdateConfigPayload
 ): Promise<AdminAnalyticsConfigRes> => {
-  const { data } = await client.post("/update", payload)
+  const { data } = await client.post(`${ANALYTICS_BASE}/update`, payload)
   return data
 }
 
@@ -73,7 +82,7 @@ export const useAdminAnalyticsConfig = () => {
 
   const { data, ...rest } = useQuery(
     ANALYTICS_CONFIG_KEY,
-    () => getAnalyticsConfig(),
+    async () => getAnalyticsConfig(),
     {
       retry: false,
       enabled: isFeatureEnabled("analytics"),
@@ -87,7 +96,7 @@ export const useAdminUpdateAnalyticsConfig = () => {
   const invalidateAnalyticsConfig = useInvalidateAnalyticsConfig()
 
   const mutation = useMutation(
-    (payload: UpdateConfigPayload) => updateAnalyticsConfig(payload),
+    async (payload: UpdateConfigPayload) => updateAnalyticsConfig(payload),
     {
       onSuccess: invalidateAnalyticsConfig,
     }
@@ -100,7 +109,7 @@ export const useAdminCreateAnalyticsConfig = () => {
   const invalidateAnalyticsConfig = useInvalidateAnalyticsConfig()
 
   const mutation = useMutation(
-    (payload: CreateConfigPayload) => createAnalyticsConfig(payload),
+    async (payload: CreateConfigPayload) => createAnalyticsConfig(payload),
     {
       onSuccess: invalidateAnalyticsConfig,
     }

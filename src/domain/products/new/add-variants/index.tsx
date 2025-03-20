@@ -1,24 +1,28 @@
 import clsx from "clsx"
-import React, { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useContext, useEffect, useMemo } from "react"
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { v4 as uuidv4 } from "uuid"
+import { useTranslation } from "react-i18next"
+import { CustomsFormType } from "../../../../components/forms/product/customs-form"
+import { DimensionsFormType } from "../../../../components/forms/product/dimensions-form"
+import CreateFlowVariantForm, {
+  CreateFlowVariantFormType,
+} from "../../../../components/forms/product/variant-form/create-flow-variant-form"
+import { VariantOptionType } from "../../../../components/forms/product/variant-form/variant-select-options-form"
+import useCheckOptions from "../../../../components/forms/product/variant-form/variant-select-options-form/hooks"
 import Button from "../../../../components/fundamentals/button"
 import PlusIcon from "../../../../components/fundamentals/icons/plus-icon"
 import TrashIcon from "../../../../components/fundamentals/icons/trash-icon"
 import IconTooltip from "../../../../components/molecules/icon-tooltip"
 import InputField from "../../../../components/molecules/input"
 import Modal from "../../../../components/molecules/modal"
+import LayeredModal, {
+  LayeredModalContext,
+} from "../../../../components/molecules/modal/layered-modal"
 import TagInput from "../../../../components/molecules/tag-input"
 import { useDebounce } from "../../../../hooks/use-debounce"
 import useToggleState from "../../../../hooks/use-toggle-state"
 import { NestedForm } from "../../../../utils/nested-form"
-import { CustomsFormType } from "../../components/customs-form"
-import { DimensionsFormType } from "../../components/dimensions-form"
-import CreateFlowVariantForm, {
-  CreateFlowVariantFormType,
-} from "../../components/variant-form/create-flow-variant-form"
-import { VariantOptionType } from "../../components/variant-form/variant-select-options-form"
-import useCheckOptions from "../../components/variant-form/variant-select-options-form/hooks"
 import NewVariant from "./new-variant"
 
 type ProductOptionType = {
@@ -43,6 +47,8 @@ const AddVariantsForm = ({
   productCustoms,
   productDimensions,
 }: Props) => {
+  const { t } = useTranslation()
+  const layeredModalContext = useContext(LayeredModalContext)
   const { control, path, register } = form
 
   const { checkForDuplicate, getOptions } = useCheckOptions(form)
@@ -220,7 +226,10 @@ const AddVariantsForm = ({
     if (exists) {
       newVariantForm.setError("options", {
         type: "deps",
-        message: "A variant with these options already exists.",
+        message: t(
+          "add-variants-a-variant-with-these-options-already-exists",
+          "A variant with these options already exists."
+        ),
       })
       return
     }
@@ -258,18 +267,28 @@ const AddVariantsForm = ({
     <>
       <div>
         <div className="flex items-center gap-x-2xsmall">
-          <h3 className="inter-base-semibold">Product options</h3>
+          <h3 className="inter-base-semibold">
+            {t("add-variants-product-options", "Product options")}
+          </h3>
           <IconTooltip
             type="info"
-            content="Options are used to define the color, size, etc. of the product."
+            content={t(
+              "add-variants-options-are-used-to-define-the-color-size-etc-of-the-product",
+              "Options are used to define the color, size, etc. of the product."
+            )}
           />
         </div>
         <div>
           {options.length > 0 && (
             <div className="mt-small">
               <div className="inter-small-semibold mb-small grid grid-cols-[230px_1fr_40px] gap-x-xsmall text-grey-50">
-                <span>Option title</span>
-                <span>Variations (comma separated)</span>
+                <span>{t("add-variants-option-title", "Option title")}</span>
+                <span>
+                  {t(
+                    "add-variants-variations-comma-separated",
+                    "Variations (comma separated)"
+                  )}
+                </span>
               </div>
               <div className="grid grid-cols-1 gap-y-xsmall">
                 {options.map((field, index) => {
@@ -279,7 +298,7 @@ const AddVariantsForm = ({
                       className="grid grid-cols-[230px_1fr_40px] gap-x-xsmall"
                     >
                       <InputField
-                        placeholder="Color..."
+                        placeholder={t("add-variants-color", "Color...")}
                         {...register(path(`options.${index}.title`))}
                       />
                       <Controller
@@ -295,11 +314,17 @@ const AddVariantsForm = ({
 
                                 return newVal
                               }}
-                              invalidMessage="already exists"
+                              invalidMessage={t(
+                                "add-variants-already-exists",
+                                "already exists"
+                              )}
                               showLabel={false}
                               values={value}
                               onChange={onChange}
-                              placeholder="Blue, Red, Black..."
+                              placeholder={t(
+                                "add-variants-blue-red-black",
+                                "Blue, Red, Black..."
+                              )}
                             />
                           )
                         }}
@@ -327,7 +352,7 @@ const AddVariantsForm = ({
             onClick={appendNewOption}
           >
             <PlusIcon size={20} />
-            <span>Add an option</span>
+            <span>{t("add-variants-add-an-option", "Add an option")}</span>
           </Button>
           <div className="mt-xlarge">
             <div className="flex items-center gap-x-2xsmall">
@@ -336,7 +361,7 @@ const AddVariantsForm = ({
                   "opacity-50": !options.length,
                 })}
               >
-                Product variants{" "}
+                {t("add-variants-product-variants", "Product variants")}{" "}
                 <span className="inter-base-regular text-grey-50">
                   ({variants?.length || 0})
                 </span>
@@ -344,16 +369,19 @@ const AddVariantsForm = ({
               {!enableVariants && (
                 <IconTooltip
                   type="info"
-                  content="You must add at least one product option before you can begin adding product variants."
+                  content={t(
+                    "add-variants-you-must-add-at-least-one-product-option-before-you-can-begin-adding-product-variants",
+                    "You must add at least one product option before you can begin adding product variants."
+                  )}
                 />
               )}
             </div>
             {variants?.length > 0 && (
               <div className="mt-small">
                 <div className="inter-small-semibold grid grid-cols-[1fr_90px_100px_48px] pr-base text-grey-50">
-                  <p>Variant</p>
+                  <p>{t("add-variants-variant", "Variant")}</p>
                   <div className="mr-xlarge flex justify-end">
-                    <p>Inventory</p>
+                    <p>{t("add-variants-inventory", "Inventory")}</p>
                   </div>
                 </div>
                 <div>
@@ -386,16 +414,22 @@ const AddVariantsForm = ({
               onClick={onToggleForm}
             >
               <PlusIcon size={20} />
-              <span>Add a variant</span>
+              <span>{t("add-variants-add-a-variant", "Add a variant")}</span>
             </Button>
           </div>
         </div>
       </div>
 
-      <Modal open={state} handleClose={onToggleForm}>
+      <LayeredModal
+        context={layeredModalContext}
+        open={state}
+        handleClose={onToggleForm}
+      >
         <Modal.Body>
           <Modal.Header handleClose={onToggleForm}>
-            <h1 className="inter-xlarge-semibold">Create Variant</h1>
+            <h1 className="inter-xlarge-semibold">
+              {t("add-variants-create-variant", "Create Variant")}
+            </h1>
           </Modal.Header>
           <Modal.Content>
             <CreateFlowVariantForm
@@ -412,7 +446,7 @@ const AddVariantsForm = ({
                 type="button"
                 onClick={onToggleForm}
               >
-                Cancel
+                {t("add-variants-cancel", "Cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -420,12 +454,12 @@ const AddVariantsForm = ({
                 type="button"
                 onClick={onAppendVariant}
               >
-                Save and close
+                {t("add-variants-save-and-close", "Save and close")}
               </Button>
             </div>
           </Modal.Footer>
         </Modal.Body>
-      </Modal>
+      </LayeredModal>
     </>
   )
 }

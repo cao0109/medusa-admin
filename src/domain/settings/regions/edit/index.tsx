@@ -1,5 +1,5 @@
 import { useAdminRegion } from "medusa-react"
-import React from "react"
+import { useTranslation } from "react-i18next"
 import Spinner from "../../../../components/atoms/spinner"
 import GeneralSection from "./general-section"
 import ReturnShippingOptions from "./return-shipping-options"
@@ -10,6 +10,7 @@ type Props = {
 }
 
 const EditRegion = ({ id }: Props) => {
+  const { t } = useTranslation()
   const { region, isLoading, isError } = useAdminRegion(id!, {
     enabled: !!id,
   })
@@ -25,10 +26,14 @@ const EditRegion = ({ id }: Props) => {
   if (isError) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-y-xsmall rounded-rounded border border-grey-20 bg-grey-0 text-center ">
-        <h1 className="inter-large-semibold">Something went wrong...</h1>
+        <h1 className="inter-large-semibold">
+          {t("edit-something-went-wrong", "Something went wrong...")}
+        </h1>
         <p className="inter-base-regular text-grey-50">
-          We can't find a region with that ID, use the menu to the left to
-          select a region.
+          {t(
+            "edit-no-region-found",
+            "We can't find a region with that ID, use the menu to the left to select a region."
+          )}
         </p>
       </div>
     )

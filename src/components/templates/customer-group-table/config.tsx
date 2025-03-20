@@ -1,4 +1,3 @@
-import React from "react"
 import { Customer, CustomerGroup } from "@medusajs/medusa"
 import { Column } from "react-table"
 

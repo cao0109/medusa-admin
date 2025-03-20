@@ -1,6 +1,8 @@
 import { CustomerGroup } from "@medusajs/medusa"
-import { useAdminCustomerGroups } from "medusa-react"
-import React, { useContext } from "react"
+import {
+  useAdminCustomerGroups,
+  useAdminDeleteCustomerGroup,
+} from "medusa-react"
 import { useNavigate } from "react-router-dom"
 import {
   HeaderGroup,
@@ -11,16 +13,16 @@ import {
   useSortBy,
   useTable,
 } from "react-table"
-import CustomerGroupContext, {
-  CustomerGroupContextContainer,
-} from "../../../domain/customers/groups/context/customer-group-context"
+import { useTranslation } from "react-i18next"
 import useQueryFilters from "../../../hooks/use-query-filters"
 import useSetSearchParams from "../../../hooks/use-set-search-params"
 import DetailsIcon from "../../fundamentals/details-icon"
-import EditIcon from "../../fundamentals/icons/edit-icon"
+import TrashIcon from "../../fundamentals/icons/trash-icon"
+import { ActionType } from "../../molecules/actionables"
 import Table from "../../molecules/table"
 import TableContainer from "../../organisms/table-container"
 import { CUSTOMER_GROUPS_TABLE_COLUMNS } from "./config"
+import useNotification from "../../../hooks/use-notification"
 
 /**
  * Default filtering config for querying customer groups endpoint.
@@ -92,18 +94,41 @@ function CustomerGroupsTableRow(props: CustomerGroupsTableRowProps) {
   const { row } = props
 
   const navigate = useNavigate()
-  const { showModal } = useContext(CustomerGroupContext)
+  const notification = useNotification()
+  const { mutate } = useAdminDeleteCustomerGroup(row.original.id)
+  const { t } = useTranslation()
 
-  const actions = [
+  const actions: ActionType[] = [
     {
-      label: "Edit",
-      onClick: showModal,
-      icon: <EditIcon size={20} />,
-    },
-    {
-      label: "Details",
+      label: t("customer-group-table-details", "Details"),
       onClick: () => navigate(row.original.id),
       icon: <DetailsIcon size={20} />,
+    },
+    {
+      label: t("customer-group-table-delete", "Delete"),
+      onClick: () => {
+        mutate(undefined, {
+          onSuccess: () => {
+            notification(
+              t("customer-group-table-success", "Success"),
+              t("customer-group-table-group-deleted", "Group deleted"),
+              "success"
+            )
+          },
+          onError: () => {
+            notification(
+              t("customer-group-table-error", "Error"),
+              t(
+                "customer-group-table-failed-to-delete-the-group",
+                "Failed to delete the group"
+              ),
+              "error"
+            )
+          },
+        })
+      },
+      icon: <TrashIcon size={20} />,
+      variant: "danger",
     },
   ]
 
@@ -139,6 +164,7 @@ type CustomerGroupsTableProps = ReturnType<typeof useQueryFilters> & {
 function CustomerGroupsTable(props: CustomerGroupsTableProps) {
   const { customerGroups, queryObject, count, paginate, setQuery, isLoading } =
     props
+  const { t } = useTranslation()
 
   const tableConfig: TableOptions<CustomerGroup> = {
     columns: CUSTOMER_GROUPS_TABLE_COLUMNS,
@@ -197,7 +223,7 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
         count: count,
         offset: queryObject.offset,
         pageSize: queryObject.offset + table.rows.length,
-        title: "Customer groups",
+        title: t("customer-group-table-customer-groups", "Customer groups"),
         currentPage: table.state.pageIndex + 1,
         pageCount: table.pageCount,
         nextPage: handleNext,
@@ -223,11 +249,7 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
         <Table.Body {...table.getTableBodyProps()}>
           {table.rows.map((row) => {
             table.prepareRow(row)
-            return (
-              <CustomerGroupContextContainer key={row.id} group={row.original}>
-                <CustomerGroupsTableRow row={row} />
-              </CustomerGroupContextContainer>
-            )
+            return <CustomerGroupsTableRow row={row} key={row.id} />
           })}
         </Table.Body>
       </Table>

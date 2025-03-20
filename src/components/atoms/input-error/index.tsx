@@ -1,6 +1,5 @@
 import { ErrorMessage } from "@hookform/error-message"
 import clsx from "clsx"
-import React from "react"
 import { MultipleFieldErrors } from "react-hook-form"
 import Tooltip from "../tooltip"
 

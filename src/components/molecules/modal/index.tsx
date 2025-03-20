@@ -3,6 +3,7 @@ import * as Portal from "@radix-ui/react-portal"
 import clsx from "clsx"
 import React from "react"
 import { useWindowDimensions } from "../../../hooks/use-window-dimensions"
+import Button from "../../fundamentals/button"
 import CrossIcon from "../../fundamentals/icons/cross-icon"
 
 type ModalState = {
@@ -42,7 +43,7 @@ type ModalType = React.FC<ModalProps> & {
 
 const Overlay: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <Dialog.Overlay className="fixed top-0 left-0 right-0 bottom-0 z-50 grid place-items-center overflow-y-auto bg-grey-90/40">
+    <Dialog.Overlay className="fixed top-0 bottom-0 left-0 right-0 z-50 grid place-items-center overflow-y-auto bg-grey-90/40">
       {children}
     </Dialog.Overlay>
   )
@@ -108,7 +109,7 @@ Modal.Content = ({ children, className }) => {
     <div
       style={style}
       className={clsx(
-        "overflow-y-auto px-7 pt-5",
+        "overflow-y-auto px-8 pt-6",
         {
           ["w-largeModal pb-7"]: isLargeModal,
           ["pb-5"]: !isLargeModal,
@@ -124,17 +125,22 @@ Modal.Content = ({ children, className }) => {
 Modal.Header = ({ handleClose = undefined, children }) => {
   return (
     <div
-      className="flex w-full flex-col pl-7 pt-3.5 pr-3.5"
+      className="flex w-full items-center border-b px-8 py-6"
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex w-full justify-end pb-1">
+      <div className="flex flex-grow">{children}</div>
+      <div className="self-end">
         {handleClose && (
-          <button onClick={handleClose} className="cursor-pointer text-grey-50">
+          <Button
+            variant="ghost"
+            size="small"
+            onClick={handleClose}
+            className="cursor-pointer border p-1.5 text-grey-50"
+          >
             <CrossIcon size={20} />
-          </button>
+          </Button>
         )}
       </div>
-      {children}
     </div>
   )
 }

@@ -1,11 +1,13 @@
-import { StockLocationExpandedDTO } from "@medusajs/medusa"
+import { SalesChannel } from "@medusajs/medusa"
+import { StockLocationExpandedDTO } from "@medusajs/types"
 import {
   useAdminAddLocationToSalesChannel,
   useAdminRemoveLocationFromSalesChannel,
 } from "medusa-react"
+import { useTranslation } from "react-i18next"
+import SalesChannelsModal from "../../../../../components/forms/product/sales-channels-modal"
 import Button from "../../../../../components/fundamentals/button"
 import useToggleState from "../../../../../hooks/use-toggle-state"
-import SalesChannelsModal from "../../../../products/components/sales-channels-modal"
 
 const EditSalesChannels = ({
   location,
@@ -17,13 +19,14 @@ const EditSalesChannels = ({
     close: closeSalesChannelsModal,
     open: openSalesChannelsModal,
   } = useToggleState()
+  const { t } = useTranslation()
 
   const { mutateAsync: addLocationToSalesChannel } =
     useAdminAddLocationToSalesChannel()
   const { mutateAsync: removeLocationFromSalesChannel } =
     useAdminRemoveLocationFromSalesChannel()
 
-  const onSave = async (channels) => {
+  const onSave = async (channels: SalesChannel[]) => {
     const existingChannels = location.sales_channels
     const channelsToRemove =
       existingChannels?.filter(
@@ -61,7 +64,9 @@ const EditSalesChannels = ({
         type="button"
         onClick={openSalesChannelsModal}
       >
-        {location.sales_channels?.length ? "Edit channels" : "Add channels"}
+        {location.sales_channels?.length
+          ? t("edit-sales-channels-edit-channels", "Edit channels")
+          : t("edit-sales-channels-add-channels", "Add channels")}
       </Button>
       <SalesChannelsModal
         open={showSalesChannelsModal}

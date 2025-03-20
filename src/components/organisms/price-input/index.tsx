@@ -1,4 +1,3 @@
-import React from "react"
 import AmountField from "react-currency-input-field"
 
 import { CurrencyType } from "../../../utils/currencies"

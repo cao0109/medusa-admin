@@ -1,24 +1,29 @@
-import { useContext } from "react"
-import BodyCard from "../../../components/organisms/body-card"
-import PlusIcon from "../../../components/fundamentals/icons/plus-icon"
-import CustomersPageTableHeader from "../header"
-import Details from "./details"
-import CustomerGroupContext, {
-  CustomerGroupContextContainer,
-} from "./context/customer-group-context"
-import CustomerGroupsTable from "../../../components/templates/customer-group-table/customer-groups-table"
 import { Route, Routes } from "react-router-dom"
+import RouteContainer from "../../../components/extensions/route-container"
+import WidgetContainer from "../../../components/extensions/widget-container"
+import PlusIcon from "../../../components/fundamentals/icons/plus-icon"
+import BodyCard from "../../../components/organisms/body-card"
+import CustomerGroupsTable from "../../../components/templates/customer-group-table/customer-groups-table"
+import useToggleState from "../../../hooks/use-toggle-state"
+import { useRoutes } from "../../../providers/route-provider"
+import { useWidgets } from "../../../providers/widget-provider"
+import CustomersPageTableHeader from "../header"
+import CustomerGroupModal from "./customer-group-modal"
+import Details from "./details"
+import { useTranslation } from "react-i18next"
 
 /*
  * Customer groups index page
  */
 function Index() {
-  const { showModal } = useContext(CustomerGroupContext)
+  const { state, open, close } = useToggleState()
+  const { getWidgets } = useWidgets()
+  const { t } = useTranslation()
 
   const actions = [
     {
-      label: "New group",
-      onClick: showModal,
+      label: t("groups-new-group", "New group"),
+      onClick: open,
       icon: (
         <span className="text-grey-90">
           <PlusIcon size={20} />
@@ -28,16 +33,40 @@ function Index() {
   ]
 
   return (
-    <div className="flex h-full grow flex-col">
-      <div className="flex w-full grow flex-col">
+    <>
+      <div className="flex h-full grow flex-col gap-y-xsmall">
+        {getWidgets("customer_group.list.before").map((w, index) => {
+          return (
+            <WidgetContainer
+              key={index}
+              entity={null}
+              widget={w}
+              injectionZone="customer_group.list.before"
+            />
+          )
+        })}
+
         <BodyCard
           actionables={actions}
+          className="h-auto"
           customHeader={<CustomersPageTableHeader activeView="groups" />}
         >
           <CustomerGroupsTable />
         </BodyCard>
+
+        {getWidgets("customer_group.list.after").map((w, index) => {
+          return (
+            <WidgetContainer
+              key={index}
+              entity={null}
+              widget={w}
+              injectionZone="customer_group.list.after"
+            />
+          )
+        })}
       </div>
-    </div>
+      <CustomerGroupModal open={state} onClose={close} />
+    </>
   )
 }
 
@@ -45,13 +74,26 @@ function Index() {
  * Customer groups routes
  */
 function CustomerGroups() {
+  const { getNestedRoutes } = useRoutes()
+
+  const nestedRoutes = getNestedRoutes("/customers/groups")
+
   return (
-    <CustomerGroupContextContainer>
-      <Routes>
-        <Route index element={<Index />} />
-        <Route path="/:id" element={<Details />} />
-      </Routes>
-    </CustomerGroupContextContainer>
+    <Routes>
+      <Route index element={<Index />} />
+      <Route path="/:id" element={<Details />} />
+      {nestedRoutes.map((r, i) => {
+        return (
+          <Route
+            path={r.path}
+            key={i}
+            element={
+              <RouteContainer route={r} previousPath={"/customers/groups"} />
+            }
+          />
+        )
+      })}
+    </Routes>
   )
 }
 

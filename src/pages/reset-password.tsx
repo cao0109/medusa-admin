@@ -1,15 +1,16 @@
 import { useAdminResetPassword } from "medusa-react"
 import qs from "qs"
-import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { decodeToken } from "react-jwt"
 import { useLocation, useNavigate } from "react-router-dom"
+import InputError from "../components/atoms/input-error"
 import Button from "../components/fundamentals/button"
-import MedusaIcon from "../components/fundamentals/icons/medusa-icon"
 import SigninInput from "../components/molecules/input-signin"
 import SEO from "../components/seo"
-import LoginLayout from "../components/templates/login-layout"
+import PublicLayout from "../components/templates/login-layout"
+import useNotification from "../hooks/use-notification"
 import { getErrorMessage } from "../utils/error-messages"
+import FormValidator from "../utils/form-validator"
 
 type formValues = {
   password: string
@@ -30,25 +31,34 @@ const ResetPasswordPage = () => {
     }
   }
 
-  const [passwordMismatch, setPasswordMismatch] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [ready, setReady] = useState(false)
   const email = (token?.email || parsed?.email || "") as string
 
-  const { register, handleSubmit, formState } = useForm<formValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<formValues>({
     defaultValues: {
       password: "",
       repeat_password: "",
     },
   })
   const reset = useAdminResetPassword()
+  const notification = useNotification()
 
-  const handleAcceptInvite = (data: formValues) => {
-    setPasswordMismatch(false)
-    setError(null)
-
+  const onSubmit = handleSubmit((data: formValues) => {
     if (data.password !== data.repeat_password) {
-      setPasswordMismatch(true)
+      setError(
+        "repeat_password",
+        {
+          type: "manual",
+          message: "Passwords do not match",
+        },
+        {
+          shouldFocus: true,
+        }
+      )
       return
     }
 
@@ -63,95 +73,78 @@ const ResetPasswordPage = () => {
           navigate("/login")
         },
         onError: (err) => {
-          setError(getErrorMessage(err))
+          notification("Error", getErrorMessage(err), "error")
         },
       }
     )
-  }
-
-  useEffect(() => {
-    if (
-      formState.dirtyFields.password &&
-      formState.dirtyFields.repeat_password
-    ) {
-      setReady(true)
-    } else {
-      setReady(false)
-    }
-  }, [formState])
+  })
 
   return (
-    <LoginLayout>
+    <PublicLayout>
       <SEO title="Reset Password" />
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="flex min-h-[540px] justify-center rounded-rounded bg-grey-0">
-          <form
-            className="flex w-full flex-col items-center py-12 px-[120px]"
-            onSubmit={handleSubmit(handleAcceptInvite)}
-          >
-            <MedusaIcon />
-            {!token ? (
-              <div className="flex h-full flex-col items-center justify-center gap-y-2 text-center">
-                <span className="inter-large-semibold text-grey-90">
-                  You reset link is invalid
-                </span>
-                <span className="inter-base-regular mt-2 text-grey-50">
-                  Please try resetting your password again
-                </span>
-              </div>
-            ) : (
-              <>
-                <span className="inter-2xlarge-semibold mt-4 text-grey-90">
-                  Reset your password
-                </span>
-                <span className="inter-base-regular mt-2 mb-xlarge text-grey-50">
-                  Choose a new password below 👇🏼
-                </span>
+      <div className="flex flex-col items-center justify-center">
+        {token ? (
+          <form onSubmit={onSubmit}>
+            <div className="flex flex-col items-center gap-y-large">
+              <h1 className="inter-xlarge-semibold">Reset your password</h1>
+              <div className="flex flex-col items-center gap-y-small">
                 <SigninInput
                   placeholder="Email"
-                  name="first_name"
-                  value={email}
+                  disabled
                   readOnly
+                  value={email}
                 />
-                <SigninInput
-                  placeholder="Password"
-                  type={"password"}
-                  {...register("password", { required: true })}
-                  autoComplete="new-password"
-                />
-                <SigninInput
-                  placeholder="Confirm password"
-                  type={"password"}
-                  {...register("repeat_password", { required: true })}
-                  autoComplete="new-password"
-                  className="mb-0"
-                />
-                {error && (
-                  <span className="inter-small-regular mt-xsmall w-full text-rose-50">
-                    The two passwords are not the same
-                  </span>
-                )}
-                {passwordMismatch && (
-                  <span className="inter-small-regular mt-xsmall w-full text-rose-50">
-                    The two passwords are not the same
-                  </span>
-                )}
-                <Button
-                  variant="primary"
-                  size="large"
-                  type="submit"
-                  className="mt-base w-full rounded-rounded"
-                  loading={formState.isSubmitting}
-                  disabled={!ready}
-                >
-                  Reset Password
-                </Button>
-              </>
-            )}
+                <div>
+                  <SigninInput
+                    placeholder="Password (8+ characters)"
+                    type="password"
+                    {...register("password", {
+                      required: FormValidator.required("Password"),
+                    })}
+                  />
+                  <InputError errors={errors} name="password" />
+                </div>
+                <div>
+                  <SigninInput
+                    placeholder="Confirm password"
+                    type="password"
+                    {...register("repeat_password", {
+                      required: "You must confirm your password",
+                    })}
+                  />
+                  <InputError errors={errors} name="repeat_password" />
+                </div>
+              </div>
+              <Button variant="secondary" size="medium" className="w-[280px]">
+                Reset password
+              </Button>
+              <a
+                href="/login"
+                className="inter-small-regular mt-xsmall text-grey-40"
+              >
+                Go back to sign in
+              </a>
+            </div>
           </form>
-        </div>
+        ) : (
+          <div className="flex flex-col items-center gap-y-large">
+            <div className="flex flex-col gap-y-xsmall text-center">
+              <h1 className="inter-xlarge-semibold text-[20px]">
+                Your reset link is invalid
+              </h1>
+              <p className="inter-base-regular text-grey-50">
+                Try resetting your password again.
+              </p>
+            </div>
+            <a href="/login?reset-password=true">
+              <Button variant="secondary" size="medium" className="w-[280px]">
+                Go to reset password
+              </Button>
+            </a>
+          </div>
+        )}
       </div>
-    </LoginLayout>
+    </PublicLayout>
   )
 }
 

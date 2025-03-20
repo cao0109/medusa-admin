@@ -1,6 +1,7 @@
 import * as RadixTooltip from "@radix-ui/react-tooltip"
-import clsx from "clsx"
+
 import React from "react"
+import clsx from "clsx"
 
 export type TooltipProps = RadixTooltip.TooltipContentProps &
   Pick<
@@ -10,6 +11,7 @@ export type TooltipProps = RadixTooltip.TooltipContentProps &
     content: React.ReactNode
     side?: "bottom" | "left" | "top" | "right"
     onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>["onClick"]
+    maxWidth?: number
   }
 
 const Tooltip = ({
@@ -19,6 +21,7 @@ const Tooltip = ({
   defaultOpen,
   onOpenChange,
   delayDuration,
+  maxWidth = 220,
   className,
   side,
   onClick,
@@ -40,13 +43,13 @@ const Tooltip = ({
           sideOffset={8}
           align="center"
           className={clsx(
-            "inter-small-semibold text-grey-50",
+            "inter-small-semibold z-[999] text-grey-50",
             "rounded-rounded bg-grey-0 py-2 px-3 shadow-dropdown",
             "border border-solid border-grey-20",
-            "max-w-[220px]",
             className
           )}
           {...props}
+          style={{ ...props.style, maxWidth }}
         >
           {content}
         </RadixTooltip.Content>

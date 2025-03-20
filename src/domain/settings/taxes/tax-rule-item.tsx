@@ -1,11 +1,11 @@
-import React from "react"
-
+import { useTranslation } from "react-i18next"
 import Actionables from "../../../components/molecules/actionables"
 import EditIcon from "../../../components/fundamentals/icons/edit-icon"
 import TrashIcon from "../../../components/fundamentals/icons/trash-icon"
 import Badge from "../../../components/fundamentals/badge"
 
 export const TaxRuleItem = ({ onEdit, onDelete, index, name, description }) => {
+  const { t } = useTranslation()
   return (
     <div className="flex items-center gap-base rounded-rounded border p-base">
       <div>
@@ -25,12 +25,12 @@ export const TaxRuleItem = ({ onEdit, onDelete, index, name, description }) => {
           forceDropdown
           actions={[
             {
-              label: "Edit",
+              label: t("taxes-edit", "Edit"),
               onClick: () => onEdit(),
               icon: <EditIcon size={20} />,
             },
             {
-              label: "Delete rule",
+              label: t("taxes-delete-rule", "Delete rule"),
               variant: "danger",
               onClick: () => onDelete(),
               icon: <TrashIcon size={20} />,

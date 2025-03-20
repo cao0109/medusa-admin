@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { Column } from "react-table"
 import Table from "../../molecules/table"
 import { decideStatus, SimpleProductType } from "./utils"

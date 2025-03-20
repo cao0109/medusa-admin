@@ -1,5 +1,3 @@
-import React from "react"
-
 type OSShortcutProps = {
   winModifiers: string | string[]
   macModifiers: string | string[]

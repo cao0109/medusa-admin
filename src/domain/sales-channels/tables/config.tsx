@@ -1,5 +1,4 @@
-import React from "react"
-
+import { Translation } from "react-i18next"
 import IndeterminateCheckbox from "../../../components/molecules/indeterminate-checkbox"
 import ImagePlaceholder from "../../../components/fundamentals/image-placeholder"
 
@@ -24,7 +23,7 @@ export const SALES_CHANNEL_PRODUCTS_TABLE_COLUMNS = [
     },
   },
   {
-    Header: "Name",
+    Header: <Translation>{(t) => t("tables-name", "Name")}</Translation>,
     accessor: "title",
     Cell: ({ row: { original } }) => {
       return (
@@ -47,7 +46,9 @@ export const SALES_CHANNEL_PRODUCTS_TABLE_COLUMNS = [
     },
   },
   {
-    Header: "Collection",
+    Header: (
+      <Translation>{(t) => t("tables-collection", "Collection")}</Translation>
+    ),
     accessor: "collection",
     Cell: ({ cell: { value } }) => {
       return <div>{value?.title || "-"}</div>

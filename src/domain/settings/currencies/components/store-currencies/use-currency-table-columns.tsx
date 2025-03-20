@@ -1,5 +1,5 @@
 import { Currency } from "@medusajs/medusa"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { Column } from "react-table"
 import SortingIcon from "../../../../../components/fundamentals/icons/sorting-icon"
 import IndeterminateCheckbox from "../../../../../components/molecules/indeterminate-checkbox"

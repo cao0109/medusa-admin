@@ -1,4 +1,6 @@
+import Spacer from "../../../components/atoms/spacer"
 import BodyCard from "../../../components/organisms/body-card"
+import InventoryTable from "../../../components/templates/inventory-table"
 import InventoryPageTableHeader from "../header"
 
 const InventoryView = () => {
@@ -9,8 +11,9 @@ const InventoryView = () => {
           customHeader={<InventoryPageTableHeader activeView="inventory" />}
           className="h-fit"
         >
-          <h1>Inventory</h1>
+          <InventoryTable />
         </BodyCard>
+        <Spacer />
       </div>
     </div>
   )

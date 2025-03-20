@@ -5,13 +5,7 @@ import {
   useAdminShippingOptions,
   useMedusa,
 } from "medusa-react"
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-} from "react"
+import { createContext, ReactNode, useContext, useEffect, useMemo } from "react"
 import {
   FormProvider,
   useFieldArray,
@@ -20,6 +14,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { AddressPayload } from "../../../../components/templates/address-form"
 import { Option } from "../../../../types/shared"
 import { extractUnitPrice } from "../../../../utils/prices"
@@ -200,9 +195,15 @@ const NewOrderFormProvider = ({ children }: { children?: ReactNode }) => {
 export const useNewOrderForm = () => {
   const context = useContext(NewOrderContext)
   const form = useFormContext<NewOrderForm>()
+  const { t } = useTranslation()
 
   if (!context) {
-    throw new Error("useNewOrderForm must be used within NewOrderFormProvider")
+    throw new Error(
+      t(
+        "form-use-new-order-form-must-be-used-within-new-order-form-provider",
+        "useNewOrderForm must be used within NewOrderFormProvider"
+      )
+    )
   }
 
   return { context, form }

@@ -5,13 +5,23 @@ import {
   Country,
 } from "@medusajs/medusa"
 import { MutateOptions } from "@tanstack/react-query"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
+import AddressContactForm, {
+  AddressContactFormType,
+} from "../../../components/forms/general/address-contact-form"
+import AddressLocationForm, {
+  AddressLocationFormType,
+} from "../../../components/forms/general/address-location-form"
+import MetadataForm, {
+  getMetadataFormValues,
+  getSubmittableMetadata,
+  MetadataFormType,
+} from "../../../components/forms/general/metadata-form"
 import Button from "../../../components/fundamentals/button"
 import Modal from "../../../components/molecules/modal"
-import AddressForm, {
-  AddressPayload,
-  AddressType,
-} from "../../../components/templates/address-form"
+import { AddressType } from "../../../components/templates/address-form"
 import useNotification from "../../../hooks/use-notification"
 import { isoAlpha2Countries } from "../../../utils/countries"
 import { getErrorMessage } from "../../../utils/error-messages"
@@ -22,6 +32,12 @@ type AddressPayloadType =
   | Partial<AdminPostOrdersOrderReq["shipping_address"]>
   | AdminPostDraftOrdersReq["shipping_address"]
   | Partial<AdminPostDraftOrdersReq["shipping_address"]>
+
+type AddressModalFormType = {
+  contact: AddressContactFormType
+  location: AddressLocationFormType
+  metadata: MetadataFormType
+}
 
 type TVariables = {
   shipping_address?: AddressPayloadType
@@ -34,8 +50,9 @@ type MutateAction = <T extends TVariables>(
 ) => void
 
 type AddressModalProps = {
-  handleClose: () => void
-  submit: MutateAction
+  onClose: () => void
+  onSave: MutateAction
+  open: boolean
   submitting?: boolean
   allowedCountries?: Country[]
   address?: Address
@@ -45,85 +62,133 @@ type AddressModalProps = {
 const AddressModal = ({
   address,
   allowedCountries = [],
-  handleClose,
-  submit,
+  onClose,
+  onSave,
+  open,
   type,
   submitting = false,
 }: AddressModalProps) => {
-  const form = useForm<AddressPayload>({
-    defaultValues: mapAddressToFormData(address),
+  const { t } = useTranslation()
+  const form = useForm<AddressModalFormType>({
+    defaultValues: getDefaultValues(address),
   })
   const {
+    reset,
     formState: { isDirty },
+    handleSubmit,
   } = form
   const notification = useNotification()
+
+  useEffect(() => {
+    if (open) {
+      reset(getDefaultValues(address))
+    }
+  }, [address, open, reset])
 
   const countryOptions = allowedCountries
     .map((c) => ({ label: c.display_name, value: c.iso_2 }))
     .filter(Boolean)
 
-  const handleUpdateAddress = (data: AddressPayload) => {
+  const onSubmit = handleSubmit((data) => {
     const updateObj: TVariables = {}
+    const { contact, location, metadata } = data
+
+    const countryCode = location.country_code.value
+    const metadataEntries = getSubmittableMetadata(metadata)
 
     if (type === "shipping") {
       // @ts-ignore
       updateObj["shipping_address"] = {
-        ...data,
-        country_code: data.country_code.value,
+        ...contact,
+        ...location,
+        country_code: countryCode,
+        metadata: metadataEntries,
       }
     } else {
       // @ts-ignore
       updateObj["billing_address"] = {
-        ...data,
-        country_code: data.country_code.value,
+        ...contact,
+        ...location,
+        country_code: countryCode,
+        metadata: metadataEntries,
       }
     }
 
-    return submit(updateObj, {
+    return onSave(updateObj, {
       onSuccess: () => {
-        notification("Success", "Successfully updated address", "success")
-        handleClose()
+        notification(
+          t("details-success", "Success"),
+          t(
+            "details-successfully-updated-address",
+            "Successfully updated address"
+          ),
+          "success"
+        )
+        onClose()
       },
-      onError: (err) => notification("Error", getErrorMessage(err), "error"),
+      onError: (err) =>
+        notification(
+          t("details-error", "Error"),
+          getErrorMessage(err),
+          "error"
+        ),
     })
-  }
+  })
 
   return (
-    <Modal handleClose={handleClose} isLargeModal>
-      <form onSubmit={form.handleSubmit(handleUpdateAddress)}>
+    <Modal open={open} handleClose={onClose}>
+      <form onSubmit={onSubmit}>
         <Modal.Body>
-          <Modal.Header handleClose={handleClose}>
+          <Modal.Header handleClose={onClose}>
             <span className="inter-xlarge-semibold">
-              {type === AddressType.BILLING ? "Billing" : "Shipping"} Address
+              {type === AddressType.BILLING
+                ? t("details-billing-address", "Billing Address")
+                : t("details-shipping-address", "Shipping Address")}
             </span>
           </Modal.Header>
           <Modal.Content>
-            <AddressForm
-              form={nestedForm(form)}
-              countryOptions={countryOptions}
-              type={type}
-            />
+            <div className="flex flex-col gap-y-xlarge">
+              <div>
+                <h2 className="inter-base-semibold mb-base">
+                  {t("details-contact", "Contact")}
+                </h2>
+                <AddressContactForm form={nestedForm(form, "contact")} />
+              </div>
+              <div>
+                <h2 className="inter-base-semibold mb-base">
+                  {t("details-location", "Location")}
+                </h2>
+                <AddressLocationForm
+                  form={nestedForm(form, "location")}
+                  countryOptions={countryOptions}
+                />
+              </div>
+              <div>
+                <h2 className="inter-base-semibold mb-base">
+                  {t("details-metadata", "Metadata")}
+                </h2>
+                <MetadataForm form={nestedForm(form, "metadata")} />
+              </div>
+            </div>
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex h-8 w-full justify-end">
+            <div className="flex w-full justify-end gap-x-xsmall">
               <Button
-                variant="ghost"
-                className="mr-2 w-32 justify-center text-small"
-                size="large"
-                onClick={handleClose}
+                variant="secondary"
+                size="small"
+                onClick={onClose}
                 type="button"
               >
-                Cancel
+                {t("details-cancel", "Cancel")}
               </Button>
               <Button
-                size="large"
-                className="w-32 justify-center text-small"
+                size="small"
                 variant="primary"
                 type="submit"
                 loading={submitting}
                 disabled={submitting || !isDirty}
               >
-                Save
+                {t("details-save-and-close", "Save and close")}
               </Button>
             </div>
           </Modal.Footer>
@@ -133,23 +198,31 @@ const AddressModal = ({
   )
 }
 
-const mapAddressToFormData = (address?: Address): AddressPayload => {
-  const countryDisplayName =
-    isoAlpha2Countries[address?.country_code?.toUpperCase()]
+const getDefaultValues = (address?: Address): AddressModalFormType => {
+  const countryDisplayName = address?.country_code
+    ? isoAlpha2Countries[
+        address.country_code.toUpperCase() as keyof typeof isoAlpha2Countries
+      ]
+    : ""
 
   return {
-    first_name: address?.first_name || "",
-    last_name: address?.last_name || "",
-    phone: address?.phone || null,
-    company: address?.company || null,
-    address_1: address?.address_1 || "",
-    address_2: address?.address_2 || null,
-    city: address?.city || "",
-    province: address?.province || null,
-    country_code: address?.country_code
-      ? { label: countryDisplayName, value: address.country_code }
-      : { label: "", value: "" },
-    postal_code: address?.postal_code || "",
+    contact: {
+      first_name: address?.first_name || "",
+      last_name: address?.last_name || "",
+      phone: address?.phone || "",
+      company: address?.company || null,
+    },
+    location: {
+      address_1: address?.address_1 || "",
+      address_2: address?.address_2 || null,
+      city: address?.city || "",
+      province: address?.province || null,
+      country_code: address?.country_code
+        ? { label: countryDisplayName, value: address.country_code }
+        : { label: "", value: "" },
+      postal_code: address?.postal_code || "",
+    },
+    metadata: getMetadataFormValues(address?.metadata),
   }
 }
 

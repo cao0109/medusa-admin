@@ -9,7 +9,6 @@ import React, { useEffect, useState } from "react"
 
 import CreateFulfillmentModal from "../../../domain/orders/details/create-fulfillment"
 import { ReceiveReturnMenu } from "../../../domain/orders/details/receive-return"
-import { orderReturnableFields } from "../../../domain/orders/details/utils/order-returnable-fields"
 import useOrdersExpandParam from "../../../domain/orders/details/utils/use-admin-expand-paramter"
 import { ExchangeEvent } from "../../../hooks/use-build-timeline"
 import useNotification from "../../../hooks/use-notification"
@@ -79,7 +78,6 @@ const Exchange: React.FC<ExchangeProps> = ({ event, refetch }) => {
   const { orderRelations } = useOrdersExpandParam()
   const { order } = useAdminOrder(event.orderId, {
     expand: orderRelations,
-    fields: orderReturnableFields,
   })
 
   const notification = useNotification()
