@@ -4,8 +4,8 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
-    "sourceType": "module" // Allows for the use of imports
+    "ecmaVersion": 2018,
+    "sourceType": "module"
   },
   "plugins": [
     "eslint-plugin-prettier",
@@ -16,23 +16,15 @@
   ],
   "extends": [
     "eslint:recommended",
-    "google",
-    "eslint-config-prettier",
-    "plugin:vitest-globals/recommended"
+    "eslint-config-prettier"
   ],
   "rules": {
     "prettier/prettier": "error",
     "curly": [
-      2,
+      "error",
       "all"
     ],
-    "new-cap": "off",
-    "require-jsdoc": "off",
     "semi": "off",
-    "valid-jsdoc": "off",
-    "no-unused-expressions": "off",
-    "camelcase": "off",
-    "no-invalid-this": "off",
     "spaced-comment": [
       "error",
       "always",
@@ -42,14 +34,18 @@
         ]
       }
     ],
-    "react/prop-types": "off", // Disable prop-types as we use TypeScript for type checking
-    "react-hooks/rules-of-hooks": 1, // Checks rules of Hooks
-    "react-hooks/exhaustive-deps": 1, // Checks effect dependencies
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-implicit-any": 0,
-    "@typescript-eslint/no-unused-vars": 0,
+    "react/prop-types": "off",
+    // TypeScript already handles type-checking
+    "react-hooks/rules-of-hooks": "warn",
+    // React hooks best practices
+    "react-hooks/exhaustive-deps": "warn",
+    // Exhaustive deps check
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-implicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
+    // Ensure unused imports are removed
     "unused-imports/no-unused-vars": [
       "warn",
       {
@@ -68,19 +64,6 @@
   "env": {
     "browser": true,
     "node": true,
-    "es6": true,
-    "vitest-globals/env": true
-  },
-  "overrides": [
-    {
-      "files": [
-        "*.js"
-      ],
-      "rules": {
-        "@typescript-eslint/no-var-requires": 0,
-        "react/jsx-uses-react": 1,
-        "react/react-in-jsx-scope": 1
-      }
-    }
-  ]
+    "es6": true
+  }
 }

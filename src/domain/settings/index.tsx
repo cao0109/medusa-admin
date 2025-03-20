@@ -1,4 +1,3 @@
-import React from "react"
 import { useTranslation } from "react-i18next"
 import { Route, Routes } from "react-router-dom"
 import SettingsCard from "../../components/atoms/settings-card"
@@ -21,6 +20,7 @@ import Regions from "./regions"
 import ReturnReasons from "./return-reasons"
 import Taxes from "./taxes"
 import Users from "./users"
+import React from "react"
 
 type SettingsCardType = {
   heading: string

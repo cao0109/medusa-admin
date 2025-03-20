@@ -1,31 +1,33 @@
 import { useEffect } from "react"
 
-import { ProductCategory } from "@medusajs/medusa"
-import { useAdminUpdateProductCategory } from "medusa-react"
 import { TFunction } from "i18next"
+import { useAdminUpdateProductCategory } from "medusa-react"
 import { useTranslation } from "react-i18next"
 
-import Button from "../../../components/fundamentals/button"
-import CrossIcon from "../../../components/fundamentals/icons/cross-icon"
-import InputField from "../../../components/molecules/input"
-import TextArea from "../../../components/molecules/textarea"
-import SideModal from "../../../components/molecules/modal/side-modal"
-import { NextSelect } from "../../../components/molecules/select/next-select"
-import useNotification from "../../../hooks/use-notification"
-import { Option } from "../../../types/shared"
-import { getErrorMessage } from "../../../utils/error-messages"
-import TreeCrumbs from "../components/tree-crumbs"
+import { ProductCategory } from "@medusajs/medusa/dist/models"
+import { Controller, useForm } from "react-hook-form"
 import MetadataForm, {
   getSubmittableMetadata,
 } from "../../../components/forms/general/metadata-form"
-import { Controller, useForm } from "react-hook-form"
+import ThumbnailForm from "../../../components/forms/product/thumbnail-form"
+import Button from "../../../components/fundamentals/button"
+import CrossIcon from "../../../components/fundamentals/icons/cross-icon"
+import InputField from "../../../components/molecules/input"
+import SideModal from "../../../components/molecules/modal/side-modal"
+import { NextSelect } from "../../../components/molecules/select/next-select"
+import TextArea from "../../../components/molecules/textarea"
+import useNotification from "../../../hooks/use-notification"
+import { FormImage, Option } from "../../../types/shared"
+import { getErrorMessage } from "../../../utils/error-messages"
+import { prepareImages } from "../../../utils/images"
 import { nestedForm } from "../../../utils/nested-form"
+import TreeCrumbs from "../components/tree-crumbs"
+import { getDefaultCategoryValues } from "../utils"
 import {
   CategoryFormData,
   CategoryStatus,
   CategoryVisibility,
 } from "./add-product-category"
-import { getDefaultCategoryValues } from "../utils"
 
 const visibilityOptions: (t: TFunction) => Option[] = (t) => [
   {
@@ -69,20 +71,50 @@ function EditProductCategoriesSideModal(
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting },
+    formState: { isDirty, isValid, isSubmitting },
   } = form
 
   useEffect(() => {
     if (activeCategory) {
       reset(getDefaultCategoryValues(t, activeCategory))
     }
-  }, [activeCategory, reset])
+  }, [activeCategory, reset, t])
 
   const onSave = async (data: CategoryFormData) => {
     try {
+      let categoryCover
+      if (data.image?.images?.length) {
+        let preppedImages: FormImage[] = []
+
+        try {
+          preppedImages = await prepareImages(data.image.images)
+        } catch (error) {
+          let errorMessage = t(
+            "new-upload-thumbnail-error",
+            "Something went wrong while trying to upload the thumbnail."
+          )
+          const response = (error as any).response as Response
+
+          if (response.status === 500) {
+            errorMessage =
+              errorMessage +
+              " " +
+              t(
+                "new-no-file-service-configured",
+                "You might not have a file service configured. Please contact your administrator"
+              )
+          }
+
+          notification(t("new-error", "Error"), errorMessage, "error")
+          return
+        }
+        const urls = preppedImages.map((image) => image.url)
+
+        categoryCover = urls[0]
+      }
+
       await updateCategory({
         name: data.name,
         handle: data.handle,
@@ -90,6 +122,7 @@ function EditProductCategoriesSideModal(
         is_active: data.is_active.value === CategoryStatus.Active,
         is_internal: data.is_public.value === CategoryVisibility.Private,
         metadata: getSubmittableMetadata(data.metadata),
+        image: categoryCover,
       })
 
       notification(
@@ -149,7 +182,12 @@ function EditProductCategoriesSideModal(
 
         {activeCategory && (
           <div className="mt-[25px] px-6">
-            <TreeCrumbs nodes={categories} currentNode={activeCategory} />
+            <TreeCrumbs
+              nodes={categories}
+              currentNode={activeCategory}
+              showPlaceholder={false}
+              placeholderText={""}
+            />
           </div>
         )}
 
@@ -230,6 +268,17 @@ function EditProductCategoriesSideModal(
               )
             }}
           />
+
+          <div className="mb-8">
+            <p className="inter-base-regular text-grey-50">
+              {t(
+                "image-table-select-thumbnail-image-for-category",
+                "Select the image to be used as a thumbnail for this category"
+              )}
+            </p>
+            <ThumbnailForm form={nestedForm(form, "image")} />
+          </div>
+
           <div className="mt-small mb-xlarge">
             <h2 className="inter-base-semibold mb-base">
               {t("collection-modal-metadata", "Metadata")}

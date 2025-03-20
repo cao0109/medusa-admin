@@ -1,27 +1,32 @@
-import { ProductCategory } from "@medusajs/medusa"
 import {
   adminProductCategoryKeys,
   useAdminCreateProductCategory,
 } from "medusa-react"
 import { useTranslation } from "react-i18next"
 
+import { ProductCategory } from "@medusajs/medusa/dist/models"
 import { useQueryClient } from "@tanstack/react-query"
-import Button from "../../../components/fundamentals/button"
-import CrossIcon from "../../../components/fundamentals/icons/cross-icon"
-import InputField from "../../../components/molecules/input"
-import TextArea from "../../../components/molecules/textarea"
-import FocusModal from "../../../components/molecules/modal/focus-modal"
-import { NextSelect } from "../../../components/molecules/select/next-select"
-import useNotification from "../../../hooks/use-notification"
-import { getErrorMessage } from "../../../utils/error-messages"
-import TreeCrumbs from "../components/tree-crumbs"
+import { TFunction } from "i18next"
+import { Controller, useForm } from "react-hook-form"
 import MetadataForm, {
   getSubmittableMetadata,
   MetadataFormType,
 } from "../../../components/forms/general/metadata-form"
-import { Controller, useForm } from "react-hook-form"
+import ThumbnailForm, {
+  ThumbnailFormType,
+} from "../../../components/forms/product/thumbnail-form"
+import Button from "../../../components/fundamentals/button"
+import CrossIcon from "../../../components/fundamentals/icons/cross-icon"
+import InputField from "../../../components/molecules/input"
+import FocusModal from "../../../components/molecules/modal/focus-modal"
+import { NextSelect } from "../../../components/molecules/select/next-select"
+import TextArea from "../../../components/molecules/textarea"
+import useNotification from "../../../hooks/use-notification"
+import { FormImage } from "../../../types/shared"
+import { getErrorMessage } from "../../../utils/error-messages"
+import { prepareImages } from "../../../utils/images"
 import { nestedForm } from "../../../utils/nested-form"
-import { TFunction } from "i18next"
+import TreeCrumbs from "../components/tree-crumbs"
 import { getDefaultCategoryValues } from "../utils"
 
 export enum CategoryStatus {
@@ -34,9 +39,7 @@ export enum CategoryVisibility {
   Private = "private",
 }
 
-const visibilityOptions = (
-  t: TFunction<"translation", undefined, "translation">
-) => [
+const visibilityOptions = (t: TFunction) => [
   {
     label: t("modals-public", "Public"),
     value: CategoryVisibility.Public,
@@ -44,9 +47,7 @@ const visibilityOptions = (
   { label: t("modals-private", "Private"), value: CategoryVisibility.Private },
 ]
 
-const statusOptions = (
-  t: TFunction<"translation", undefined, "translation">
-) => [
+const statusOptions = (t: TFunction) => [
   { label: t("modals-active", "Active"), value: CategoryStatus.Active },
   { label: t("modals-inactive", "Inactive"), value: CategoryStatus.Inactive },
 ]
@@ -70,6 +71,7 @@ export type CategoryFormData = {
     value: CategoryVisibility
     label: string
   }
+  image: ThumbnailFormType
 }
 
 /**
@@ -89,9 +91,8 @@ function CreateProductCategory(props: CreateProductCategoryProps) {
     register,
     handleSubmit,
     watch,
-    reset,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting },
+    formState: { isDirty, isValid, isSubmitting },
   } = form
   const name = watch("name", "")
 
@@ -99,6 +100,37 @@ function CreateProductCategory(props: CreateProductCategoryProps) {
 
   const submit = handleSubmit(async (data) => {
     try {
+      let categoryCover
+      if (data.image?.images?.length) {
+        let preppedImages: FormImage[] = []
+
+        try {
+          preppedImages = await prepareImages(data.image.images)
+        } catch (error) {
+          let errorMessage = t(
+            "new-upload-thumbnail-error",
+            "Something went wrong while trying to upload the thumbnail."
+          )
+          const response = (error as any).response as Response
+
+          if (response.status === 500) {
+            errorMessage =
+              errorMessage +
+              " " +
+              t(
+                "new-no-file-service-configured",
+                "You might not have a file service configured. Please contact your administrator"
+              )
+          }
+
+          notification(t("new-error", "Error"), errorMessage, "error")
+          return
+        }
+        const urls = preppedImages.map((image) => image.url)
+
+        categoryCover = urls[0]
+      }
+
       await createProductCategory({
         name: data.name,
         handle: data.handle,
@@ -107,7 +139,9 @@ function CreateProductCategory(props: CreateProductCategoryProps) {
         is_internal: data.is_public.value === CategoryVisibility.Private,
         parent_category_id: parentCategory?.id ?? null,
         metadata: getSubmittableMetadata(data.metadata),
+        image: categoryCover,
       })
+
       // TODO: temporary here, investigate why `useAdminCreateProductCategory` doesn't invalidate this
       await queryClient.invalidateQueries(adminProductCategoryKeys.lists())
       closeModal()
@@ -200,6 +234,16 @@ function CreateProductCategory(props: CreateProductCategoryProps) {
           </div>
 
           <div className="mb-8">
+            <p className="inter-base-regular text-grey-50">
+              {t(
+                "image-table-select-thumbnail-image-for-category",
+                "Select the image to be used as a thumbnail for this category"
+              )}
+            </p>
+            <ThumbnailForm form={nestedForm(form, "image")} />
+          </div>
+
+          <div className="mb-8">
             <TextArea
               label={t("modals-description", "Description")}
               placeholder={
@@ -261,7 +305,7 @@ function CreateProductCategory(props: CreateProductCategoryProps) {
               />
             </div>
           </div>
-          <div className="mt-xlarge">
+          <div className="mt-8">
             <h2 className="inter-base-semibold mb-base">
               {t("collection-modal-metadata", "Metadata")}
             </h2>

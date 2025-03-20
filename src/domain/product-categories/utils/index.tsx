@@ -5,7 +5,7 @@ import {
   CategoryStatus,
   CategoryVisibility,
 } from "../modals/add-product-category"
-export const flattenCategoryTree = (rootCategories) => {
+export const flattenCategoryTree = (rootCategories: any[]) => {
   return rootCategories.reduce((acc, category) => {
     if (category?.category_children.length) {
       acc = acc
@@ -19,15 +19,22 @@ export const flattenCategoryTree = (rootCategories) => {
   }, [])
 }
 
-export const getAncestors = (targetNode, nodes, acc = []) => {
+export const getAncestors = (
+  targetNode: { parent_category_id: any },
+  nodes: any[],
+  acc: { parent_category_id: any }[] = []
+): { parent_category_id: any }[] => {
   let parentCategory = null
 
+  // 明确 acc 的类型为 { parent_category_id: any }[]
   acc.push(targetNode)
 
   if (targetNode.parent_category_id) {
     parentCategory = nodes.find((n) => n.id === targetNode.parent_category_id)
 
-    acc = getAncestors(parentCategory, nodes, acc)
+    if (parentCategory) {
+      acc = getAncestors(parentCategory, nodes, acc)
+    }
   }
 
   if (!parentCategory) {
@@ -36,7 +43,6 @@ export const getAncestors = (targetNode, nodes, acc = []) => {
 
   return acc
 }
-
 export const getDefaultCategoryValues = (
   t: TFunction,
   category?: ProductCategory
@@ -67,6 +73,15 @@ export const getDefaultCategoryValues = (
       label: category?.is_internal
         ? (t("modals-private", "Private") as string)
         : (t("modals-public", "Public") as string),
+    },
+    image: {
+      images: category?.image
+        ? [
+            {
+              url: category.image,
+            },
+          ]
+        : [],
     },
   }
 }

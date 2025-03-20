@@ -1,17 +1,21 @@
-import { useAdminStore } from "medusa-react"
+import { useAdminGetSession, useAdminStore } from "medusa-react"
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 
+import {
+  BookOpen,
+  Buildings,
+  CogSixTooth,
+  CurrencyDollar,
+  Gift,
+  ReceiptPercent,
+  ShoppingCart,
+  Swatch,
+  Tag,
+  UserGroup,
+  Users,
+} from "@medusajs/icons"
 import { useFeatureFlag } from "../../../providers/feature-flag-provider"
-import BuildingsIcon from "../../fundamentals/icons/buildings-icon"
-import CartIcon from "../../fundamentals/icons/cart-icon"
-import CashIcon from "../../fundamentals/icons/cash-icon"
-import GearIcon from "../../fundamentals/icons/gear-icon"
-import GiftIcon from "../../fundamentals/icons/gift-icon"
-import SaleIcon from "../../fundamentals/icons/sale-icon"
-import SwatchIcon from "../../fundamentals/icons/swatch-icon"
-import TagIcon from "../../fundamentals/icons/tag-icon"
-import UsersIcon from "../../fundamentals/icons/users-icon"
 import SidebarMenuItem from "../../molecules/sidebar-menu-item"
 import UserMenu from "../../molecules/user-menu"
 
@@ -23,6 +27,7 @@ const Sidebar: React.FC = () => {
 
   const { isFeatureEnabled } = useFeatureFlag()
   const { store } = useAdminStore()
+  const { user, isLoading } = useAdminGetSession()
 
   const triggerHandler = () => {
     const id = triggerHandler.id++
@@ -56,61 +61,75 @@ const Sidebar: React.FC = () => {
           </span>
         </div>
         <div className="py-3.5">
+          {!isLoading && user?.permission !== "admin" && (
+            <SidebarMenuItem
+              pageLink={"/a/guide"}
+              icon={<BookOpen />}
+              triggerHandler={triggerHandler}
+              text={t("sidebar-guides", "Guide")}
+            />
+          )}
           <SidebarMenuItem
             pageLink={"/a/orders"}
-            icon={<CartIcon size={ICON_SIZE} />}
+            icon={<ShoppingCart />}
             triggerHandler={triggerHandler}
             text={t("sidebar-orders", "Orders")}
           />
           <SidebarMenuItem
             pageLink={"/a/products"}
-            icon={<TagIcon size={ICON_SIZE} />}
+            icon={<Tag />}
             text={t("sidebar-products", "Products")}
             triggerHandler={triggerHandler}
           />
           {isFeatureEnabled("product_categories") && (
             <SidebarMenuItem
               pageLink={"/a/product-categories"}
-              icon={<SwatchIcon size={ICON_SIZE} />}
+              icon={<Swatch />}
               text={t("sidebar-categories", "Categories")}
               triggerHandler={triggerHandler}
             />
           )}
           <SidebarMenuItem
             pageLink={"/a/customers"}
-            icon={<UsersIcon size={ICON_SIZE} />}
+            icon={<Users />}
             triggerHandler={triggerHandler}
             text={t("sidebar-customers", "Customers")}
           />
           {inventoryEnabled && (
             <SidebarMenuItem
               pageLink={"/a/inventory"}
-              icon={<BuildingsIcon size={ICON_SIZE} />}
+              icon={<Buildings />}
               triggerHandler={triggerHandler}
               text={t("sidebar-inventory", "Inventory")}
             />
           )}
           <SidebarMenuItem
             pageLink={"/a/discounts"}
-            icon={<SaleIcon size={ICON_SIZE} />}
+            icon={<ReceiptPercent />}
             triggerHandler={triggerHandler}
             text={t("sidebar-discounts", "Discounts")}
           />
           <SidebarMenuItem
             pageLink={"/a/gift-cards"}
-            icon={<GiftIcon size={ICON_SIZE} />}
+            icon={<Gift />}
             triggerHandler={triggerHandler}
             text={t("sidebar-gift-cards", "Gift Cards")}
           />
           <SidebarMenuItem
             pageLink={"/a/pricing"}
-            icon={<CashIcon size={ICON_SIZE} />}
+            icon={<CurrencyDollar />}
             triggerHandler={triggerHandler}
             text={t("sidebar-pricing", "Pricing")}
           />
           <SidebarMenuItem
+            pageLink={"/a/users"}
+            icon={<UserGroup />}
+            triggerHandler={triggerHandler}
+            text={t("sidebar-users", "Users")}
+          />
+          <SidebarMenuItem
             pageLink={"/a/settings"}
-            icon={<GearIcon size={ICON_SIZE} />}
+            icon={<CogSixTooth />}
             triggerHandler={triggerHandler}
             text={t("sidebar-settings", "Settings")}
           />

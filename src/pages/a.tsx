@@ -9,6 +9,7 @@ import Collections from "../domain/collections"
 import Customers from "../domain/customers"
 import Discounts from "../domain/discounts"
 import GiftCards from "../domain/gift-cards"
+import Guide from "../domain/guide"
 import Inventory from "../domain/inventory"
 import Oauth from "../domain/oauth"
 import Orders from "../domain/orders"
@@ -19,6 +20,7 @@ import ProductsRoute from "../domain/products"
 import PublishableApiKeys from "../domain/publishable-api-keys"
 import SalesChannels from "../domain/sales-channels"
 import Settings from "../domain/settings"
+import UsersPage from "../domain/users"
 
 const IndexPage = () => {
   const navigate = useNavigate()
@@ -48,6 +50,7 @@ const DashboardRoutes = () => {
           <Route path="discounts/*" element={<Discounts />} />
           <Route path="customers/*" element={<Customers />} />
           <Route path="pricing/*" element={<PriceListRoute />} />
+          <Route path="users/*" element={<UsersPage />} />
           <Route path="settings/*" element={<Settings />} />
           <Route path="sales-channels/*" element={<SalesChannels />} />
           <Route
@@ -55,6 +58,7 @@ const DashboardRoutes = () => {
             element={<PublishableApiKeys />}
           />
           <Route path="inventory/*" element={<Inventory />} />
+          <Route path="guide/*" element={<Guide />} />
         </Routes>
       </Layout>
     </DndProvider>
