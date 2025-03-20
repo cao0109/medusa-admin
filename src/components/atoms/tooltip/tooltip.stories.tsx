@@ -32,17 +32,17 @@ const Template: ComponentStory<any> = ({ triggerPosition, ...props }) => {
     <div
       className={clsx(
         {
-          ["justify-start content-start"]: triggerPosition === "top left",
-          ["justify-center content-start"]: triggerPosition === "top center",
-          ["justify-end content-start"]: triggerPosition === "top right",
-          ["justify-start content-center"]: triggerPosition === "center left",
+          ["content-start justify-start"]: triggerPosition === "top left",
+          ["content-start justify-center"]: triggerPosition === "top center",
+          ["content-start justify-end"]: triggerPosition === "top right",
+          ["content-center justify-start"]: triggerPosition === "center left",
           ["place-content-center"]: triggerPosition === "center center",
-          ["justify-end content-center"]: triggerPosition === "center right",
-          ["justify-start content-end"]: triggerPosition === "bottom left",
-          ["justify-center content-end"]: triggerPosition === "bottom center",
-          ["justify-end content-end"]: triggerPosition === "bottom right",
+          ["content-center justify-end"]: triggerPosition === "center right",
+          ["content-end justify-start"]: triggerPosition === "bottom left",
+          ["content-end justify-center"]: triggerPosition === "bottom center",
+          ["content-end justify-end"]: triggerPosition === "bottom right",
         },
-        "min-h-full grid"
+        "grid min-h-full"
       )}
     >
       <Tooltip {...props}>

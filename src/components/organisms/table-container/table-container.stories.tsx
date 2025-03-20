@@ -183,7 +183,7 @@ const Template: ComponentStory<typeof TableContainer> = (args) => {
         </TableContainer>
       </div>
 
-      <div className="flex items-start justify-between mt-xlarge">
+      <div className="mt-xlarge flex items-start justify-between">
         <Button
           className="mt-base"
           variant="secondary"
@@ -192,7 +192,7 @@ const Template: ComponentStory<typeof TableContainer> = (args) => {
         >
           Reload
         </Button>
-        <p className="inter-small-regular text-grey-50 inline-block max-w-[440px]">
+        <p className="inter-small-regular inline-block max-w-[440px] text-grey-50">
           Note that React Table does not work in storybook. Because of this
           pagination does not work in this example, you should instead use the
           reload button to simulate pagination.

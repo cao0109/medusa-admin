@@ -58,16 +58,16 @@ const TumbnailSection = ({ product }: Props) => {
         }
       >
         <div
-          className={clsx("grid grid-cols-3 gap-xsmall mt-base", {
+          className={clsx("mt-base grid grid-cols-3 gap-xsmall", {
             hidden: !product.thumbnail,
           })}
         >
           {product.thumbnail && (
-            <div className="aspect-square flex items-center justify-center">
+            <div className="flex aspect-square items-center justify-center">
               <img
                 src={product.thumbnail}
                 alt={`Thumbnail for ${product.title}`}
-                className="object-contain rounded-rounded max-w-full max-h-full"
+                className="max-h-full max-w-full rounded-rounded object-contain"
               />
             </div>
           )}

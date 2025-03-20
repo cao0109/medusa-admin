@@ -85,14 +85,14 @@ const ThumbnailModal = ({ product, open, onClose }: Props) => {
         <form onSubmit={onSubmit}>
           <Modal.Content>
             <h2 className="inter-large-semibold mb-2xsmall">Thumbnail</h2>
-            <p className="inter-base-regular text-grey-50 mb-large">
+            <p className="inter-base-regular mb-large text-grey-50">
               Used to represent your product during checkout, social sharing and
               more.
             </p>
             <ThumbnailForm form={nestedForm(form, "thumbnail")} />
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex gap-x-2 justify-end w-full">
+            <div className="flex w-full justify-end gap-x-2">
               <Button
                 size="small"
                 variant="secondary"

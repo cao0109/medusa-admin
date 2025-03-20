@@ -22,9 +22,8 @@ const AmountInput = ({
   value,
   onChange,
 }: Props) => {
-  const { symbol_native, decimal_digits } = currencies[
-    currencyCode.toUpperCase()
-  ]
+  const { symbol_native, decimal_digits } =
+    currencies[currencyCode.toUpperCase()]
 
   const getFormattedValue = (value: number) => {
     return `${value / 10 ** decimal_digits}`
@@ -57,7 +56,7 @@ const AmountInput = ({
       {label && <InputHeader label={label} className="mb-xsmall" />}
       <div
         className={clsx(
-          "w-full flex items-center bg-grey-5 border border-gray-20 px-base py-xsmall rounded-rounded h-10 focus-within:shadow-input focus-within:border-violet-60 inter-base-regular",
+          "border-gray-20 inter-base-regular flex h-10 w-full items-center rounded-rounded border bg-grey-5 px-base py-xsmall focus-within:border-violet-60 focus-within:shadow-input",
           {
             "border-rose-50": errors && name && errors[name],
           }
@@ -67,7 +66,7 @@ const AmountInput = ({
           <p>{currencyCode.toUpperCase()}</p>
         </div>
 
-        <div className="flex items-center gap-2xsmall w-full">
+        <div className="flex w-full items-center gap-2xsmall">
           <AmountField
             step={step}
             value={formattedValue}
@@ -77,10 +76,10 @@ const AmountInput = ({
             allowNegativeValue={false}
             placeholder="-"
             decimalScale={decimal_digits}
-            className="bg-transparent outline-none outline-0 w-full remove-number-spinner leading-base text-grey-90 font-normal caret-violet-60 placeholder-grey-40 text-right"
+            className="remove-number-spinner w-full bg-transparent text-right font-normal leading-base text-grey-90 placeholder-grey-40 caret-violet-60 outline-none outline-0"
           />
-          <div className="flex items-center min-w-[16px] ml-2xsmall">
-            <p className="text-grey-40 w-full text-right">{symbol_native}</p>
+          <div className="ml-2xsmall flex min-w-[16px] items-center">
+            <p className="w-full text-right text-grey-40">{symbol_native}</p>
           </div>
         </div>
       </div>

@@ -38,10 +38,8 @@ const ProductPrices = ({
   onFileChosen,
 }: ProductPricesProps) => {
   const [showAdd, setShowAdd] = React.useState(false)
-  const [
-    selectedVariant,
-    setSelectedVariant,
-  ] = React.useState<ProductVariant | null>(null)
+  const [selectedVariant, setSelectedVariant] =
+    React.useState<ProductVariant | null>(null)
   const unselect = () => setSelectedVariant(null)
 
   const { prices, setPrices } = usePriceListForm()

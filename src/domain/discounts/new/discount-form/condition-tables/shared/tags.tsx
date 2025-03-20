@@ -15,7 +15,7 @@ export const TagColumns: Column<ProductTag>[] = [
     Cell: ({ row: { original } }) => {
       return (
         <div className="w-[220px]">
-          <span className="bg-grey-10 px-2 py-0.5 rounded-rounded">
+          <span className="rounded-rounded bg-grey-10 px-2 py-0.5">
             #{original.value}
           </span>
         </div>

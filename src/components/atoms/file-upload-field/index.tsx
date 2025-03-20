@@ -77,7 +77,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
       onDrop={handleFileDrop}
       onDragOver={(e) => e.preventDefault()}
       className={clsx(
-        "flex flex-col select-none inter-base-regular text-grey-50 cursor-pointer items-center justify-center w-full h-full rounded-rounded border-2 border-dashed border-grey-20 transition-colors hover:border-violet-60 hover:text-grey-40",
+        "inter-base-regular flex h-full w-full cursor-pointer select-none flex-col items-center justify-center rounded-rounded border-2 border-dashed border-grey-20 text-grey-50 transition-colors hover:border-violet-60 hover:text-grey-40",
         className
       )}
     >

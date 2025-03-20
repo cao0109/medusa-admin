@@ -30,7 +30,7 @@ const useOrderTableColums = () => {
         Header: <div className="pl-2">Order</div>,
         accessor: "display_id",
         Cell: ({ cell: { value } }) => (
-          <p className="text-grey-90 group-hover:text-violet-60 min-w-[100px] pl-2">{`#${value}`}</p>
+          <p className="min-w-[100px] pl-2 text-grey-90 group-hover:text-violet-60">{`#${value}`}</p>
         ),
       },
       {
@@ -103,7 +103,7 @@ const useOrderTableColums = () => {
         accessor: "country_code",
         Cell: ({ row }) => (
           <div className="pr-2">
-            <div className="flex rounded-rounded w-full justify-end">
+            <div className="flex w-full justify-end rounded-rounded">
               <Tooltip
                 content={
                   isoAlpha2Countries[

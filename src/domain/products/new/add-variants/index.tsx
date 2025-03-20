@@ -267,7 +267,7 @@ const AddVariantsForm = ({
         <div>
           {options.length > 0 && (
             <div className="mt-small">
-              <div className="grid grid-cols-[230px_1fr_40px] gap-x-xsmall inter-small-semibold text-grey-50 mb-small">
+              <div className="inter-small-semibold mb-small grid grid-cols-[230px_1fr_40px] gap-x-xsmall text-grey-50">
                 <span>Option title</span>
                 <span>Variations (comma separated)</span>
               </div>
@@ -322,7 +322,7 @@ const AddVariantsForm = ({
           <Button
             variant="secondary"
             size="small"
-            className="h-10 w-full mt-base"
+            className="mt-base h-10 w-full"
             type="button"
             onClick={appendNewOption}
           >
@@ -350,9 +350,9 @@ const AddVariantsForm = ({
             </div>
             {variants?.length > 0 && (
               <div className="mt-small">
-                <div className="grid grid-cols-[1fr_90px_100px_48px] inter-small-semibold text-grey-50 pr-base">
+                <div className="inter-small-semibold grid grid-cols-[1fr_90px_100px_48px] pr-base text-grey-50">
                   <p>Variant</p>
-                  <div className="flex justify-end mr-xlarge">
+                  <div className="mr-xlarge flex justify-end">
                     <p>Inventory</p>
                   </div>
                 </div>
@@ -380,7 +380,7 @@ const AddVariantsForm = ({
             <Button
               variant="secondary"
               size="small"
-              className="h-10 w-full mt-base"
+              className="mt-base h-10 w-full"
               type="button"
               disabled={!enableVariants}
               onClick={onToggleForm}
@@ -405,7 +405,7 @@ const AddVariantsForm = ({
             />
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex items-center gap-x-xsmall justify-end w-full">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button
                 variant="secondary"
                 size="small"

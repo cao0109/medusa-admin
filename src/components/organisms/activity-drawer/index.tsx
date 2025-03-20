@@ -18,7 +18,7 @@ const ActivityDrawer = ({ onDismiss }) => {
   return (
     <div
       ref={ref}
-      className="bg-grey-0 w-[400px] shadow-dropdown rounded-rounded top-[64px] bottom-2 right-3 rounded overflow-x-hidden fixed flex flex-col"
+      className="fixed top-[64px] bottom-2 right-3 flex w-[400px] flex-col overflow-x-hidden rounded-rounded rounded bg-grey-0 shadow-dropdown"
     >
       <div className="inter-large-semibold pt-7 pl-8 pb-1">Activity</div>
 
@@ -37,12 +37,12 @@ const ActivityDrawer = ({ onDismiss }) => {
 
 const EmptyActivityDrawer = () => {
   return (
-    <div className="p-4 h-full w-full flex flex-col justify-center items-center">
+    <div className="flex h-full w-full flex-col items-center justify-center p-4">
       <SidedMouthFaceIcon size={36} />
-      <span className={"mt-4 inter-large-semibold text-grey-90"}>
+      <span className={"inter-large-semibold mt-4 text-grey-90"}>
         It's quite in here...
       </span>
-      <span className={"mt-4 text-grey-60 text-center inter-base-regular"}>
+      <span className={"inter-base-regular mt-4 text-center text-grey-60"}>
         You don't have any notifications at the moment, but once you do they
         will live here.
       </span>
@@ -52,15 +52,15 @@ const EmptyActivityDrawer = () => {
 
 const ErrorActivityDrawer = () => {
   return (
-    <div className="p-4 h-full w-full flex flex-col justify-center items-center">
+    <div className="flex h-full w-full flex-col items-center justify-center p-4">
       <SadFaceIcon size={36} />
-      <span className={"mt-4 inter-large-semibold text-grey-90"}>Oh no...</span>
-      <span className={"mt-2 text-grey-60 text-center inter-base-regular"}>
+      <span className={"inter-large-semibold mt-4 text-grey-90"}>Oh no...</span>
+      <span className={"inter-base-regular mt-2 text-center text-grey-60"}>
         Something went wrong while trying to fetch your notifications - We will
         keep trying!
       </span>
 
-      <div className="flex items-center mt-4">
+      <div className="mt-4 flex items-center">
         <Spinner size={"small"} variant={"secondary"} />
         <span className="ml-2.5">Processing...</span>
       </div>

@@ -23,10 +23,10 @@ const NestedPrice = ({ form, nestedPrice }: Props) => {
   const { currencyPrice, regionPrices } = nestedPrice
   return (
     <div key={currencyPrice.id} className="flex flex-col gap-y-2xsmall">
-      <div className="relative grid grid-cols-[1fr_223px] gap-x-base p-2xsmall pl-10 hover:bg-grey-5 focus-within:bg-grey-5 transition-colors rounded-rounded justify-between">
+      <div className="relative grid grid-cols-[1fr_223px] justify-between gap-x-base rounded-rounded p-2xsmall pl-10 transition-colors focus-within:bg-grey-5 hover:bg-grey-5">
         <button
           className={clsx(
-            "absolute top-1/2 -translate-y-1/2 left-xsmall text-grey-40 transition-all",
+            "absolute top-1/2 left-xsmall -translate-y-1/2 text-grey-40 transition-all",
             {
               "rotate-90": state,
             },
@@ -41,7 +41,7 @@ const NestedPrice = ({ form, nestedPrice }: Props) => {
           <TriangleRightIcon />
         </button>
         <div className="flex items-center gap-x-small">
-          <div className="w-10 h-10 bg-grey-10 rounded-rounded text-grey-50 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-rounded bg-grey-10 text-grey-50">
             <CoinsIcon size={20} />
           </div>
           <div className="flex items-center gap-x-xsmall">
@@ -71,7 +71,7 @@ const NestedPrice = ({ form, nestedPrice }: Props) => {
       </div>
       <ul
         className={clsx(
-          "flex flex-col gap-y-2xsmall my-2xsmall overflow-hidden",
+          "my-2xsmall flex flex-col gap-y-2xsmall overflow-hidden",
           {
             "max-h-0": !state,
             "max-h-[9999px]": state,
@@ -81,11 +81,11 @@ const NestedPrice = ({ form, nestedPrice }: Props) => {
         {regionPrices.map((rp) => {
           return (
             <div
-              className="grid grid-cols-[1fr_223px] p-2xsmall pl-10 hover:bg-grey-5 focus-within:bg-grey-5 transition-colors rounded-rounded justify-between"
+              className="grid grid-cols-[1fr_223px] justify-between rounded-rounded p-2xsmall pl-10 transition-colors focus-within:bg-grey-5 hover:bg-grey-5"
               key={rp.id}
             >
               <div className="flex items-center gap-x-small">
-                <div className="w-10 h-10 bg-grey-10 rounded-rounded text-grey-50 flex items-center justify-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-rounded bg-grey-10 text-grey-50">
                   <MapPinIcon size={20} />
                 </div>
                 <div className="flex items-center gap-x-xsmall">

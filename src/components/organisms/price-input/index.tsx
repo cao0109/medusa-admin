@@ -27,9 +27,9 @@ function PriceInput(props: PriceInputProps) {
   const placeholder = `0.${"0".repeat(decimal_digits)}`
 
   return (
-    <div className="w-[314px] relative">
-      <div className="absolute flex items-center h-full top-0 left-3">
-        <span className="text-small text-grey-40 mt-[1px]">{code}</span>
+    <div className="relative w-[314px]">
+      <div className="absolute top-0 left-3 flex h-full items-center">
+        <span className="mt-[1px] text-small text-grey-40">{code}</span>
       </div>
 
       <AmountField
@@ -42,19 +42,19 @@ function PriceInput(props: PriceInputProps) {
         placeholder={placeholder}
         decimalScale={decimal_digits}
         style={{ paddingRight: rightOffset }}
-        className="focus:bg-white focus:border-violet-6
-            border border-solid border-grey-20
-            w-full h-[40px]
-            py-[10px] pl-12
-            rounded-lg
-            bg-grey-5
-            text-gray-90
+        className="focus:border-violet-6 text-gray-90
+            h-[40px] w-full rounded-lg
+            border border-solid
+            border-grey-20 bg-grey-5
+            py-[10px]
+            pl-12
             text-right
-            text-small"
+            text-small
+            focus:bg-white"
       />
 
-      <div className="absolute flex items-center h-full top-0 right-3">
-        <span className="text-small text-grey-40 mt-[1px]">
+      <div className="absolute top-0 right-3 flex h-full items-center">
+        <span className="mt-[1px] text-small text-grey-40">
           {symbol_native}
         </span>
       </div>

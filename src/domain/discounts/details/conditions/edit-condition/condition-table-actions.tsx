@@ -32,10 +32,10 @@ const ExistingConditionTableActions = ({
   const { push } = useContext(LayeredModalContext)
 
   return (
-    <div className="flex space-x-xsmall h-[34px] overflow-hidden">
+    <div className="flex h-[34px] space-x-xsmall overflow-hidden">
       <div className={clsx("transition-all duration-200", classes)}>
-        <div className="divide-x flex items-center h-[34px] mb-2">
-          <span className="mr-3 inter-small-regular text-grey-50">
+        <div className="mb-2 flex h-[34px] items-center divide-x">
+          <span className="inter-small-regular mr-3 text-grey-50">
             {numberOfSelectedRows} selected
           </span>
           <div className="flex space-x-xsmall pl-3">
@@ -57,7 +57,7 @@ const ExistingConditionTableActions = ({
             </Button>
           </div>
         </div>
-        <div className="flex justify-end h-[34px]">
+        <div className="flex h-[34px] justify-end">
           <Button
             size="small"
             variant="ghost"

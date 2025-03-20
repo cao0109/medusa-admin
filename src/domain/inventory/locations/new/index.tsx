@@ -95,7 +95,7 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
     <form className="w-full">
       <FocusModal>
         <FocusModal.Header>
-          <div className="flex justify-between w-full px-8 medium:w-8/12">
+          <div className="flex w-full justify-between px-8 medium:w-8/12">
             <Button
               size="small"
               variant="ghost"
@@ -117,9 +117,9 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
             </div>
           </div>
         </FocusModal.Header>
-        <FocusModal.Main className="flex justify-center w-full no-scrollbar">
-          <div className="medium:w-7/12 large:w-6/12 small:w-4/5 max-w-[700px] my-16">
-            <h1 className="px-1 font-semibold mb-base text-grey-90 text-xlarge">
+        <FocusModal.Main className="no-scrollbar flex w-full justify-center">
+          <div className="my-16 max-w-[700px] small:w-4/5 medium:w-7/12 large:w-6/12">
+            <h1 className="mb-base px-1 text-xlarge font-semibold text-grey-90">
               Add new location
             </h1>
             <Accordion defaultValue={"general"} type="single">
@@ -131,7 +131,7 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
                 <p className="inter-base-regular text-grey-50">
                   Specify the details about this location
                 </p>
-                <div className="flex flex-col mt-xlarge gap-y-xlarge">
+                <div className="mt-xlarge flex flex-col gap-y-xlarge">
                   <GeneralForm form={nestedForm(form, "general")} />
                   <AddressForm form={nestedForm(form, "address")} />
                 </div>
@@ -145,7 +145,7 @@ const NewLocation = ({ onClose }: { onClose: () => void }) => {
                     Specify which Sales Channels this location's items can be
                     purchased through.
                   </p>
-                  <div className="flex mt-xlarge">
+                  <div className="mt-xlarge flex">
                     <SalesChannelsForm
                       location={null}
                       form={nestedForm(form, "salesChannels")}

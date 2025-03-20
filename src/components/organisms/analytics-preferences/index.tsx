@@ -82,7 +82,7 @@ const AnalyticsPreferencesModal = () => {
     <FocusModal>
       <FocusModal.Main>
         <div className="flex flex-col items-center">
-          <div className="mt-5xlarge flex flex-col max-w-[664px] w-full">
+          <div className="mt-5xlarge flex w-full max-w-[664px] flex-col">
             <h1 className="inter-xlarge-semibold mb-large">
               Help us get better
             </h1>
@@ -120,7 +120,7 @@ const AnalyticsPreferencesModal = () => {
               />
               <AnalyticsConfigForm form={nestedForm(form, "config")} />
             </div>
-            <div className="flex items-center justify-end mt-5xlarge">
+            <div className="mt-5xlarge flex items-center justify-end">
               <Button
                 variant="primary"
                 size="small"

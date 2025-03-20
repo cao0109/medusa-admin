@@ -33,13 +33,13 @@ const Topbar: React.FC = () => {
   )
 
   return (
-    <div className="sticky top-0 z-40 flex items-center justify-between w-full border-b min-h-topbar max-h-topbar pr-xlarge pl-base bg-grey-0 border-grey-20">
+    <div className="sticky top-0 z-40 flex max-h-topbar min-h-topbar w-full items-center justify-between border-b border-grey-20 bg-grey-0 pr-xlarge pl-base">
       <SearchBar />
       <div className="flex items-center">
         <Button
           size="small"
           variant="ghost"
-          className="w-8 h-8 mr-3"
+          className="mr-3 h-8 w-8"
           onClick={() => setShowSupportForm(!showSupportform)}
         >
           <HelpCircleIcon size={24} />

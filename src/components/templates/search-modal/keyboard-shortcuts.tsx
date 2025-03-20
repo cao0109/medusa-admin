@@ -7,26 +7,26 @@ import PointerIcon from "../../fundamentals/icons/pointer-icon"
 const KeyboardShortcuts = ({ ...props }) => {
   return (
     <p {...props}>
-      <span className="rounded p-1 bg-grey-10">
+      <span className="rounded bg-grey-10 p-1">
         <PointerIcon color="#9CA3AF" size="16px" />
       </span>
       or
-      <span className="rounded p-1 bg-grey-10">
+      <span className="rounded bg-grey-10 p-1">
         <ArrowUpIcon color="#9CA3AF" size="16px" />
       </span>
-      <span className="rounded -ml-1 p-1 bg-grey-10">
+      <span className="-ml-1 rounded bg-grey-10 p-1">
         <ArrowDownIcon color="#9CA3AF" size="16px" />
       </span>
       to navigate,
-      <span className="rounded p-1 bg-grey-10">
+      <span className="rounded bg-grey-10 p-1">
         <DownLeftIcon color="#9CA3AF" size="16px" />
       </span>
       to select, and
-      <span className="rounded px-1.5 py-0.5 bg-grey-10 font-semibold leading-small font-small">
+      <span className="font-small rounded bg-grey-10 px-1.5 py-0.5 font-semibold leading-small">
         <OSCommandIcon />
       </span>
       <span className="-mx-2">+</span>
-      <span className="rounded px-1.5 py-0.5 bg-grey-10 font-semibold leading-small font-small">
+      <span className="font-small rounded bg-grey-10 px-1.5 py-0.5 font-semibold leading-small">
         K
       </span>
       to search anytime

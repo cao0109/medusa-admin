@@ -163,7 +163,7 @@ const NewVariant = ({
         ref={preview}
         data-handler-id={handlerId}
         className={clsx(
-          "grid grid-cols-[32px_1fr_90px_100px_48px] transition-all rounded-rounded hover:bg-grey-5 focus-within:bg-grey-5 h-16 py-xsmall pl-xsmall pr-base translate-y-0 translate-x-0",
+          "grid h-16 translate-y-0 translate-x-0 grid-cols-[32px_1fr_90px_100px_48px] rounded-rounded py-xsmall pl-xsmall pr-base transition-all focus-within:bg-grey-5 hover:bg-grey-5",
           {
             "opacity-50": isDragging,
           }
@@ -171,15 +171,15 @@ const NewVariant = ({
       >
         <div
           ref={ref}
-          className="text-grey-40 cursor-move flex items-center justify-center"
+          className="flex cursor-move items-center justify-center text-grey-40"
         >
           <GripIcon size={20} />
         </div>
-        <div className="flex justify-center flex-col ml-base">
+        <div className="ml-base flex flex-col justify-center">
           <p className="inter-base-semibold">
             {source.general.title}
             {source.stock.sku && (
-              <span className="inter-base-regular text-grey-50 ml-2xsmall">
+              <span className="inter-base-regular ml-2xsmall text-grey-50">
                 ({source.stock.sku})
               </span>
             )}
@@ -190,7 +190,7 @@ const NewVariant = ({
             </span>
           )}
         </div>
-        <div className="flex items-center justify-end mr-xlarge">
+        <div className="mr-xlarge flex items-center justify-end">
           <p>{source.stock.inventory_quantity || "-"}</p>
         </div>
         <div className="flex items-center justify-center">
@@ -219,7 +219,7 @@ const NewVariant = ({
             customTrigger={
               <Button
                 variant="ghost"
-                className="w-xlarge h-xlarge p-0 flex items-center justify-center text-grey-50"
+                className="flex h-xlarge w-xlarge items-center justify-center p-0 text-grey-50"
               >
                 <MoreHorizontalIcon size={20} />
               </Button>
@@ -234,7 +234,7 @@ const NewVariant = ({
             <h1 className="inter-xlarge-semibold">
               Edit Variant
               {source.general.title && (
-                <span className="ml-xsmall inter-xlarge-regular text-grey-50">
+                <span className="inter-xlarge-regular ml-xsmall text-grey-50">
                   ({source.general.title})
                 </span>
               )}
@@ -248,7 +248,7 @@ const NewVariant = ({
             />
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex items-center gap-x-xsmall justify-end w-full">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button
                 variant="secondary"
                 size="small"
@@ -292,7 +292,7 @@ const VariantValidity = ({
       <IconTooltip
         type="error"
         content={
-          <div className="text-rose-50 flex flex-col gap-y-2xsmall">
+          <div className="flex flex-col gap-y-2xsmall text-rose-50">
             <p>This variant has no options.</p>
           </div>
         }
@@ -307,9 +307,9 @@ const VariantValidity = ({
       <IconTooltip
         type="error"
         content={
-          <div className="text-rose-50 flex flex-col gap-y-2xsmall">
+          <div className="flex flex-col gap-y-2xsmall text-rose-50">
             <p>You are missing options values for the following options:</p>
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               {invalidOptions.map((io, index) => {
                 return <li key={index}>{io.title || `Option ${index + 1}`}</li>
               })}
@@ -343,12 +343,12 @@ const VariantValidity = ({
         type="warning"
         side="right"
         content={
-          <div className="text-orange-50 flex flex-col gap-y-2xsmall">
+          <div className="flex flex-col gap-y-2xsmall text-orange-50">
             <p>
               Your variant is createable, but it's missing some important
               fields:
             </p>
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               {!validPrices && <li>Pricing</li>}
               {!validDimensions && <li>Dimensions</li>}
               {!validCustoms && <li>Customs</li>}

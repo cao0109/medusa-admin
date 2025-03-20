@@ -39,7 +39,7 @@ export const EditTaxRateDetails = ({
           required: !lockName ? FormValidator.required("Name") : undefined,
         })}
         required={!lockName}
-        className="mb-base min-w-[335px] w-full"
+        className="mb-base w-full min-w-[335px]"
         errors={errors}
       />
       <Input
@@ -58,7 +58,7 @@ export const EditTaxRateDetails = ({
           valueAsNumber: true,
         })}
         required
-        className="mb-base min-w-[335px] w-full"
+        className="mb-base w-full min-w-[335px]"
         errors={errors}
       />
       <Input
@@ -68,7 +68,7 @@ export const EditTaxRateDetails = ({
           required: FormValidator.required("Tax Code"),
         })}
         required
-        className="mb-base min-w-[335px] w-full"
+        className="mb-base w-full min-w-[335px]"
         errors={errors}
       />
     </div>

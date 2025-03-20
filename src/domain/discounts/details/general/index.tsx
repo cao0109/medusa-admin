@@ -92,7 +92,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
             {discount.is_dynamic && (
               <span>
                 <Badge variant="default">
-                  <span className="text-grey-90 inter-small-regular">
+                  <span className="inter-small-regular text-grey-90">
                     {"Template discount"}
                   </span>
                 </Badge>
@@ -114,7 +114,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               Discount Amount
             </span>
           </div>
-          <div className="border-l border-grey-20 pl-6 ml-12">
+          <div className="ml-12 border-l border-grey-20 pl-6">
             <h2 className="inter-xlarge-regular text-grey-90">
               {discount.regions.length.toLocaleString("en-US")}
             </h2>
@@ -122,7 +122,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               Valid Regions
             </span>
           </div>
-          <div className="border-l border-grey-20 pl-6 ml-12">
+          <div className="ml-12 border-l border-grey-20 pl-6">
             <h2 className="inter-xlarge-regular text-grey-90">
               {discount.usage_count.toLocaleString("en-US")}
             </h2>
@@ -150,7 +150,7 @@ const getPromotionDescription = (discount: Discount) => {
               amount: discount.rule.value,
             })}
           </h2>
-          <span className="inter-base-regular text-grey-50 ml-1">
+          <span className="inter-base-regular ml-1 text-grey-50">
             {discount.regions[0].currency_code.toUpperCase()}
           </span>
         </div>
@@ -161,7 +161,7 @@ const getPromotionDescription = (discount: Discount) => {
           <h2 className="inter-xlarge-regular text-grey-90">
             {discount.rule.value}
           </h2>
-          <span className="inter-base-regular text-grey-50 ml-1">%</span>
+          <span className="inter-base-regular ml-1 text-grey-50">%</span>
         </div>
       )
     case "free_shipping":

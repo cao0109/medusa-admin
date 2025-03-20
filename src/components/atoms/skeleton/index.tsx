@@ -14,7 +14,7 @@ const Skeleton = ({ children, isLoading }: Props) => {
   return (
     <div
       className={clsx("h-fit w-fit", {
-        "bg-grey-10 animate-pulse rounded-rounded [&>*]:opacity-0": state,
+        "animate-pulse rounded-rounded bg-grey-10 [&>*]:opacity-0": state,
       })}
     >
       {children}

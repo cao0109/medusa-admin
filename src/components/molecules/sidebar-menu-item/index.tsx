@@ -62,7 +62,7 @@ const SubItem = ({ pageLink, text }: SidebarMenuSubitemProps) => {
 
   return (
     <NavLink className={classNameFn} to={pageLink}>
-      <span className="ml-3 text-grey-90 text-small">{text}</span>
+      <span className="ml-3 text-small text-grey-90">{text}</span>
     </NavLink>
   )
 }

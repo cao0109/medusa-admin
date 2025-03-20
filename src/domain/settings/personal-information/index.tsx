@@ -16,7 +16,7 @@ const PersonalInformation = () => {
         path="/a/settings"
         className="mb-xsmall"
       />
-      <div className="bg-white flex flex-col rounded-rounded border border-grey-20 pt-large pb-xlarge px-xlarge gap-y-xlarge large:max-w-[50%]">
+      <div className="flex flex-col gap-y-xlarge rounded-rounded border border-grey-20 bg-white px-xlarge pt-large pb-xlarge large:max-w-[50%]">
         <div className="flex flex-col gap-y-2xsmall">
           <h1 className="inter-xlarge-semibold">Personal information</h1>
           <p className="inter-base-regular text-grey-50">

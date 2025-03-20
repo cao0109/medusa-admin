@@ -69,12 +69,12 @@ const LocationCard: React.FC<Props> = ({ location }) => {
   ]
 
   return (
-    <div className="border my-base rounded-rounded bg-grey-0 border-grey-20">
+    <div className="my-base rounded-rounded border border-grey-20 bg-grey-0">
       <div className="flex items-center px-6 py-base">
         <IconBadge>
           <BuildingsIcon />
         </IconBadge>
-        <div className="flex flex-col ml-base">
+        <div className="ml-base flex flex-col">
           <span className="font-semibold text-grey-90">{location.name}</span>
           {location.address && (
             <div>
@@ -88,8 +88,8 @@ const LocationCard: React.FC<Props> = ({ location }) => {
         </div>
       </div>
       {isFeatureEnabled("sales_channels") && (
-        <div className="px-6 border-t border-solid py-base border-grey-20">
-          <h2 className="text-gray-500 inter-small-semibold">
+        <div className="border-t border-solid border-grey-20 px-6 py-base">
+          <h2 className="inter-small-semibold text-gray-500">
             Connected sales channels
           </h2>
           <SalesChannelsSection location={location} />

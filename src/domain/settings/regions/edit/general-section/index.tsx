@@ -68,7 +68,7 @@ const GeneralSection = ({ region }: Props) => {
           },
         ]}
       >
-        <div className="flex flex-col gap-y-xsmall mt-large">
+        <div className="mt-large flex flex-col gap-y-xsmall">
           <h2 className="inter-large-semibold">Details</h2>
           <div className="flex flex-col gap-y-xsmall">
             <RegionDetail title={"Currency"}>
@@ -200,7 +200,7 @@ type DetailProps = {
 
 const RegionDetail = ({ title, children }: DetailProps) => {
   return (
-    <div className="flex items-center justify-between inter-base-regular text-grey-50">
+    <div className="inter-base-regular flex items-center justify-between text-grey-50">
       <p>{title}</p>
       {children}
     </div>

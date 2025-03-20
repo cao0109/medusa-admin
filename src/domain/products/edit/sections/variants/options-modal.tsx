@@ -180,16 +180,15 @@ const OptionsModal = ({ product, open, onClose }: Props) => {
                         placeholder="Color"
                         {...register(`options.${index}.title`, {
                           required: "Option title is required",
-                          minLength: FormValidator.minOneCharRule(
-                            "Option title"
-                          ),
+                          minLength:
+                            FormValidator.minOneCharRule("Option title"),
                           pattern: FormValidator.whiteSpaceRule("Option title"),
                         })}
                         errors={errors}
                       />
                       <Button
                         variant="secondary"
-                        className="px-2.5 py-2.5 max-h-[40px]"
+                        className="max-h-[40px] px-2.5 py-2.5"
                         type="button"
                         onClick={() => remove(index)}
                       >
@@ -202,7 +201,7 @@ const OptionsModal = ({ product, open, onClose }: Props) => {
             </div>
             <Button
               variant="secondary"
-              className="w-full h-10 mt-base"
+              className="mt-base h-10 w-full"
               type="button"
               onClick={handleAddAnOption}
             >
@@ -210,8 +209,13 @@ const OptionsModal = ({ product, open, onClose }: Props) => {
             </Button>
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex items-center justify-end gap-xsmall w-full">
-              <Button variant="secondary" size="small" type="button" onClick={handleClose}>
+            <div className="flex w-full items-center justify-end gap-xsmall">
+              <Button
+                variant="secondary"
+                size="small"
+                type="button"
+                onClick={handleClose}
+              >
                 Cancel
               </Button>
               <Button

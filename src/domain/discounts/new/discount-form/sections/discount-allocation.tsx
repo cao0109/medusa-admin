@@ -18,7 +18,7 @@ const DiscountAllocation = () => {
           <RadioGroup.Root
             value={value}
             onValueChange={onChange}
-            className={clsx("flex items-center gap-base mt-base px-1")}
+            className={clsx("mt-base flex items-center gap-base px-1")}
           >
             <RadioGroup.Item
               value={AllocationType.TOTAL}

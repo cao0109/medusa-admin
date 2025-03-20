@@ -51,7 +51,7 @@ const AddTagsConditionsScreen = () => {
         />
       </Modal.Content>
       <Modal.Footer>
-        <div className="flex justify-end w-full space-x-xsmall">
+        <div className="flex w-full justify-end space-x-xsmall">
           <Button variant="secondary" size="small" onClick={pop}>
             Cancel
           </Button>

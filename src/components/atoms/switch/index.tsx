@@ -11,12 +11,12 @@ function Switch(props: RadixSwitch.SwitchProps) {
       {...props}
       disabled={props.disabled}
       className={clsx(
-        "w-8 h-[18px] rounded-full transition-bg bg-gray-300 radix-state-checked:bg-violet-60"
+        "h-[18px] w-8 rounded-full bg-gray-300 transition-bg radix-state-checked:bg-violet-60"
       )}
     >
       <RadixSwitch.Thumb
         className={clsx(
-          "w-2 h-2 bg-white rounded-full block transition-transform translate-x-[5px] radix-state-checked:translate-x-[19px]"
+          "block h-2 w-2 translate-x-[5px] rounded-full bg-white transition-transform radix-state-checked:translate-x-[19px]"
         )}
       />
     </RadixSwitch.Root>

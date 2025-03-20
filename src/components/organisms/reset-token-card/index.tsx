@@ -52,7 +52,7 @@ const ResetTokenCard: React.FC<ResetTokenCardProps> = ({ goBack }) => {
         <span className="inter-2xlarge-semibold mt-base text-grey-90">
           Reset your password
         </span>
-        <span className="inter-base-regular text-grey-50 mt-xsmall text-center">
+        <span className="inter-base-regular mt-xsmall text-center text-grey-50">
           Enter your email address below, and we'll send you
           <br />
           instructions on how to reset your password.
@@ -61,31 +61,32 @@ const ResetTokenCard: React.FC<ResetTokenCardProps> = ({ goBack }) => {
           <>
             <SigninInput
               placeholder="lebron@james.com..."
-              {...register('email', { required: true })}
-              className="mb-0 mt-xlarge" />
+              {...register("email", { required: true })}
+              className="mb-0 mt-xlarge"
+            />
             {unrecognizedEmail && (
               <div className="mt-xsmall w-[318px]">
-                <span className="inter-small-regular text-rose-50 text-left">
+                <span className="inter-small-regular text-left text-rose-50">
                   We can't find a user with that email address
                 </span>
               </div>
             )}
             {invalidEmail && (
               <div className="mt-xsmall w-[318px]">
-                <span className="inter-small-regular text-rose-50 text-left">
+                <span className="inter-small-regular text-left text-rose-50">
                   Not a valid email address
                 </span>
               </div>
             )}
             <button
-              className="text-grey-0 w-[320px] h-[48px] border rounded-rounded mt-4 bg-violet-50 inter-base-regular py-3 px-4"
+              className="inter-base-regular mt-4 h-[48px] w-[320px] rounded-rounded border bg-violet-50 py-3 px-4 text-grey-0"
               type="submit"
             >
               Send reset instructions
             </button>
           </>
         ) : (
-          <div className="text-violet-60 rounded-rounded bg-violet-10 p-base flex gap-x-small mt-large">
+          <div className="mt-large flex gap-x-small rounded-rounded bg-violet-10 p-base text-violet-60">
             <div>
               <CheckCircleIcon size={20} />
             </div>
@@ -102,14 +103,14 @@ const ResetTokenCard: React.FC<ResetTokenCardProps> = ({ goBack }) => {
           </div>
         )}
         <span
-          className="inter-small-regular text-grey-50 mt-8 cursor-pointer"
+          className="inter-small-regular mt-8 cursor-pointer text-grey-50"
           onClick={goBack}
         >
           Go back to sign in
         </span>
       </div>
     </form>
-  );
+  )
 }
 
 export default ResetTokenCard

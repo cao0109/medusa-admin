@@ -87,10 +87,10 @@ const AmountAndCurrencyInput = ({
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex w-full flex-col">
       {label && <InputHeader label={label} className="mb-xsmall" />}
-      <div className="focus-within:shadow-focus-border rounded-rounded">
-        <div className="relative bg-grey-5 rounded-rounded h-10 shadow-border focus-within:shadow-cta transition-colors">
+      <div className="rounded-rounded focus-within:shadow-focus-border">
+        <div className="relative h-10 rounded-rounded bg-grey-5 shadow-border transition-colors focus-within:shadow-cta">
           <NextSelect
             customStyles={{
               control:
@@ -107,7 +107,7 @@ const AmountAndCurrencyInput = ({
             value={value.currency}
             onChange={onCurrencyChange}
           />
-          <div className="absolute left-[92px] inset-y-0 right-0 flex items-center pl-xsmall pr-base inter-base-regular h-10">
+          <div className="inter-base-regular absolute inset-y-0 left-[92px] right-0 flex h-10 items-center pl-xsmall pr-base">
             <AmountField
               ref={inputRef}
               step={step}
@@ -118,10 +118,10 @@ const AmountAndCurrencyInput = ({
               allowNegativeValue={false}
               placeholder="-"
               decimalScale={decimal_digits}
-              className="bg-transparent outline-none outline-0 w-full remove-number-spinner leading-base text-grey-90 font-normal caret-violet-60 placeholder-grey-40 text-right"
+              className="remove-number-spinner w-full bg-transparent text-right font-normal leading-base text-grey-90 placeholder-grey-40 caret-violet-60 outline-none outline-0"
             />
-            <div className="flex items-center min-w-[16px] ml-2xsmall">
-              <p className="text-grey-40 w-full text-right">{symbol_native}</p>
+            <div className="ml-2xsmall flex min-w-[16px] items-center">
+              <p className="w-full text-right text-grey-40">{symbol_native}</p>
             </div>
           </div>
         </div>

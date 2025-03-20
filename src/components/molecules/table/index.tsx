@@ -73,9 +73,9 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <div className={`flex flex-col ${containerClassName}`}>
-        <div className="w-full flex justify-between mb-2">
+        <div className="mb-2 flex w-full justify-between">
           {filteringOptions ? (
-            <div className="flex mb-2 self-end">
+            <div className="mb-2 flex self-end">
               {Array.isArray(filteringOptions)
                 ? filteringOptions.map((fo) => <FilteringOptions {...fo} />)
                 : filteringOptions}
@@ -116,7 +116,7 @@ Table.Head = React.forwardRef<
   <thead
     ref={ref}
     className={clsx(
-      "whitespace-nowrap inter-small-semibold text-grey-50 border-t border-b border-grey-20",
+      "inter-small-semibold whitespace-nowrap border-t border-b border-grey-20 text-grey-50",
       className
     )}
     {...props}
@@ -138,7 +138,7 @@ Table.HeadCell = React.forwardRef<
   HTMLTableCellElement,
   React.HTMLAttributes<HTMLTableCellElement>
 >(({ className, children, ...props }, ref) => (
-  <th ref={ref} className={clsx("text-left h-[40px]", className)} {...props}>
+  <th ref={ref} className={clsx("h-[40px] text-left", className)} {...props}>
     {children}
   </th>
 ))
@@ -159,9 +159,9 @@ Table.SortingHeadCell = React.forwardRef<
     ref
   ) => {
     return (
-      <th ref={ref} className={clsx("text-left py-2.5", className)} {...props}>
+      <th ref={ref} className={clsx("py-2.5 text-left", className)} {...props}>
         <div
-          className="flex items-center cursor-pointer select-none"
+          className="flex cursor-pointer select-none items-center"
           onClick={(e) => {
             e.preventDefault()
             if (!sortDirection) {

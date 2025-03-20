@@ -47,7 +47,7 @@ const AddVariantModal = ({ open, onClose, product }: Props) => {
             <EditFlowVariantForm form={form} />
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex items-center gap-x-xsmall justify-end w-full">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button
                 variant="secondary"
                 size="small"

@@ -26,14 +26,14 @@ const Section = ({
   return (
     <div
       className={clsx(
-        "px-xlarge pt-large pb-xlarge rounded-rounded bg-grey-0 border border-grey-20",
+        "rounded-rounded border border-grey-20 bg-grey-0 px-xlarge pt-large pb-xlarge",
         className
       )}
     >
       {hasHeader && (
         <div className="flex items-center justify-between">
           {title && (
-            <h1 className="text-grey-90 inter-xlarge-semibold">{title}</h1>
+            <h1 className="inter-xlarge-semibold text-grey-90">{title}</h1>
           )}
           <div className="flex items-center gap-x-2">
             {customActions && customActions}

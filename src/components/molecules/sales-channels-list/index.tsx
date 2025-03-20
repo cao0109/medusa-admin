@@ -18,7 +18,7 @@ const SalesChannelsList = ({ salesChannels, showMax = 3 }: Props) => {
       {salesChannels
         .slice(0, showMax)
         .map((salesChannel, index, slicedArray) => (
-          <span className="ml-1 inter-base-regular text-grey-90 first-of-type:ml-0">
+          <span className="inter-base-regular ml-1 text-grey-90 first-of-type:ml-0">
             {salesChannel.name}
             {index < slicedArray.length - 1 && ", "}
           </span>

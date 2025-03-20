@@ -37,16 +37,16 @@ const Sidebar: React.FC = () => {
     isFeatureEnabled("stockLocationService")
 
   return (
-    <div className="h-screen overflow-y-auto border-r min-w-sidebar max-w-sidebar bg-gray-0 border-grey-20 py-base px-base">
+    <div className="bg-gray-0 h-screen min-w-sidebar max-w-sidebar overflow-y-auto border-r border-grey-20 py-base px-base">
       <div className="h-full">
         <div className="flex justify-between px-2">
-          <div className="flex items-center justify-center w-8 h-8 border border-gray-300 border-solid rounded-circle">
+          <div className="flex h-8 w-8 items-center justify-center rounded-circle border border-solid border-gray-300">
             <UserMenu />
           </div>
         </div>
-        <div className="flex flex-col px-2 my-base">
-          <span className="font-medium text-grey-50 text-small">Store</span>
-          <span className="font-medium text-grey-90 text-medium">
+        <div className="my-base flex flex-col px-2">
+          <span className="text-small font-medium text-grey-50">Store</span>
+          <span className="text-medium font-medium text-grey-90">
             {store?.name}
           </span>
         </div>

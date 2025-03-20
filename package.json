@@ -37,7 +37,7 @@
     "immutability-helper": "^3.1.1",
     "iso8601-duration": "^1.3.0",
     "lodash": "^4.17.21",
-    "medusa-react": "^4.0.3",
+    "medusa-react": "^9.0.18",
     "moment": "^2.27.0",
     "query-string": "^7.1.1",
     "randomatic": "^3.1.1",
@@ -125,5 +125,6 @@
   },
   "bugs": {
     "url": "https://github.com/medusajs/admin/issues"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

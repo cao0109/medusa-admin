@@ -20,13 +20,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   return (
     <div
       className={clsx(
-        "w-full flex items-center inter-small-semibold text-grey-50 mb-4",
+        "inter-small-semibold mb-4 flex w-full items-center text-grey-50",
         className
       )}
       {...props}
     >
       <span
-        className="text-violet-60 cursor-pointer"
+        className="cursor-pointer text-violet-60"
         onClick={() => navigate(previousRoute)}
       >
         {previousBreadcrumb}

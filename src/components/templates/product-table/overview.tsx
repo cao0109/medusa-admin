@@ -24,18 +24,18 @@ const ProductOverview = ({
   return (
     <>
       <div className="flex justify-end border-t border-b border-grey-20 py-2.5 pr-xlarge">
-        <div className="inter-small-semibold text-grey-50 flex justify-self-end">
+        <div className="inter-small-semibold flex justify-self-end text-grey-50">
           <span
             onClick={toggleListView}
             className={clsx(
-              "hover:bg-grey-5 cursor-pointer rounded p-0.5 text-grey-40"
+              "cursor-pointer rounded p-0.5 text-grey-40 hover:bg-grey-5"
             )}
           >
             <ListIcon size={20} />
           </span>
           <span
             className={clsx(
-              "hover:bg-grey-5 cursor-pointer rounded p-0.5 text-grey-90"
+              "cursor-pointer rounded p-0.5 text-grey-90 hover:bg-grey-5"
             )}
           >
             <TileIcon size={20} />
@@ -55,10 +55,10 @@ const ProductTile = ({ product }) => {
   const { getActions } = useProductActions(product)
 
   return (
-    <div className="p-base group rounded-rounded hover:bg-grey-5 flex-col">
+    <div className="group flex-col rounded-rounded p-base hover:bg-grey-5">
       <div className="relative">
         <div
-          className={clsx("rounded-base inline-block absolute top-2 right-2")}
+          className={clsx("absolute top-2 right-2 inline-block rounded-base")}
         >
           <Actionables
             actions={getActions()}
@@ -66,7 +66,7 @@ const ProductTile = ({ product }) => {
               <Button
                 variant="ghost"
                 size="small"
-                className="w-xlarge h-xlarge hidden-actions group-hover:opacity-100 focus-within:opacity-100 opacity-0 bg-grey-0"
+                className="hidden-actions h-xlarge w-xlarge bg-grey-0 opacity-0 focus-within:opacity-100 group-hover:opacity-100"
               >
                 <MoreHorizontalIcon size={20} />
               </Button>
@@ -76,17 +76,17 @@ const ProductTile = ({ product }) => {
         <Link to={`${product.id}`}>
           {product.thumbnail ? (
             <img
-              className="min-h-[230px] block object-cover rounded-rounded"
+              className="block min-h-[230px] rounded-rounded object-cover"
               src={product.thumbnail}
             />
           ) : (
-            <div className="min-h-[230px] flex items-center justify-center bg-grey-5 rounded-rounded">
+            <div className="flex min-h-[230px] items-center justify-center rounded-rounded bg-grey-5">
               <ImagePlaceholder />
             </div>
           )}
           <div>
             <div className="mt-base flex items-center justify-between">
-              <p className="inter-small-regular text-grey-90 line-clamp-1 mr-3">
+              <p className="inter-small-regular mr-3 text-grey-90 line-clamp-1">
                 {product.title}
               </p>
               <StatusIndicator

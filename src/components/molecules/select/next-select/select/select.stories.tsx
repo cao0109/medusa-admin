@@ -98,7 +98,7 @@ storiesOf("Molecules/Select/Next/Select", module).add(
           }}
         />
 
-        <div className="bg-grey-5 rounded-rounded px-small py-xsmall mt-xlarge mono-small-regular text-grey-50">
+        <div className="mono-small-regular mt-xlarge rounded-rounded bg-grey-5 px-small py-xsmall text-grey-50">
           <h1 className="inter-base-semibold mb-small">Data</h1>
           <pre>{JSON.stringify(liveData, null, 4)}</pre>
         </div>
@@ -139,7 +139,7 @@ storiesOf("Molecules/Select/Next/Select", module).add(
           }}
         />
 
-        <div className="bg-grey-5 rounded-rounded px-small py-xsmall mt-xlarge mono-small-regular text-grey-50">
+        <div className="mono-small-regular mt-xlarge rounded-rounded bg-grey-5 px-small py-xsmall text-grey-50">
           <h1 className="inter-base-semibold mb-small">Data</h1>
           <pre>{JSON.stringify(liveData, null, 4)}</pre>
         </div>
@@ -219,7 +219,7 @@ storiesOf("Molecules/Select/Next/Select", module).add("In Modal", () => {
         <Button variant="primary" size="small" onClick={toggle}>
           Toggle modal
         </Button>
-        <div className="bg-grey-5 rounded-rounded px-small py-xsmall mt-xlarge mono-small-regular text-grey-50">
+        <div className="mono-small-regular mt-xlarge rounded-rounded bg-grey-5 px-small py-xsmall text-grey-50">
           <h1 className="inter-base-semibold mb-small">Data</h1>
           <pre>{JSON.stringify(liveData, null, 4)}</pre>
         </div>
@@ -250,7 +250,7 @@ storiesOf("Molecules/Select/Next/Select", module).add("In Modal", () => {
             />
           </Modal.Content>
           <Modal.Footer>
-            <div className="w-full flex items-center justify-end gap-x-xsmall">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button variant="secondary" size="small" onClick={toggle}>
                 Cancel
               </Button>

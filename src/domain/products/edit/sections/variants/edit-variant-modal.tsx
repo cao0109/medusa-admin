@@ -56,7 +56,7 @@ const EditVariantModal = ({
         <h1 className="inter-xlarge-semibold">
           Edit Variant
           {variant.title && (
-            <span className="text-grey-50 inter-xlarge-regular">
+            <span className="inter-xlarge-regular text-grey-50">
               {" "}
               ({variant.title})
             </span>
@@ -68,7 +68,7 @@ const EditVariantModal = ({
           <EditFlowVariantForm form={form} />
         </Modal.Content>
         <Modal.Footer>
-          <div className="w-full flex items-center gap-x-xsmall justify-end">
+          <div className="flex w-full items-center justify-end gap-x-xsmall">
             <Button
               variant="secondary"
               size="small"

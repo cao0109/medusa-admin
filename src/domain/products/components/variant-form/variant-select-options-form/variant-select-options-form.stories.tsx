@@ -114,7 +114,7 @@ storiesOf(
         onCreateOption={onCreateOption}
       />
 
-      <div className="bg-grey-5 rounded-rounded px-small py-xsmall mt-xlarge mono-small-regular text-grey-50">
+      <div className="mono-small-regular mt-xlarge rounded-rounded bg-grey-5 px-small py-xsmall text-grey-50">
         <h1 className="inter-base-semibold mb-small">Data</h1>
         <pre>{JSON.stringify(liveData, null, 4)}</pre>
       </div>

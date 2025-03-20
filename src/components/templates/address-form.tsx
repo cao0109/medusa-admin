@@ -51,7 +51,7 @@ const AddressForm = ({
       {(type === AddressType.SHIPPING || type === AddressType.BILLING) && (
         <>
           <span className="inter-base-semibold">General</span>
-          <div className="grid grid-cols-2 mt-4 mb-8 gap-large">
+          <div className="mt-4 mb-8 grid grid-cols-2 gap-large">
             <Input
               {...register(path("first_name"), {
                 required: required
@@ -104,7 +104,7 @@ const AddressForm = ({
           }`}
         </span>
       )}
-      <div className="grid grid-cols-2 mt-4 gap-y-large gap-x-large">
+      <div className="mt-4 grid grid-cols-2 gap-y-large gap-x-large">
         <Input
           {...form.register(path("address_1"), {
             required: required ? FormValidator.required("Address 1") : false,

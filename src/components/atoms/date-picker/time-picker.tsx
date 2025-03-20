@@ -50,12 +50,12 @@ const TimePicker: React.FC<DateTimePickerProps> = ({
         <PopoverPrimitive.Trigger asChild>
           <button
             className={clsx("w-full rounded-rounded border ", {
-              "shadow-input border-violet-60": isOpen,
+              "border-violet-60 shadow-input": isOpen,
               "border-grey-20": !isOpen,
             })}
           >
-            <InputContainer className="border-0 shadown-none focus-within:shadow-none">
-              <div className="w-full flex text-grey-50 pr-0.5 justify-between">
+            <InputContainer className="shadown-none border-0 focus-within:shadow-none">
+              <div className="flex w-full justify-between pr-0.5 text-grey-50">
                 <InputHeader
                   {...{
                     label,
@@ -66,7 +66,7 @@ const TimePicker: React.FC<DateTimePickerProps> = ({
                 />
                 <ArrowDownIcon size={16} />
               </div>
-              <div className="w-full items-center flex text-left text-grey-40">
+              <div className="flex w-full items-center text-left text-grey-40">
                 <ClockIcon size={16} />
                 <span className="mx-1">UTC</span>
                 <span className="text-grey-90">
@@ -79,7 +79,7 @@ const TimePicker: React.FC<DateTimePickerProps> = ({
         <PopoverPrimitive.Content
           side="top"
           sideOffset={8}
-          className="rounded-rounded scrollbar-hide border px-6 pt-6 pb-4 border-grey-20 bg-grey-0 w-full flex shadow-dropdown"
+          className="scrollbar-hide flex w-full rounded-rounded border border-grey-20 bg-grey-0 px-6 pt-6 pb-4 shadow-dropdown"
         >
           <NumberScroller
             numbers={hourNumbers}
@@ -92,7 +92,7 @@ const TimePicker: React.FC<DateTimePickerProps> = ({
             selected={selectedMinute}
             onSelect={(n) => setSelectedMinute(n)}
           />
-          <div className="absolute bottom-4 left-0 right-0 bg-gradient-to-b from-transparent to-grey-0 h-xlarge z-10" />
+          <div className="absolute bottom-4 left-0 right-0 z-10 h-xlarge bg-gradient-to-b from-transparent to-grey-0" />
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Root>
     </div>

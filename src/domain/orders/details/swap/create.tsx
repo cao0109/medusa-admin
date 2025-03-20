@@ -263,7 +263,7 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
               />
             )}
           </div>
-          <div className="flex justify-between mt-8 items-center">
+          <div className="mt-8 flex items-center justify-between">
             <h3 className="inter-base-semibold ">Items to send</h3>
             {itemsToAdd.length === 0 ? (
               <Button
@@ -316,7 +316,7 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
               </div>
             </>
           )}
-          <div className="flex text-grey-90 justify-between items-center inter-small-regular mt-8">
+          <div className="inter-small-regular mt-8 flex items-center justify-between text-grey-90">
             <span>Return Total</span>
             <span>
               {formatAmountWithSymbol({
@@ -325,7 +325,7 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
               })}
             </span>
           </div>
-          <div className="flex text-grey-90 justify-between items-center inter-small-regular mt-2">
+          <div className="inter-small-regular mt-2 flex items-center justify-between text-grey-90">
             <span>Additional Total</span>
             <span>
               {formatAmountWithSymbol({
@@ -336,11 +336,11 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
               })}
             </span>
           </div>
-          <div className="flex text-grey-90 justify-between items-center inter-small-regular mt-2">
+          <div className="inter-small-regular mt-2 flex items-center justify-between text-grey-90">
             <span>Outbond Shipping</span>
             <span>Calculated at checkout</span>
           </div>
-          <div className="flex justify-between items-center inter-base-semibold mt-4">
+          <div className="inter-base-semibold mt-4 flex items-center justify-between">
             <span>Estimated difference</span>
             <span className="inter-large-semibold">
               {formatAmountWithSymbol({
@@ -355,11 +355,11 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
         <Modal.Footer>
           <div className="flex w-full justify-between">
             <div
-              className="items-center h-full flex cursor-pointer"
+              className="flex h-full cursor-pointer items-center"
               onClick={() => setNoNotification(!noNotification)}
             >
               <div
-                className={`w-5 h-5 flex justify-center text-grey-0 border-grey-30 border rounded-base ${
+                className={`flex h-5 w-5 justify-center rounded-base border border-grey-30 text-grey-0 ${
                   !noNotification && "bg-violet-60"
                 }`}
               >
@@ -374,7 +374,7 @@ const SwapMenu: React.FC<SwapMenuProps> = ({ order, onDismiss }) => {
                 checked={!noNotification}
                 type="checkbox"
               />
-              <span className="ml-3 flex items-center text-grey-90 gap-x-xsmall">
+              <span className="ml-3 flex items-center gap-x-xsmall text-grey-90">
                 Send notifications
                 <IconTooltip content="If unchecked the customer will not receive communication about this exchange" />
               </span>

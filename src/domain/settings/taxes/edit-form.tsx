@@ -224,7 +224,7 @@ const EditTaxRate = ({
                   )
                 )
               }}
-              className="w-full mt-base"
+              className="mt-base w-full"
               size="medium"
               variant="secondary"
             >
@@ -234,7 +234,7 @@ const EditTaxRate = ({
         </div>
       </Modal.Content>
       <Modal.Footer>
-        <div className="flex items-center justify-end w-full">
+        <div className="flex w-full items-center justify-end">
           <Button
             type="button"
             onClick={onDismiss}
@@ -325,7 +325,7 @@ export const SimpleEditForm = ({ onDismiss, taxRate }: SimpleEditFormProps) => {
         <EditTaxRateDetails form={nestedForm(form, "details")} lockName />
       </Modal.Content>
       <Modal.Footer>
-        <div className="flex items-center justify-end w-full">
+        <div className="flex w-full items-center justify-end">
           <Button
             type="button"
             onClick={onDismiss}

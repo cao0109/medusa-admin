@@ -38,7 +38,7 @@ const OrganizeForm = ({ form }: Props) => {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-x-large mb-large">
+      <div className="mb-large grid grid-cols-2 gap-x-large">
         <Controller
           name={path("type")}
           control={control}

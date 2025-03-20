@@ -24,7 +24,7 @@ function General(props: GeneralProps) {
   const { name, description, setName, setDescription } = props
 
   return (
-    <div className="flex flex-col gap-y-base my-base">
+    <div className="my-base flex flex-col gap-y-base">
       <div className="flex-1">
         <InputField
           label="Title"
@@ -62,7 +62,7 @@ function AddProducts() {
         size="small"
         type="button"
         variant="secondary"
-        className="w-full h-[40px] mt-6"
+        className="mt-6 h-[40px] w-full"
         onClick={() => setShowModal(true)}
       >
         <PlusIcon size={20} />
@@ -135,16 +135,16 @@ const AddSalesChannelModal = ({ onClose }: AddSalesChannelModalProps) => {
   return (
     <FocusModal>
       <FocusModal.Header>
-        <div className="medium:w-8/12 w-full px-8 flex justify-between">
+        <div className="flex w-full justify-between px-8 medium:w-8/12">
           <Button
             size="small"
             variant="ghost"
             onClick={onClose}
-            className="border rounded-rounded w-8 h-8"
+            className="h-8 w-8 rounded-rounded border"
           >
             <CrossIcon size={20} />
           </Button>
-          <div className="gap-x-small flex">
+          <div className="flex gap-x-small">
             <Button
               size="small"
               variant="secondary"
@@ -168,8 +168,8 @@ const AddSalesChannelModal = ({ onClose }: AddSalesChannelModalProps) => {
         </div>
       </FocusModal.Header>
       <FocusModal.Main>
-        <div className="flex justify-center mb-[25%]">
-          <div className="medium:w-7/12 large:w-6/12 small:w-4/5 w-full pt-16">
+        <div className="mb-[25%] flex justify-center">
+          <div className="w-full pt-16 small:w-4/5 medium:w-7/12 large:w-6/12">
             <h1 className="inter-xlarge-semibold">Create new sales channel</h1>
             <Accordion
               className="pt-7 text-grey-90"

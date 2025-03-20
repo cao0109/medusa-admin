@@ -6,7 +6,7 @@ import { PollingProvider } from "../../context/polling"
 
 const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <div className="flex w-full h-screen inter-base-regular text-grey-90">
+    <div className="inter-base-regular flex h-screen w-full text-grey-90">
       <Toaster
         containerStyle={{
           top: 74,
@@ -17,10 +17,10 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
       />
       <Sidebar />
       <PollingProvider>
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-1 flex-col">
           <Topbar />
-          <div className="large:px-xlarge py-xlarge bg-grey-5 min-h-content overflow-y-auto">
-            <main className="xsmall:mx-base small:mx-xlarge medium:mx-4xlarge large:mx-auto large:max-w-7xl large:w-full h-full">
+          <div className="min-h-content overflow-y-auto bg-grey-5 py-xlarge large:px-xlarge">
+            <main className="h-full xsmall:mx-base small:mx-xlarge medium:mx-4xlarge large:mx-auto large:w-full large:max-w-7xl">
               {children}
             </main>
           </div>

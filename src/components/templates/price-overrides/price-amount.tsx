@@ -11,12 +11,12 @@ const PriceAmount = ({ value, onChange }) => {
 
   const currencyName = currencies[value.currency_code?.toUpperCase()]?.name
   return (
-    <div className="flex flex-col gap-3 py-3 first:border-t border-grey-20 border-solid border-b last:border-b-0">
+    <div className="flex flex-col gap-3 border-b border-solid border-grey-20 py-3 first:border-t last:border-b-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="inter-base-semibold">
             <span className="mr-2 uppercase">{value.currency_code}</span>
-            <span className="inter-base-regular text-grey-50 capitalize">
+            <span className="inter-base-regular capitalize text-grey-50">
               {currencyName}
             </span>
           </div>
@@ -24,7 +24,7 @@ const PriceAmount = ({ value, onChange }) => {
             <Button
               variant="secondary"
               size="small"
-              className="rounded-rounded h-[32px]"
+              className="h-[32px] rounded-rounded"
               onClick={toggle}
             >
               <div className="flex items-center gap-2">

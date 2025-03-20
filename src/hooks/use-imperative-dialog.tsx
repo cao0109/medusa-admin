@@ -23,11 +23,11 @@ const DeleteDialog = ({
         <Modal.Content className="!py-large">
           <div className="flex flex-col">
             <span className="inter-large-semibold">{heading}</span>
-            <span className="mt-1 inter-base-regular text-grey-50">{text}</span>
+            <span className="inter-base-regular mt-1 text-grey-50">{text}</span>
           </div>
           {extraConfirmation && (
-            <div className="flex flex-col my-base">
-              <span className="mt-1 inter-base-regular text-grey-50">
+            <div className="my-base flex flex-col">
+              <span className="inter-base-regular mt-1 text-grey-50">
                 Type the name{" "}
                 <span className="font-semibold">"{entityName}"</span> to
                 confirm.
@@ -44,10 +44,10 @@ const DeleteDialog = ({
           )}
         </Modal.Content>
         <Modal.Footer className="border-none !pt-0">
-          <div className="flex justify-end w-full">
+          <div className="flex w-full justify-end">
             <Button
               variant="secondary"
-              className="justify-center mr-2 text-small"
+              className="mr-2 justify-center text-small"
               size="small"
               onClick={onCancel}
             >

@@ -19,7 +19,7 @@ const RegionCard = ({ region }: Props) => {
           : undefined
       }
     >
-      <div className="flex flex-col gap-y-2xsmall inter-small-regular text-grey-50">
+      <div className="inter-small-regular flex flex-col gap-y-2xsmall text-grey-50">
         <p>
           Payment providers:{" "}
           <span className="truncate">

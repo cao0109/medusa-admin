@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof ToasterContainer>
 
 const Template: ComponentStory<typeof ToasterContainer> = (args) => (
-  <div className="flex items-start bg-grey-0 p-base border border-grey-20 rounded-rounded shadow-toaster w-[380px]">
+  <div className="flex w-[380px] items-start rounded-rounded border border-grey-20 bg-grey-0 p-base shadow-toaster">
     <ToasterContainer {...args} />
   </div>
 )

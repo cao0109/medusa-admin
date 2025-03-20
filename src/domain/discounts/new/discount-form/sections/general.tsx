@@ -80,7 +80,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
               )
             }}
           />
-          <div className="flex gap-x-base gap-y-base my-base">
+          <div className="my-base flex gap-x-base gap-y-base">
             <InputField
               label="Code"
               className="flex-1"
@@ -139,7 +139,7 @@ const General: React.FC<GeneralProps> = ({ discount }) => {
             )}
           </div>
 
-          <div className="text-grey-50 inter-small-regular flex flex-col mb-6">
+          <div className="inter-small-regular mb-6 flex flex-col text-grey-50">
             <span>
               The code your customers will enter during checkout. This will
               appear on your customer’s invoice.

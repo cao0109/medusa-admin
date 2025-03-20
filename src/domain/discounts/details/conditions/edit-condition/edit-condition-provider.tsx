@@ -42,10 +42,8 @@ export const EditConditionProvider = ({
     condition.id
   )
 
-  const removeConditionResourceBatch = useAdminDeleteDiscountConditionResourceBatch(
-    discount.id,
-    condition.id
-  )
+  const removeConditionResourceBatch =
+    useAdminDeleteDiscountConditionResourceBatch(discount.id, condition.id)
 
   const addConditionResources = (
     resourcesToAdd: string[],

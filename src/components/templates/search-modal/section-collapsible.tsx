@@ -8,7 +8,7 @@ const SectionCollapsible = ({ title, length, children, ...props }) => {
   return (
     <RadixCollapsible.Root open={open} onOpenChange={setOpen} {...props}>
       <RadixCollapsible.Trigger asChild>
-        <button className="px-base py-small w-full justify-between flex items-center bg-grey-10 rounded-rounded">
+        <button className="flex w-full items-center justify-between rounded-rounded bg-grey-10 px-base py-small">
           <h6 className="inter-base-semibold text-grey-90">
             {title}
             <span className="inter-base-regular text-grey-40"> ({length})</span>

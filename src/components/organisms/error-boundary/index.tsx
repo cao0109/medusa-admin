@@ -52,12 +52,12 @@ class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="h-screen flex items-center justify-center px-large">
+        <div className="flex h-screen items-center justify-center px-large">
           <div className="max-w-[600px]">
             <div>
               <div>
                 {this.state.status && (
-                  <p className="text-grey-60 opacity-75 inter-small-semibold">
+                  <p className="inter-small-semibold text-grey-60 opacity-75">
                     {this.state.status}
                   </p>
                 )}
@@ -69,7 +69,7 @@ class ErrorBoundary extends React.Component<Props, State> {
                 </p>
               </div>
 
-              <div className="w-full flex items-center  mt-xlarge">
+              <div className="mt-xlarge flex w-full  items-center">
                 <Button
                   size="small"
                   variant="primary"

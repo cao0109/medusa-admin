@@ -119,7 +119,7 @@ const EditGeneral: React.FC<EditGeneralProps> = ({ discount, onClose }) => {
                 )
               }}
             />
-            <div className="flex gap-x-base gap-y-base my-base">
+            <div className="my-base flex gap-x-base gap-y-base">
               <InputField
                 label="Code"
                 className="flex-1"
@@ -178,7 +178,7 @@ const EditGeneral: React.FC<EditGeneralProps> = ({ discount, onClose }) => {
               )}
             </div>
 
-            <div className="text-grey-50 inter-small-regular flex flex-col mb-6">
+            <div className="inter-small-regular mb-6 flex flex-col text-grey-50">
               <span>
                 The code your customers will enter during checkout. This will
                 appear on your customer’s invoice.
@@ -196,7 +196,7 @@ const EditGeneral: React.FC<EditGeneralProps> = ({ discount, onClose }) => {
             />
           </Modal.Content>
           <Modal.Footer>
-            <div className="gap-x-xsmall flex items-center justify-end w-full">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button
                 variant="ghost"
                 size="small"

@@ -24,7 +24,7 @@ const AttributesSection = ({ product }: Props) => {
   return (
     <>
       <Section title="Attributes" actions={actions} forceDropdown>
-        <div className="flex flex-col gap-y-xsmall mb-large mt-base">
+        <div className="mb-large mt-base flex flex-col gap-y-xsmall">
           <h2 className="inter-base-semibold">Dimensions</h2>
           <div className="flex flex-col gap-y-xsmall">
             <Attribute attribute="Height" value={product.height} />
@@ -58,7 +58,7 @@ type AttributeProps = {
 
 const Attribute = ({ attribute, value }: AttributeProps) => {
   return (
-    <div className="flex items-center justify-between w-full inter-base-regular text-grey-50">
+    <div className="inter-base-regular flex w-full items-center justify-between text-grey-50">
       <p>{attribute}</p>
       <p>{value || "–"}</p>
     </div>

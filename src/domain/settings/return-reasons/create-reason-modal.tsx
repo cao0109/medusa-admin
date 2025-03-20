@@ -69,7 +69,7 @@ const CreateReturnReasonModal = ({
         </Modal.Header>
         <form onSubmit={handleSubmit(onCreate)}>
           <Modal.Content>
-            <div className="grid grid-cols-2 gap-large mb-large">
+            <div className="mb-large grid grid-cols-2 gap-large">
               <Input
                 {...register("value", {
                   required: "Value is required",
@@ -103,10 +103,10 @@ const CreateReturnReasonModal = ({
             />
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex w-full h-8 justify-end">
+            <div className="flex h-8 w-full justify-end">
               <Button
                 variant="ghost"
-                className="mr-2 w-32 text-small justify-center"
+                className="mr-2 w-32 justify-center text-small"
                 size="large"
                 onClick={handleClose}
                 type="button"
@@ -117,7 +117,7 @@ const CreateReturnReasonModal = ({
                 loading={isLoading}
                 disabled={isLoading}
                 size="large"
-                className="w-32 text-small justify-center"
+                className="w-32 justify-center text-small"
                 variant="primary"
               >
                 Create

@@ -35,7 +35,7 @@ const EditDeclined: React.FC<EditDeclinedProps> = ({ event }) => {
       midNode={<ByLine user={customer || user} />}
     >
       {note && (
-        <div className="px-base py-small mt-base rounded-large bg-grey-10 inter-base-regular text-grey-90">
+        <div className="inter-base-regular mt-base rounded-large bg-grey-10 px-base py-small text-grey-90">
           {note}
         </div>
       )}

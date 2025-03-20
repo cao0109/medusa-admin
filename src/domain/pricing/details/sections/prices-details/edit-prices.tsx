@@ -41,8 +41,8 @@ const EditPrices = ({ close, id }) => {
         <FormHeader id={id} viewType={ViewType.EDIT_PRICES} onClose={close} />
       </FocusModal.Header>
       <FocusModal.Main>
-        <div className="flex justify-center mb-[25%]">
-          <div className="medium:w-7/12 large:w-6/12 small:w-4/5 w-full pt-16">
+        <div className="mb-[25%] flex justify-center">
+          <div className="w-full pt-16 small:w-4/5 medium:w-7/12 large:w-6/12">
             <h1 className="inter-xlarge-semibold">Edit prices</h1>
             <div className="mt-7">
               <div className="flex items-center gap-1.5">

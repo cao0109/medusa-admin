@@ -76,7 +76,7 @@ const RegionOverview = ({ id }: Props) => {
         }
         className="h-full"
       >
-        <p className="text-base-regular text-grey-50 mt-2xsmall">
+        <p className="text-base-regular mt-2xsmall text-grey-50">
           Manage the markets that you will operate within.
         </p>
         <div className="mt-large">

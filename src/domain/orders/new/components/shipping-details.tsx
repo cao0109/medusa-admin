@@ -144,7 +144,7 @@ const ShippingDetails = () => {
   }, [shippingAddress, email])
 
   return (
-    <div className="min-h-[705px] flex flex-col gap-y-8">
+    <div className="flex min-h-[705px] flex-col gap-y-8">
       <div>
         <span className="inter-base-semibold">
           Customer and shipping details
@@ -229,7 +229,7 @@ const ShippingDetails = () => {
             <Button
               variant="ghost"
               size="small"
-              className="border border-grey-20 w-[112px]"
+              className="w-[112px] border border-grey-20"
               onClick={onCreateNew}
             >
               Create new

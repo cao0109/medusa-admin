@@ -148,7 +148,7 @@ const CollectionsTable: React.FC = () => {
           <Table.Body {...getTableBodyProps()}>
             <Table.Row>
               <Table.Cell colSpan={columns.length}>
-                <div className="w-full pt-2xlarge flex items-center justify-center">
+                <div className="flex w-full items-center justify-center pt-2xlarge">
                   <Spinner size={"large"} variant={"secondary"} />
                 </div>
               </Table.Cell>

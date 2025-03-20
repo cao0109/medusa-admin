@@ -28,7 +28,7 @@ const SwitchableItem: React.FC<SwitchableItemProps> = ({
             <p className="inter-base-semibold">{title}</p>
             {tooltip && <IconTooltip content={tooltip} />}
           </div>
-          <p className="inter-small-regular text-grey-50 mt-1">{description}</p>
+          <p className="inter-small-regular mt-1 text-grey-50">{description}</p>
         </div>
         <Switch
           checked={open}
@@ -39,7 +39,7 @@ const SwitchableItem: React.FC<SwitchableItemProps> = ({
       </div>
       <div
         className={clsx(
-          "transition-[max-height,opacity] duration-500 ease-in-out overflow-hidden",
+          "overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out",
           {
             "max-h-[1000px] opacity-100": open,
             "max-h-0 opacity-0": !open,

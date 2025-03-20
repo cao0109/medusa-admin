@@ -210,7 +210,7 @@ const NewTaxRate = ({ regionId, onDismiss }: NewTaxRateProps) => {
                       )
                     )
                   }}
-                  className="w-full mt-base"
+                  className="mt-base w-full"
                   size="medium"
                   variant="secondary"
                 >
@@ -220,7 +220,7 @@ const NewTaxRate = ({ regionId, onDismiss }: NewTaxRateProps) => {
             </div>
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex items-center justify-end w-full">
+            <div className="flex w-full items-center justify-end">
               <Button
                 type="button"
                 onClick={onDismiss}

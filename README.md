@@ -1,7 +1,8 @@
 ## Important update
+
 This repository is currently in maintainance mode, so we are only fixing bugs. In 1.8, we have moved Medusa Admin to our [core repository](https://github.com/medusajs/medusa) to centralise our projects and ship it as a plugin through `npm` - similar to all other packages. You'll find the admin in package [`admin-ui`](https://github.com/medusajs/medusa/tree/master/packages/admin-ui).
 
-This project will reach end-of-life 1st of June 2023 at which point it will be archived and deleted. 
+This project will reach end-of-life 1st of June 2023 at which point it will be archived and deleted.
 
 If you are curious to try out the new admin, follow the guide in our [1.8](https://github.com/medusajs/medusa/releases/tag/v1.8.0) release notes.
 
@@ -40,11 +41,9 @@ Medusa is an open-source headless commerce engine that enables developers to cre
   </a>
 </p>
 
-
 ## Quickstart
 
 Follow our [quickstart guide](https://docs.medusajs.com/quickstart/quick-start) to learn how to set up a Medusa server.
-
 
 ## Setting up Admin
 
@@ -68,7 +67,9 @@ Back in your Medusa engine installation directory, you can create your own user 
 ```
 medusa user -e some@email.com -p some-password
 ```
+
 Alternatively, if you've seeded your server with our dummy data, you can use the following credentials:
+
 ```
 admin@medusa-test.com // supersecret
 ```
@@ -88,7 +89,6 @@ The Medusa repository is a mono-repository managed using Lerna. Lerna allows us 
 ## Licensed
 
 Licensed under the [MIT License](https://github.com/medusajs/medusa/blob/master/LICENSE)
-
 
 ## Community & Support
 

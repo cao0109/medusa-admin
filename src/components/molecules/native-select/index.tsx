@@ -23,7 +23,7 @@ const NativeSelect: NativeSelectType = ({
   return (
     <RadixSelect.Root {...props}>
       <RadixSelect.SelectTrigger
-        className="flex items-center inter-base-semibold gap-3 px-2"
+        className="inter-base-semibold flex items-center gap-3 px-2"
         {...triggerProps}
       >
         <RadixSelect.Value />
@@ -33,13 +33,13 @@ const NativeSelect: NativeSelectType = ({
       </RadixSelect.SelectTrigger>
       <RadixSelect.Content
         position="popper"
-        className="rounded-rounded scrollbar-hide border px-2 py-2 border-grey-20 bg-grey-0 w-full flex shadow-dropdown z-[9999] max-h-[305px] overflow-y-auto"
+        className="scrollbar-hide z-[9999] flex max-h-[305px] w-full overflow-y-auto rounded-rounded border border-grey-20 bg-grey-0 px-2 py-2 shadow-dropdown"
       >
-        <RadixSelect.ScrollUpButton className="h-[25px] flex items-center justify-center bg-gradient-to-b from-transparent to-grey-0">
+        <RadixSelect.ScrollUpButton className="flex h-[25px] items-center justify-center bg-gradient-to-b from-transparent to-grey-0">
           <ChevronUpIcon size={ICON_SIZE} />
         </RadixSelect.ScrollUpButton>
         <RadixSelect.Viewport className="p-2">{children}</RadixSelect.Viewport>
-        <RadixSelect.ScrollDownButton className="h-[25px] flex items-center justify-center bg-gradient-to-b from-transparent to-grey-0">
+        <RadixSelect.ScrollDownButton className="flex h-[25px] items-center justify-center bg-gradient-to-b from-transparent to-grey-0">
           <ChevronDownIcon size={ICON_SIZE} />
         </RadixSelect.ScrollDownButton>
       </RadixSelect.Content>
@@ -52,7 +52,7 @@ type ItemProps = RadixSelect.SelectItemProps
 const Item: React.FC<ItemProps> = ({ children, ...props }) => (
   <RadixSelect.Item
     className={clsx(
-      "flex relative justify-start py-1.5 px-9 items-center inter-base-regular rounded hover:bg-grey-10"
+      "inter-base-regular relative flex items-center justify-start rounded py-1.5 px-9 hover:bg-grey-10"
     )}
     {...props}
   >

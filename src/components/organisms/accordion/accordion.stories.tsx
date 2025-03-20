@@ -9,7 +9,7 @@ export default {
 } as ComponentMeta<typeof Accordion>
 
 const Template: ComponentStory<typeof Accordion> = (args) => (
-  <div className="max-w-3xl max-h-6xlarge">
+  <div className="max-h-6xlarge max-w-3xl">
     <Accordion {...args}>
       <Accordion.Item
         title={"General"}

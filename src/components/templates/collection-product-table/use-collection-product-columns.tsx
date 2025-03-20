@@ -10,7 +10,7 @@ const useCollectionProductColumns = () => {
         accessor: "thumbnail",
         Cell: ({ cell: { value } }) => (
           <Table.Cell className="w-[5%]">
-            <div className="h-[40px] w-[30px] bg-grey-5 rounded-soft overflow-hidden my-xsmall">
+            <div className="my-xsmall h-[40px] w-[30px] overflow-hidden rounded-soft bg-grey-5">
               {value ? (
                 <img
                   src={value}

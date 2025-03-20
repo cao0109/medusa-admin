@@ -2,7 +2,7 @@ import ImagePlaceholderIcon from "./icons/image-placeholder-icon"
 
 const ImagePlaceholder = () => {
   return (
-    <div className="flex items-center justify-center w-full h-full rounded-soft bg-grey-5">
+    <div className="flex h-full w-full items-center justify-center rounded-soft bg-grey-5">
       <ImagePlaceholderIcon size={12} />
     </div>
   )

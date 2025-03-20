@@ -27,14 +27,15 @@ type PricesTableProps = {
 
 const PricesTable = ({ id, selectProduct }: PricesTableProps) => {
   const params = useQueryFilters(defaultQueryProps)
-  const { products, isLoading, count = 0 } = useAdminPriceListProducts(
-    id,
-    params.queryObject
-  )
+  const {
+    products,
+    isLoading,
+    count = 0,
+  } = useAdminPriceListProducts(id, params.queryObject)
   const columns = usePricesColumns()
 
   return (
-    <div className="w-full overflow-y-auto flex flex-col justify-between h-full">
+    <div className="flex h-full w-full flex-col justify-between overflow-y-auto">
       <SelectableTable
         columns={columns}
         data={products || []}
@@ -49,7 +50,7 @@ const PricesTable = ({ id, selectProduct }: PricesTableProps) => {
               product={row.original}
               priceListId={id}
               onClick={handleSelect}
-              className="hover:bg-grey-5 hover:cursor-pointer"
+              className="hover:cursor-pointer hover:bg-grey-5"
             >
               {row.cells.map((cell) => {
                 return (

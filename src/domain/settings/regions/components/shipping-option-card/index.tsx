@@ -40,9 +40,9 @@ const ShippingOptionCard = ({ option }: Props) => {
 
   return (
     <>
-      <div className="bg-grey-0 rounded-rounded border border-grey-20 p-base flex items-center justify-between">
+      <div className="flex items-center justify-between rounded-rounded border border-grey-20 bg-grey-0 p-base">
         <div className="flex items-center gap-x-base">
-          <div className="bg-grey-10 p-2.5 rounded-rounded flex items-center justify-center h-10 w-10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-rounded bg-grey-10 p-2.5">
             <FastDeliveryIcon size={20} className="text-grey-50" />
           </div>
           <div>
@@ -77,7 +77,7 @@ const ShippingOptionCard = ({ option }: Props) => {
         </div>
         <div className="flex items-center gap-x-base">
           <div
-            className={clsx("py-0.5 px-xsmall rounded-rounded", {
+            className={clsx("rounded-rounded py-0.5 px-xsmall", {
               "bg-grey-10 text-grey-50": option.admin_only,
               "bg-emerald-10 text-emerald-50": !option.admin_only,
             })}

@@ -130,7 +130,7 @@ const TransferOrdersModal: React.FC<TransferOrdersModalProps> = ({
           <div className="flex flex-col space-y-xlarge">
             <div className="space-y-xsmall">
               <h3 className="inter-base-semibold">Order</h3>
-              <div className="flex items-center justify-between border-grey-20 border rounded-rounded py-xsmall px-2.5">
+              <div className="flex items-center justify-between rounded-rounded border border-grey-20 py-xsmall px-2.5">
                 <Badge variant="default">
                   <span className="text-grey-60">{`#${order.display_id}`}</span>
                 </Badge>
@@ -145,7 +145,7 @@ const TransferOrdersModal: React.FC<TransferOrdersModalProps> = ({
                 />
               </div>
             </div>
-            <div className="w-full grid grid-cols-2">
+            <div className="grid w-full grid-cols-2">
               <div className="flex flex-col">
                 <span className="inter-base-semibold">Current Owner</span>
                 <span className="inter-base-regular">
@@ -172,7 +172,7 @@ const TransferOrdersModal: React.FC<TransferOrdersModalProps> = ({
                 />
               </div>
             </div>
-            <div className="w-full grid grid-cols-2">
+            <div className="grid w-full grid-cols-2">
               <div className="flex flex-col">
                 <span className="inter-base-semibold">New Owner</span>
                 <span className="inter-base-regular">

@@ -110,18 +110,18 @@ const OrderFilters = ({
         triggerElement={
           <button
             className={clsx(
-              "flex rounded-rounded items-center space-x-1 focus-visible:outline-none focus-visible:shadow-input focus-visible:border-violet-60"
+              "flex items-center space-x-1 rounded-rounded focus-visible:border-violet-60 focus-visible:shadow-input focus-visible:outline-none"
             )}
           >
-            <div className="flex rounded-rounded items-center bg-grey-5 border border-grey-20 inter-small-semibold px-2 h-6">
+            <div className="inter-small-semibold flex h-6 items-center rounded-rounded border border-grey-20 bg-grey-5 px-2">
               Filters
-              <div className="text-grey-40 ml-1 flex items-center rounded">
-                <span className="text-violet-60 inter-small-semibold">
+              <div className="ml-1 flex items-center rounded text-grey-40">
+                <span className="inter-small-semibold text-violet-60">
                   {numberOfFilters ? numberOfFilters : "0"}
                 </span>
               </div>
             </div>
-            <div className="flex items-center rounded-rounded bg-grey-5 border border-grey-20 inter-small-semibold p-1">
+            <div className="inter-small-semibold flex items-center rounded-rounded border border-grey-20 bg-grey-5 p-1">
               <PlusIcon size={14} />
             </div>
           </button>

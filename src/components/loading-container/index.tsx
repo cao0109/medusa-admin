@@ -18,7 +18,7 @@ const LoadingContainer = ({
   if (isLoading) {
     return (
       <div
-        className="w-full pt-2xlarge flex items-center justify-center min-h-[756px]"
+        className="flex min-h-[756px] w-full items-center justify-center pt-2xlarge"
         {...props}
       >
         {placeholder}

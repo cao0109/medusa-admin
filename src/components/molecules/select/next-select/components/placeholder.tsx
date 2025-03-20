@@ -20,7 +20,7 @@ const Placeholder = <
           placeholder: true,
         },
         clsx(
-          "absolute top-1/2 -translate-y-1/2 select-none inter-base-regular text-grey-50",
+          "inter-base-regular absolute top-1/2 -translate-y-1/2 select-none text-grey-50",
           className
         )
       )}

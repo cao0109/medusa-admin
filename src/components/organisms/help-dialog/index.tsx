@@ -26,13 +26,13 @@ const MailDialog = ({ open, onClose }: MailDialogProps) => {
 
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>
-      <Dialog.Overlay className="fixed z-50 grid top-0 left-0 right-0 bottom-0 place-items-end overflow-y-auto">
-        <Dialog.Content className="bg-grey-0 w-[400px] shadow-dropdown rounded-rounded p-8 top-[64px] bottom-2 right-3 fixed flex flex-col justify-between">
+      <Dialog.Overlay className="fixed top-0 left-0 right-0 bottom-0 z-50 grid place-items-end overflow-y-auto">
+        <Dialog.Content className="fixed top-[64px] bottom-2 right-3 flex w-[400px] flex-col justify-between rounded-rounded bg-grey-0 p-8 shadow-dropdown">
           <div>
             <Dialog.Title className="inter-xlarge-semibold mb-1">
               How can we help?
             </Dialog.Title>
-            <Dialog.Description className="inter-small-regular text-grey-50 mb-6">
+            <Dialog.Description className="inter-small-regular mb-6 text-grey-50">
               We usually respond in a few hours
             </Dialog.Description>
             <InputField
@@ -58,13 +58,13 @@ const MailDialog = ({ open, onClose }: MailDialogProps) => {
               href="https://discord.gg/medusajs"
               target="_blank"
               rel="noopener noreferrer"
-              className="group cursor-pointer w-full"
+              className="group w-full cursor-pointer"
             >
-              <div className="flex flex-col items-center justify-center rounded-rounded group-hover:bg-grey-5 w-full py-small">
-                <span className="text-grey-40 mb-3">
+              <div className="flex w-full flex-col items-center justify-center rounded-rounded py-small group-hover:bg-grey-5">
+                <span className="mb-3 text-grey-40">
                   <DiscordIcon size={24} />
                 </span>
-                <p className="text-grey-40 inter-small-regular text-center leading-6">
+                <p className="inter-small-regular text-center leading-6 text-grey-40">
                   Feel free to join our community of
                   <br />
                   merchants and e-commerce developers

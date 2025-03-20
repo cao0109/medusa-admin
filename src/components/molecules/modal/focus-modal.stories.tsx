@@ -49,7 +49,7 @@ const BasicTemplate: ComponentStory<typeof FocusModal> = (args) => {
 }
 
 const Block = ({ children }) => (
-  <div className="w-full h-[100px] my-4 bg-grey-10 rounded-rounded">
+  <div className="my-4 h-[100px] w-full rounded-rounded bg-grey-10">
     {children}
   </div>
 )

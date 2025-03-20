@@ -26,7 +26,7 @@ const GeneralForm = ({ form, requireHandle = true }: Props) => {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-x-large mb-small">
+      <div className="mb-small grid grid-cols-2 gap-x-large">
         <InputField
           label="Title"
           placeholder="Winter Jacket"
@@ -50,12 +50,12 @@ const GeneralForm = ({ form, requireHandle = true }: Props) => {
           errors={errors}
         />
       </div>
-      <p className="inter-base-regular text-grey-50 mb-large">
+      <p className="inter-base-regular mb-large text-grey-50">
         Give your product a short and clear title.
         <br />
         50-60 characters is the recommended length for search engines.
       </p>
-      <div className="grid grid-cols-2 gap-x-large mb-large">
+      <div className="mb-large grid grid-cols-2 gap-x-large">
         <InputField
           label="Handle"
           tooltipContent={

@@ -91,14 +91,14 @@ const EditRegionModal = ({ region, onClose, open }: Props) => {
               <h3 className="inter-base-semibold mb-base">Details</h3>
               <RegionDetailsForm form={nestedForm(form, "details")} />
             </div>
-            <div className="w-full h-px bg-grey-20 my-xlarge" />
+            <div className="my-xlarge h-px w-full bg-grey-20" />
             <div>
               <h3 className="inter-base-semibold mb-base">Providers</h3>
               <RegionProvidersForm form={nestedForm(form, "providers")} />
             </div>
           </Modal.Content>
           <Modal.Footer>
-            <div className="w-full flex items-center justify-end gap-x-xsmall">
+            <div className="flex w-full items-center justify-end gap-x-xsmall">
               <Button
                 variant="secondary"
                 size="small"

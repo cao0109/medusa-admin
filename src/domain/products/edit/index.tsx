@@ -38,7 +38,7 @@ const Edit = () => {
   if (status === "loading" || !product) {
     // temp, perhaps use skeletons?
     return (
-      <div className="w-full h-[calc(100vh-64px)] flex items-center justify-center">
+      <div className="flex h-[calc(100vh-64px)] w-full items-center justify-center">
         <Spinner variant="secondary" />
       </div>
     )
@@ -58,7 +58,7 @@ const Edit = () => {
           <AttributesSection product={product} />
           <RawSection product={product} />
         </div>
-        <div className="flex flex-col col-span-4 gap-y-xsmall">
+        <div className="col-span-4 flex flex-col gap-y-xsmall">
           <ThumbnailSection product={product} />
           <MediaSection product={product} />
         </div>

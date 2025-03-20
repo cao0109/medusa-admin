@@ -45,9 +45,8 @@ const getInfo = (edit: OrderEdit): { type: string; user_id: string } => {
 }
 
 const EditCreated: React.FC<EditCreatedProps> = ({ event }) => {
-  const { isModalVisible, showModal, setActiveOrderEdit } = useContext(
-    OrderEditContext
-  )
+  const { isModalVisible, showModal, setActiveOrderEdit } =
+    useContext(OrderEditContext)
 
   const { order_edit: orderEdit, isFetching } = useAdminOrderEdit(event.edit.id)
 
@@ -90,8 +89,7 @@ const EditCreated: React.FC<EditCreatedProps> = ({ event }) => {
   const onConfirmEditClicked = async () => {
     const shouldDelete = await forceConfirmDialog({
       heading: "Delete Confirm",
-      text:
-        "By force confirming you allow the order edit to be fulfilled. You will still have to reconcile payments manually after confirming.",
+      text: "By force confirming you allow the order edit to be fulfilled. You will still have to reconcile payments manually after confirming.",
       confirmText: "Yes, Force Confirm",
       cancelText: "No, Cancel",
     })
@@ -136,7 +134,7 @@ const EditCreated: React.FC<EditCreatedProps> = ({ event }) => {
         midNode={<ByLine user={user} />}
       >
         {orderEdit.internal_note && (
-          <div className="px-base py-small mt-base mb-large rounded-large bg-grey-10 inter-base-regular text-grey-90">
+          <div className="inter-base-regular mt-base mb-large rounded-large bg-grey-10 px-base py-small text-grey-90">
             {orderEdit.internal_note}
           </div>
         )}
@@ -145,7 +143,7 @@ const EditCreated: React.FC<EditCreatedProps> = ({ event }) => {
         </div>
         {(orderEdit.status === "created" ||
           orderEdit.status === "requested") && (
-          <div className="space-y-xsmall mt-large">
+          <div className="mt-large space-y-xsmall">
             {type === "created" ? (
               <>
                 <Button
@@ -264,9 +262,9 @@ const OrderEditChangeItem: React.FC<OrderEditChangeItemProps> = ({
   const lineItem = isAdd ? change.line_item : change.original_line_item
 
   return (
-    <div className="flex gap-x-base mt-xsmall">
+    <div className="mt-xsmall flex gap-x-base">
       <div>
-        <div className="flex h-[40px] w-[30px] rounded-rounded overflow-hidden">
+        <div className="flex h-[40px] w-[30px] overflow-hidden rounded-rounded">
           {lineItem?.thumbnail ? (
             <img src={lineItem.thumbnail} className="object-cover" />
           ) : (
@@ -281,7 +279,7 @@ const OrderEditChangeItem: React.FC<OrderEditChangeItemProps> = ({
             <CopyToClipboard value={lineItem?.variant?.sku} iconSize={14} />
           )}
         </span>
-        <span className="flex inter-small-regular text-grey-50">
+        <span className="inter-small-regular flex text-grey-50">
           {lineItem?.variant?.options?.map((option) => option.value)}
         </span>
       </div>

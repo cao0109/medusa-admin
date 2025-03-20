@@ -35,9 +35,8 @@ const ReturnReasonDetail = ({ reason }: ReturnReasonDetailsProps) => {
     open: handleOpenPrompt,
     close: handleClosePrompt,
   } = useToggleState()
-  const { register, reset, handleSubmit } = useForm<
-    ReturnReasonDetailsFormData
-  >()
+  const { register, reset, handleSubmit } =
+    useForm<ReturnReasonDetailsFormData>()
   const notification = useNotification()
   const { mutate: deleteRR } = useAdminDeleteReturnReason(reason?.id)
   const { mutate: update } = useAdminUpdateReturnReason(reason?.id)

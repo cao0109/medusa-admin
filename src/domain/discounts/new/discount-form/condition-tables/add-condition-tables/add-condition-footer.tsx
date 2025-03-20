@@ -26,7 +26,7 @@ const AddConditionFooter: React.FC<AddConditionFooterProps> = ({
   const { updateCondition } = useDiscountForm()
 
   return (
-    <div className="w-full flex justify-end gap-x-xsmall">
+    <div className="flex w-full justify-end gap-x-xsmall">
       <Button
         variant="ghost"
         size="small"

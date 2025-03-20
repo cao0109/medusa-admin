@@ -18,7 +18,7 @@ const BackButton = ({ path, label = "Go back", className }: Props) => {
       }}
       className={clsx("px-small py-xsmall", className)}
     >
-      <div className="flex items-center gap-x-xsmall text-grey-50 inter-grey-40 inter-small-semibold">
+      <div className="inter-grey-40 inter-small-semibold flex items-center gap-x-xsmall text-grey-50">
         <ArrowLeftIcon size={20} />
         <span className="ml-1">{label}</span>
       </div>

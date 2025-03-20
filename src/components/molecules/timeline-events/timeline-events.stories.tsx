@@ -43,7 +43,7 @@ NoteCurrentUser.args = {
   topNode: eventActions,
   time: new Date(),
   children: (
-    <div className="bg-violet-5 text-violet-90 rounded-2xl px-base py-base">
+    <div className="rounded-2xl bg-violet-5 px-base py-base text-violet-90">
       Return will be shipped together with return 74421
     </div>
   ),
@@ -56,7 +56,7 @@ NoteOtherUser.args = {
   topNode: eventActions,
   time: new Date(),
   children: (
-    <div className="bg-grey-5 rounded-2xl px-base py-base">
+    <div className="rounded-2xl bg-grey-5 px-base py-base">
       Added discount code: "OLI_DISCOUNT"
     </div>
   ),
@@ -69,7 +69,7 @@ MailNotice.args = {
   title: "Shipment Notice Sent",
   midNode: (
     <div className="flex items-center">
-      <div className="text-grey-40 mr-2xsmall">
+      <div className="mr-2xsmall text-grey-40">
         <ArrowRightIcon size={16} />
       </div>
       <span>kasper@medusajs.com</span>
@@ -148,7 +148,7 @@ ReturnRequested.args = {
 
 const Demo = (args) => (
   <div className="w-full bg-grey-10 p-xlarge">
-    <div className="max-w-md px-xlarge py-large flex flex-col gap-y-base bg-grey-0 rounded-rounded border border-grey-20">
+    <div className="flex max-w-md flex-col gap-y-base rounded-rounded border border-grey-20 bg-grey-0 px-xlarge py-large">
       {args.arguments.map((arg, i) => {
         return (
           <EventContainer {...arg} isFirst={i === args.arguments.length - 1} />

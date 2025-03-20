@@ -55,7 +55,7 @@ const Notification: React.FC<NotificationProps> = ({ event }) => {
 const ReceiverNode: React.FC<{ email: string }> = ({ email }) => {
   return (
     <div className="flex items-center">
-      <div className="text-grey-40 mr-2xsmall">
+      <div className="mr-2xsmall text-grey-40">
         <ArrowRightIcon size={16} />
       </div>
       <span>{email}</span>

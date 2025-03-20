@@ -81,14 +81,14 @@ const AccountDetails = () => {
           title="Store Details"
           subtitle="Manage your business details"
         >
-          <h6 className="mt-large inter-base-semibold">General</h6>
+          <h6 className="inter-base-semibold mt-large">General</h6>
           <Input
             className="mt-base"
             label="Store name"
             {...register("name")}
             placeholder="Medusa Store"
           />
-          <h6 className="mt-2xlarge inter-base-semibold">Advanced settings</h6>
+          <h6 className="inter-base-semibold mt-2xlarge">Advanced settings</h6>
           <Input
             className="mt-base"
             label="Swap link template"

@@ -61,8 +61,8 @@ const SelectShippingMethod = () => {
 
       {region ? (
         !shippingOptions?.length ? (
-          <div className="inter-small-regular mt-6 p-4 text-orange-50 bg-orange-5 rounded-rounded flex">
-            <div className="h-full mr-3">
+          <div className="inter-small-regular mt-6 flex rounded-rounded bg-orange-5 p-4 text-orange-50">
+            <div className="mr-3 h-full">
               <AlertIcon size={20} />
             </div>
             <div className="flex flex-col">
@@ -98,7 +98,7 @@ const SelectShippingMethod = () => {
             />
             <div className="mt-4">
               {!showCustomPrice && (
-                <div className="w-full flex justify-end">
+                <div className="flex w-full justify-end">
                   <Button
                     variant="ghost"
                     size="small"
@@ -137,7 +137,7 @@ const SelectShippingMethod = () => {
                     variant="ghost"
                     size="small"
                     onClick={removeCustomPrice}
-                    className="ml-8 text-grey-40 w-8 h-8"
+                    className="ml-8 h-8 w-8 text-grey-40"
                   >
                     <TrashIcon size={20} />
                   </Button>
@@ -147,7 +147,7 @@ const SelectShippingMethod = () => {
           </div>
         )
       ) : (
-        <div className="flex-1 flex justify-center items-center">
+        <div className="flex flex-1 items-center justify-center">
           <Spinner />
         </div>
       )}

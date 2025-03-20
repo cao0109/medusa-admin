@@ -122,14 +122,14 @@ const InvitePage = () => {
         <LoginLayout>
           <SEO title="Create Account" />
           <div className="flex h-full w-full items-center justify-center">
-            <div className="flex min-h-[600px] bg-grey-0 rounded-rounded justify-center">
+            <div className="flex min-h-[600px] justify-center rounded-rounded bg-grey-0">
               <form
-                className="flex flex-col py-12 w-full px-[120px] items-center"
+                className="flex w-full flex-col items-center py-12 px-[120px]"
                 onSubmit={handleSubmit(handleAcceptInvite)}
               >
                 <MedusaIcon />
                 {!token ? (
-                  <div className="h-full flex flex-col gap-y-2 text-center items-center justify-center">
+                  <div className="flex h-full flex-col items-center justify-center gap-y-2 text-center">
                     <span className="inter-large-semibold text-grey-90">
                       You signup link is invalid
                     </span>
@@ -142,7 +142,7 @@ const InvitePage = () => {
                     <span className="inter-2xlarge-semibold mt-4 text-grey-90">
                       Welcome to the team!
                     </span>
-                    <span className="inter-base-regular text-grey-50 mt-2 mb-large">
+                    <span className="inter-base-regular mt-2 mb-large text-grey-50">
                       Create your account below👇🏼
                     </span>
                     <SigninInput
@@ -168,7 +168,7 @@ const InvitePage = () => {
                       autoComplete="new-password"
                     />
                     {passwordMismatch && (
-                      <span className="text-rose-50 w-full mt-2 inter-small-regular">
+                      <span className="inter-small-regular mt-2 w-full text-rose-50">
                         The two passwords are not the same
                       </span>
                     )}
@@ -176,7 +176,7 @@ const InvitePage = () => {
                       variant="primary"
                       size="large"
                       type="submit"
-                      className="w-full mt-base"
+                      className="mt-base w-full"
                       loading={formState.isSubmitting}
                       disabled={!ready}
                     >
@@ -184,7 +184,7 @@ const InvitePage = () => {
                     </Button>
                     <Link
                       to="/login"
-                      className="inter-small-regular text-grey-50 mt-large"
+                      className="inter-small-regular mt-large text-grey-50"
                     >
                       Already signed up? Log in
                     </Link>
@@ -195,11 +195,11 @@ const InvitePage = () => {
           </div>
         </LoginLayout>
       ) : (
-        <div className="bg-grey-90 h-screen w-full overflow-hidden">
-          <div className="z-10 flex-grow flex flex-col items-center justify-center h-full absolute inset-0 max-w-[1080px] mx-auto">
+        <div className="h-screen w-full overflow-hidden bg-grey-90">
+          <div className="absolute inset-0 z-10 mx-auto flex h-full max-w-[1080px] flex-grow flex-col items-center justify-center">
             <MedusaVice className="mb-3xlarge" />
-            <div className="flex flex-col items-center max-w-3xl text-center">
-              <h1 className="inter-3xlarge-semibold text-grey-0 mb-base">
+            <div className="flex max-w-3xl flex-col items-center text-center">
+              <h1 className="inter-3xlarge-semibold mb-base text-grey-0">
                 You have been invited to join the team
               </h1>
               <p className="inter-xlarge-regular text-grey-50">

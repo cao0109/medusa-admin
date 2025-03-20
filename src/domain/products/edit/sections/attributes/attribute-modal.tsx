@@ -73,21 +73,21 @@ const AttributeModal = ({ product, open, onClose }: Props) => {
           <Modal.Content>
             <div className="mb-xlarge">
               <h2 className="inter-large-semibold mb-2xsmall">Dimensions</h2>
-              <p className="inter-base-regular text-grey-50 mb-large">
+              <p className="inter-base-regular mb-large text-grey-50">
                 Configure to calculate the most accurate shipping rates
               </p>
               <DimensionsForm form={nestedForm(form, "dimensions")} />
             </div>
             <div>
               <h2 className="inter-large-semibold mb-2xsmall">Customs</h2>
-              <p className="inter-base-regular text-grey-50 mb-large">
+              <p className="inter-base-regular mb-large text-grey-50">
                 Configure to calculate the most accurate shipping rates
               </p>
               <CustomsForm form={nestedForm(form, "customs")} />
             </div>
           </Modal.Content>
           <Modal.Footer>
-            <div className="flex gap-x-2 justify-end w-full">
+            <div className="flex w-full justify-end gap-x-2">
               <Button
                 size="small"
                 variant="secondary"

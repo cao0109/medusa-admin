@@ -92,7 +92,7 @@ const EditDenominationsModal = ({
         <Modal.Content>
           <div className="pt-1">
             <div className="flex items-center">
-              <label className="inter-base-semibold text-grey-90 mr-1.5">
+              <label className="inter-base-semibold mr-1.5 text-grey-90">
                 Prices
               </label>
               <IconTooltip content={"Helpful denominations"} />
@@ -101,7 +101,7 @@ const EditDenominationsModal = ({
               return (
                 <div
                   key={field.indexId}
-                  className="first:mt-0 mt-xsmall flex items-center"
+                  className="mt-xsmall flex items-center first:mt-0"
                 >
                   <div className="flex-1">
                     <CurrencyInput.Root
@@ -142,7 +142,7 @@ const EditDenominationsModal = ({
           </div>
         </Modal.Content>
         <Modal.Footer>
-          <div className="w-full flex justify-end">
+          <div className="flex w-full justify-end">
             <Button
               variant="ghost"
               size="small"

@@ -131,14 +131,14 @@ const DraftOrderDetails = () => {
         previousRoute="/a/draft-orders"
       />
       {isLoading || !draft_order ? (
-        <BodyCard className="w-full pt-2xlarge flex items-center justify-center">
+        <BodyCard className="flex w-full items-center justify-center pt-2xlarge">
           <Spinner size={"large"} variant={"secondary"} />
         </BodyCard>
       ) : (
         <div className="flex space-x-4">
-          <div className="flex flex-col w-full h-full">
+          <div className="flex h-full w-full flex-col">
             <BodyCard
-              className={"w-full mb-4 min-h-[200px]"}
+              className={"mb-4 min-h-[200px] w-full"}
               title={`Order #${draft_order.display_id}`}
               subtitle={moment(draft_order.created_at).format(
                 "D MMMM YYYY hh:mm a"
@@ -183,21 +183,21 @@ const DraftOrderDetails = () => {
                     ]
               }
             >
-              <div className="flex mt-6 space-x-6 divide-x">
+              <div className="mt-6 flex space-x-6 divide-x">
                 <div className="flex flex-col">
-                  <div className="inter-smaller-regular text-grey-50 mb-1">
+                  <div className="inter-smaller-regular mb-1 text-grey-50">
                     Email
                   </div>
                   <div>{cart?.email}</div>
                 </div>
                 <div className="flex flex-col pl-6">
-                  <div className="inter-smaller-regular text-grey-50 mb-1">
+                  <div className="inter-smaller-regular mb-1 text-grey-50">
                     Phone
                   </div>
                   <div>{cart?.shipping_address?.phone || "N/A"}</div>
                 </div>
                 <div className="flex flex-col pl-6">
-                  <div className="inter-smaller-regular text-grey-50 mb-1">
+                  <div className="inter-smaller-regular mb-1 text-grey-50">
                     Amount ({region?.currency_code.toUpperCase()})
                   </div>
                   <div>
@@ -211,15 +211,15 @@ const DraftOrderDetails = () => {
                 </div>
               </div>
             </BodyCard>
-            <BodyCard className={"w-full mb-4 min-h-0 h-auto"} title="Summary">
+            <BodyCard className={"mb-4 h-auto min-h-0 w-full"} title="Summary">
               <div className="mt-6">
                 {cart?.items?.map((item, i) => (
                   <div
                     key={i}
-                    className="flex justify-between mb-1 h-[64px] py-2 mx-[-5px] px-[5px] hover:bg-grey-5 rounded-rounded"
+                    className="mx-[-5px] mb-1 flex h-[64px] justify-between rounded-rounded py-2 px-[5px] hover:bg-grey-5"
                   >
-                    <div className="flex space-x-4 justify-center">
-                      <div className="flex h-[48px] w-[36px] rounded-rounded items-center justify-center">
+                    <div className="flex justify-center space-x-4">
+                      <div className="flex h-[48px] w-[36px] items-center justify-center rounded-rounded">
                         {item?.thumbnail ? (
                           <img
                             src={item.thumbnail}
@@ -230,7 +230,7 @@ const DraftOrderDetails = () => {
                         )}
                       </div>
                       <div className="flex flex-col justify-center">
-                        <span className="inter-small-regular text-grey-90 max-w-[225px] truncate">
+                        <span className="inter-small-regular max-w-[225px] truncate text-grey-90">
                           {item.title}
                         </span>
                         {item?.variant && (
@@ -241,7 +241,7 @@ const DraftOrderDetails = () => {
                       </div>
                     </div>
                     <div className="flex  items-center">
-                      <div className="flex small:space-x-2 medium:space-x-4 large:space-x-6 mr-3">
+                      <div className="mr-3 flex small:space-x-2 medium:space-x-4 large:space-x-6">
                         <div className="inter-small-regular text-grey-50">
                           {formatAmountWithSymbol({
                             amount: (item?.total ?? 0) / item.quantity,
@@ -276,9 +276,9 @@ const DraftOrderDetails = () => {
                 {cart?.discounts?.map((discount, index) => (
                   <div
                     key={index}
-                    className="flex justify-between mt-4 items-center"
+                    className="mt-4 flex items-center justify-between"
                   >
-                    <div className="flex inter-small-regular text-grey-90 items-center">
+                    <div className="inter-small-regular flex items-center text-grey-90">
                       Discount:{" "}
                       <Badge className="ml-3" variant="default">
                         {discount.code}
@@ -314,7 +314,7 @@ const DraftOrderDetails = () => {
               </div>
             </BodyCard>
             <BodyCard
-              className={"w-full mb-4 min-h-0 h-auto"}
+              className={"mb-4 h-auto min-h-0 w-full"}
               title="Payment"
               customActionable={
                 draft_order?.status !== "completed" && <PaymentActionables />
@@ -343,7 +343,7 @@ const DraftOrderDetails = () => {
                   totalTitle={"Total to pay"}
                 />
                 {draft_order?.status !== "completed" && (
-                  <div className="text-grey-50 inter-small-regular w-full flex items-center mt-5">
+                  <div className="inter-small-regular mt-5 flex w-full items-center text-grey-50">
                     <span className="mr-2.5">Payment link:</span>
                     {store?.payment_link_template ? (
                       <CopyToClipboard
@@ -358,24 +358,24 @@ const DraftOrderDetails = () => {
                 )}
               </div>
             </BodyCard>
-            <BodyCard className={"w-full mb-4 min-h-0 h-auto"} title="Shipping">
+            <BodyCard className={"mb-4 h-auto min-h-0 w-full"} title="Shipping">
               <div className="mt-6">
                 {cart?.shipping_methods.map((method) => (
                   <div className="flex flex-col" key={method.id}>
                     <span className="inter-small-regular text-grey-50">
                       Shipping Method
                     </span>
-                    <span className="inter-small-regular text-grey-90 mt-2">
+                    <span className="inter-small-regular mt-2 text-grey-90">
                       {method?.shipping_option.name || ""}
                     </span>
-                    <div className="flex flex-col min-h-[100px] mt-8 bg-grey-5 px-3 py-2 h-full">
+                    <div className="mt-8 flex h-full min-h-[100px] flex-col bg-grey-5 px-3 py-2">
                       <span className="inter-base-semibold">
                         Data{" "}
-                        <span className="text-grey-50 inter-base-regular">
+                        <span className="inter-base-regular text-grey-50">
                           (1 item)
                         </span>
                       </span>
-                      <div className="flex flex-grow items-center mt-4">
+                      <div className="mt-4 flex flex-grow items-center">
                         <JSONView data={method?.data} />
                       </div>
                     </div>
@@ -384,7 +384,7 @@ const DraftOrderDetails = () => {
               </div>
             </BodyCard>
             <BodyCard
-              className={"w-full mb-4 min-h-0 h-auto"}
+              className={"mb-4 h-auto min-h-0 w-full"}
               title="Customer"
               actionables={[
                 {
@@ -416,8 +416,8 @@ const DraftOrderDetails = () => {
               ]}
             >
               <div className="mt-6">
-                <div className="flex w-full space-x-4 items-center">
-                  <div className="flex w-[40px] h-[40px] ">
+                <div className="flex w-full items-center space-x-4">
+                  <div className="flex h-[40px] w-[40px] ">
                     <Avatar
                       user={cart?.customer}
                       font="inter-large-semibold"
@@ -440,12 +440,12 @@ const DraftOrderDetails = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex mt-6 space-x-6 divide-x">
+                <div className="mt-6 flex space-x-6 divide-x">
                   <div className="flex flex-col">
-                    <div className="inter-small-regular text-grey-50 mb-1">
+                    <div className="inter-small-regular mb-1 text-grey-50">
                       Contact
                     </div>
-                    <div className="flex flex-col inter-small-regular">
+                    <div className="inter-small-regular flex flex-col">
                       <span>{cart?.email}</span>
                       <span>{cart?.shipping_address?.phone || ""}</span>
                     </div>
@@ -462,7 +462,7 @@ const DraftOrderDetails = () => {
               </div>
             </BodyCard>
             <BodyCard
-              className={"w-full mb-4 min-h-0 h-auto pt-[15px]"}
+              className={"mb-4 h-auto min-h-0 w-full pt-[15px]"}
               title="Raw Draft Order"
             >
               <JSONView data={draft_order!} />

@@ -154,7 +154,7 @@ const UserTable: React.FC<UserTableProps> = ({
         <Table.Cell className="text-grey-40">
           <SidebarTeamMember user={{ email: invite.user_email }} />
         </Table.Cell>
-        <Table.Cell className="text-grey-40 w-80">
+        <Table.Cell className="w-80 text-grey-40">
           {invite.user_email}
         </Table.Cell>
         <Table.Cell></Table.Cell>
@@ -273,7 +273,7 @@ const UserTable: React.FC<UserTableProps> = ({
   }
 
   return (
-    <div className="w-full h-full overflow-y-auto">
+    <div className="h-full w-full overflow-y-auto">
       <Table
         filteringOptions={filteringOptions}
         enableSearch

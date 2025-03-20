@@ -133,21 +133,21 @@ const FormHeader = (props: PriceListFormProps & { onClose?: () => void }) => {
   }
 
   return (
-    <div className="medium:w-8/12 w-full px-8 flex justify-between">
+    <div className="flex w-full justify-between px-8 medium:w-8/12">
       <Button
         size="small"
         variant="ghost"
         onClick={closeForm}
-        className="border rounded-rounded w-8 h-8"
+        className="h-8 w-8 rounded-rounded border"
       >
         <CrossIcon size={20} />
       </Button>
-      <div className="gap-x-small flex">
+      <div className="flex gap-x-small">
         <Button
           onClick={secondaryAction.onClick}
           size="small"
           variant="ghost"
-          className="border rounded-rounded"
+          className="rounded-rounded border"
         >
           {secondaryAction.label}
         </Button>
