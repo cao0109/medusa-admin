@@ -35,7 +35,6 @@ import BackButton from "../../../components/atoms/back-button"
 import Spacer from "../../../components/atoms/spacer"
 import Spinner from "../../../components/atoms/spinner"
 import Tooltip from "../../../components/atoms/tooltip"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import Button from "../../../components/fundamentals/button"
 import DetailsIcon from "../../../components/fundamentals/details-icon"
 import CancelIcon from "../../../components/fundamentals/icons/cancel-icon"
@@ -57,7 +56,6 @@ import useImperativeDialog from "../../../hooks/use-imperative-dialog"
 import useNotification from "../../../hooks/use-notification"
 import useToggleState from "../../../hooks/use-toggle-state"
 import { useFeatureFlag } from "../../../providers/feature-flag-provider"
-import { useWidgets } from "../../../providers/widget-provider"
 import { isoAlpha2Countries } from "../../../utils/countries"
 import { getErrorMessage } from "../../../utils/error-messages"
 import extractCustomerName from "../../../utils/extract-customer-name"
@@ -211,8 +209,6 @@ const OrderDetails = () => {
   useHotkeys("esc", () => navigate("/a/orders"))
   useHotkeys("command+i", handleCopy)
 
-  const { getWidgets } = useWidgets()
-
   const handleDeleteOrder = async () => {
     const shouldDelete = await dialog({
       heading: t("details-cancel-order-heading", "Cancel order"),
@@ -330,18 +326,6 @@ const OrderDetails = () => {
           </BodyCard>
         ) : (
           <>
-            <div>
-              {getWidgets("order.details.before").map((widget, i) => {
-                return (
-                  <WidgetContainer
-                    key={i}
-                    injectionZone={"order.details.before"}
-                    widget={widget}
-                    entity={order}
-                  />
-                )
-              })}
-            </div>
             <div className="flex space-x-4">
               <div className="flex h-full w-7/12 flex-col gap-y-base">
                 <BodyCard

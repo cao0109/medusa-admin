@@ -1,14 +1,12 @@
 import { useMemo, useState } from "react"
-import { Route, Routes, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { Route, Routes, useNavigate } from "react-router-dom"
 import Spacer from "../../../components/atoms/spacer"
-import WidgetContainer from "../../../components/extensions/widget-container"
 
 import PlusIcon from "../../../components/fundamentals/icons/plus-icon"
 import BodyCard from "../../../components/organisms/body-card"
 import TableViewHeader from "../../../components/organisms/custom-table-header"
 import DraftOrderTable from "../../../components/templates/draft-order-table"
-import { useWidgets } from "../../../providers/widget-provider"
 import NewOrderFormProvider from "../new/form"
 import NewOrder from "../new/new-order"
 import DraftOrderDetails from "./details"
@@ -22,8 +20,6 @@ const DraftOrderIndex = () => {
   const view = "drafts"
   const [showNewOrder, setShowNewOrder] = useState(false)
 
-  const { getWidgets } = useWidgets()
-
   const actions = useMemo(() => {
     return [
       {
@@ -36,16 +32,6 @@ const DraftOrderIndex = () => {
 
   return (
     <div className="flex h-full grow flex-col gap-y-xsmall">
-      {getWidgets("draft_order.list.before").map((Widget, i) => {
-        return (
-          <WidgetContainer
-            key={i}
-            entity={null}
-            injectionZone="draft_order.list.before"
-            widget={Widget}
-          />
-        )
-      })}
       <div className="flex w-full grow flex-col">
         <BodyCard
           customHeader={
@@ -65,16 +51,7 @@ const DraftOrderIndex = () => {
           <DraftOrderTable />
         </BodyCard>
       </div>
-      {getWidgets("draft_order.list.after").map((Widget, i) => {
-        return (
-          <WidgetContainer
-            key={i}
-            entity={null}
-            injectionZone="draft_order.list.after"
-            widget={Widget}
-          />
-        )
-      })}
+
       <Spacer />
       {showNewOrder && (
         <NewOrderFormProvider>

@@ -1,12 +1,11 @@
 import { useAdminCustomer } from "medusa-react"
 import moment from "moment"
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { useNavigate, useParams } from "react-router-dom"
 import Avatar from "../../../components/atoms/avatar"
 import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import EditIcon from "../../../components/fundamentals/icons/edit-icon"
 import StatusDot from "../../../components/fundamentals/status-indicator"
 import Actionables, {
@@ -16,7 +15,6 @@ import BodyCard from "../../../components/organisms/body-card"
 import RawJSON from "../../../components/organisms/raw-json"
 import Section from "../../../components/organisms/section"
 import CustomerOrdersTable from "../../../components/templates/customer-orders-table"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorStatus } from "../../../utils/get-error-status"
 import EditCustomerModal from "./edit"
 
@@ -43,8 +41,6 @@ const CustomerDetail = () => {
       icon: <EditIcon size={20} />,
     },
   ]
-
-  const { getWidgets } = useWidgets()
 
   if (error) {
     const errorStatus = getErrorStatus(error)
@@ -77,17 +73,6 @@ const CustomerDetail = () => {
         className="mb-xsmall"
       />
       <div className="flex flex-col gap-y-xsmall">
-        {getWidgets("customer.details.before").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              entity={customer}
-              injectionZone="customer.details.before"
-              widget={w}
-            />
-          )
-        })}
-
         <Section>
           <div className="flex w-full items-start justify-between">
             <div className="flex w-full items-center gap-x-base">
@@ -156,17 +141,6 @@ const CustomerDetail = () => {
             <CustomerOrdersTable id={customer.id} />
           </div>
         </BodyCard>
-
-        {getWidgets("customer.details.after").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              entity={customer}
-              injectionZone="customer.details.after"
-              widget={w}
-            />
-          )
-        })}
 
         <RawJSON
           data={customer}

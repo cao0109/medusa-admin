@@ -1,10 +1,9 @@
 import { useAdminCreateBatchJob, useAdminCreateCollection } from "medusa-react"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { useLocation, useNavigate } from "react-router-dom"
 import Fade from "../../../components/atoms/fade-wrapper"
 import Spacer from "../../../components/atoms/spacer"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import Button from "../../../components/fundamentals/button"
 import ExportIcon from "../../../components/fundamentals/icons/export-icon"
 import PlusIcon from "../../../components/fundamentals/icons/plus-icon"
@@ -18,7 +17,6 @@ import ProductTable from "../../../components/templates/product-table"
 import useNotification from "../../../hooks/use-notification"
 import useToggleState from "../../../hooks/use-toggle-state"
 import { usePolling } from "../../../providers/polling-provider"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorMessage } from "../../../utils/error-messages"
 import ImportProducts from "../batch-job/import"
 import NewProduct from "../new"
@@ -45,8 +43,6 @@ const Overview = () => {
   const notification = useNotification()
 
   const createCollection = useAdminCreateCollection()
-
-  const { getWidgets } = useWidgets()
 
   useEffect(() => {
     if (location.search.includes("?view=collections")) {
@@ -203,16 +199,6 @@ const Overview = () => {
   return (
     <>
       <div className="flex h-full grow flex-col gap-y-xsmall">
-        {getWidgets("product.list.before").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"product.list.before"}
-              widget={w}
-              entity={undefined}
-            />
-          )
-        })}
         <div className="flex w-full grow flex-col">
           <BodyCard
             forceDropdown={false}
@@ -230,16 +216,6 @@ const Overview = () => {
           </BodyCard>
           <Spacer />
         </div>
-        {getWidgets("product.list.after").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"product.list.after"}
-              widget={w}
-              entity={undefined}
-            />
-          )
-        })}
       </div>
 
       {showNewCollection && (

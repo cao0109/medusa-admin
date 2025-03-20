@@ -1,13 +1,17 @@
 import ReactDOM from "react-dom/client"
-import "./assets/styles/global.css"
+
 import "./i18n"
-import MedusaApp from "./medusa-app"
+
+import App from "./App"
+import { Providers } from "./providers/providers"
+
+import "./assets/styles/global.css"
 
 async function run() {
-  const app = new MedusaApp({ entries: [] })
-
   ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    app.render()
+    <Providers>
+      <App />
+    </Providers>
   )
 }
 

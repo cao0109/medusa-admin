@@ -37,11 +37,9 @@ import * as React from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import Spacer from "../../../components/atoms/spacer"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import { FilterMenu } from "../../../components/molecules/filter-menu"
 import { useDebouncedSearchParam } from "../../../hooks/use-debounced-search-param"
 import useNotification from "../../../hooks/use-notification"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorMessage } from "../../../utils/error-messages"
 import {
   getDateComparisonOperatorFromSearchParams,
@@ -133,8 +131,6 @@ const PriceListTableFilters = () => {
 }
 
 const PriceListOverview = () => {
-  const { getWidgets } = useWidgets()
-
   const [searchParams] = useSearchParams()
 
   const { query, setQuery } = useDebouncedSearchParam()
@@ -204,16 +200,6 @@ const PriceListOverview = () => {
   return (
     <div>
       <div className="flex flex-col gap-y-2">
-        {getWidgets("price_list.list.before").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"price_list.list.before"}
-              widget={w}
-              entity={undefined}
-            />
-          )
-        })}
         <Container className="overflow-hidden p-0">
           <div className="flex items-center justify-between px-8 pt-6 pb-4">
             <Heading>Price Lists</Heading>
@@ -295,16 +281,6 @@ const PriceListOverview = () => {
             pageSize={PAGE_SIZE}
           />
         </Container>
-        {getWidgets("price_list.list.after").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"price_list.list.after"}
-              widget={w}
-              entity={undefined}
-            />
-          )
-        })}
       </div>
       <Spacer />
     </div>

@@ -5,8 +5,6 @@ import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 
 import Spacer from "../../../components/atoms/spacer"
-import WidgetContainer from "../../../components/extensions/widget-container"
-import { useWidgets } from "../../../providers/widget-provider"
 import { PriceListGeneralSection } from "./details"
 import { PriceListPricesSection } from "./prices"
 
@@ -14,8 +12,6 @@ const PriceListEdit = () => {
   const { id } = useParams<{ id: string }>()
 
   const { t } = useTranslation()
-
-  const { getWidgets } = useWidgets()
 
   const { price_list, isLoading, isError } = useAdminPriceList(id!, {
     enabled: !!id,
@@ -48,16 +44,6 @@ const PriceListEdit = () => {
   return (
     <>
       <div className="flex flex-col gap-y-2">
-        {getWidgets("price_list.details.before").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"price_list.details.before"}
-              widget={w}
-              entity={price_list}
-            />
-          )
-        })}
         <PriceListGeneralSection
           key={`gs_${price_list.id}_${price_list.updated_at}`}
           priceList={price_list}
@@ -66,16 +52,7 @@ const PriceListEdit = () => {
           key={`ps_${price_list.id}_${price_list.updated_at}`}
           priceList={price_list}
         />
-        {getWidgets("price_list.details.after").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"price_list.details.after"}
-              widget={w}
-              entity={price_list}
-            />
-          )
-        })}
+
         <Spacer />
       </div>
     </>

@@ -6,10 +6,10 @@ import {
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 
+import { useTranslation } from "react-i18next"
 import BackButton from "../../../components/atoms/back-button"
 import Spacer from "../../../components/atoms/spacer"
 import Spinner from "../../../components/atoms/spinner"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import EditIcon from "../../../components/fundamentals/icons/edit-icon"
 import TrashIcon from "../../../components/fundamentals/icons/trash-icon"
 import Actionables from "../../../components/molecules/actionables"
@@ -22,11 +22,9 @@ import CollectionModal from "../../../components/templates/collection-modal"
 import AddProductsTable from "../../../components/templates/collection-product-table/add-product-table"
 import ViewProductsTable from "../../../components/templates/collection-product-table/view-products-table"
 import useNotification from "../../../hooks/use-notification"
-import { useWidgets } from "../../../providers/widget-provider"
 import Medusa from "../../../services/api"
 import { getErrorMessage } from "../../../utils/error-messages"
 import { getErrorStatus } from "../../../utils/get-error-status"
-import { useTranslation } from "react-i18next"
 
 const CollectionDetails = () => {
   const { id } = useParams()
@@ -120,8 +118,6 @@ const CollectionDetails = () => {
     }
   }, [collection?.products])
 
-  const { getWidgets } = useWidgets()
-
   if (error) {
     const errorStatus = getErrorStatus(error)
 
@@ -155,17 +151,6 @@ const CollectionDetails = () => {
           label={t("details-back-to-collections", "Back to Collections")}
         />
         <div className="flex flex-col gap-y-xsmall">
-          {getWidgets("product_collection.details.before").map((w, i) => {
-            return (
-              <WidgetContainer
-                key={i}
-                entity={collection}
-                injectionZone="product_collection.details.before"
-                widget={w}
-              />
-            )
-          })}
-
           <div className="rounded-rounded border border-grey-20 bg-grey-0 py-large px-xlarge">
             <div>
               <div>
@@ -231,17 +216,6 @@ const CollectionDetails = () => {
               />
             )}
           </Section>
-
-          {getWidgets("product_collection.details.after").map((w, i) => {
-            return (
-              <WidgetContainer
-                key={i}
-                entity={collection}
-                injectionZone="product_collection.details.after"
-                widget={w}
-              />
-            )
-          })}
 
           <RawJSON
             data={collection}

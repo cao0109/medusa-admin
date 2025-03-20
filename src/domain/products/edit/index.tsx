@@ -2,21 +2,17 @@ import { useAdminProduct } from "medusa-react"
 import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import ProductAttributesSection from "../../../components/organisms/product-attributes-section"
 import ProductGeneralSection from "../../../components/organisms/product-general-section"
 import ProductMediaSection from "../../../components/organisms/product-media-section"
 import ProductRawSection from "../../../components/organisms/product-raw-section"
 import ProductThumbnailSection from "../../../components/organisms/product-thumbnail-section"
 import ProductVariantsSection from "../../../components/organisms/product-variants-section"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorStatus } from "../../../utils/get-error-status"
 
 const Edit = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-
-  const { getWidgets } = useWidgets()
 
   const { product, status, error } = useAdminProduct(id || "")
 
@@ -51,31 +47,12 @@ const Edit = () => {
         className="mb-xsmall"
       />
       <div className="flex flex-col gap-y-xsmall">
-        {getWidgets("product.details.before").map((w, i) => {
-          return (
-            <WidgetContainer
-              key={i}
-              injectionZone={"product.details.before"}
-              widget={w}
-              entity={product}
-            />
-          )
-        })}
         <div className="grid grid-cols-12 gap-x-base">
           <div className="col-span-8 flex flex-col gap-y-xsmall">
             <ProductGeneralSection product={product} />
             <ProductVariantsSection product={product} />
             <ProductAttributesSection product={product} />
-            {getWidgets("product.details.after").map((w, i) => {
-              return (
-                <WidgetContainer
-                  key={i}
-                  injectionZone={"product.details.after"}
-                  widget={w}
-                  entity={product}
-                />
-              )
-            })}
+
             <ProductRawSection product={product} />
           </div>
           <div className="col-span-4 flex flex-col gap-y-xsmall">

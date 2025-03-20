@@ -1,10 +1,8 @@
 import React from "react"
-import { Route, Routes } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { Route, Routes } from "react-router-dom"
 import SettingsCard from "../../components/atoms/settings-card"
 import Spacer from "../../components/atoms/spacer"
-import SettingContainer from "../../components/extensions/setting-container"
-import SettingsPageErrorElement from "../../components/extensions/setting-container/setting-error-element"
 import FeatureToggle from "../../components/fundamentals/feature-toggle"
 import ArrowUTurnLeft from "../../components/fundamentals/icons/arrow-uturn-left"
 import ChannelsIcon from "../../components/fundamentals/icons/channels-icon"
@@ -16,7 +14,6 @@ import KeyIcon from "../../components/fundamentals/icons/key-icon"
 import MapPinIcon from "../../components/fundamentals/icons/map-pin-icon"
 import TaxesIcon from "../../components/fundamentals/icons/taxes-icon"
 import UsersIcon from "../../components/fundamentals/icons/users-icon"
-import { useSettings } from "../../providers/setting-provider"
 import CurrencySettings from "./currencies"
 import Details from "./details"
 import PersonalInformation from "./personal-information"
@@ -118,10 +115,6 @@ const renderCard = ({
 }
 
 const SettingsIndex = () => {
-  const { getCards } = useSettings()
-
-  const extensionCards = getCards()
-
   const { t } = useTranslation()
 
   return (
@@ -140,37 +133,13 @@ const SettingsIndex = () => {
           {settings.map((s) => renderCard(s))}
         </div>
       </div>
-      {extensionCards.length > 0 && (
-        <div className="flex flex-col gap-y-large">
-          <div className="flex flex-col gap-y-2xsmall">
-            <h2 className="inter-xlarge-semibold">Extensions</h2>
-            <p className="inter-base-regular text-grey-50">
-              {t(
-                "settings-manage-the-settings-for-your-store-apos-s-extensions",
-                "Manage the settings for your store&apos;s extensions"
-              )}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-y-xsmall gap-x-4 medium:grid-cols-2">
-            {getCards().map((s) =>
-              renderCard({
-                heading: s.label,
-                description: s.description,
-                icon: s.icon,
-                to: `/a/settings${s.path}`,
-              })
-            )}
-          </div>
-        </div>
-      )}
+
       <Spacer />
     </div>
   )
 }
 
 const Settings = () => {
-  const { getSettings } = useSettings()
-
   return (
     <Routes>
       <Route index element={<SettingsIndex />} />
@@ -181,14 +150,6 @@ const Settings = () => {
       <Route path="/team" element={<Users />} />
       <Route path="/personal-information" element={<PersonalInformation />} />
       <Route path="/taxes/*" element={<Taxes />} />
-      {getSettings().map((s) => (
-        <Route
-          key={s.path}
-          path={s.path}
-          element={<SettingContainer Page={s.Page} />}
-          errorElement={<SettingsPageErrorElement origin={s.origin} />}
-        />
-      ))}
     </Routes>
   )
 }

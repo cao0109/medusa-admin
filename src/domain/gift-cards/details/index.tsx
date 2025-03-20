@@ -1,9 +1,9 @@
 import { useAdminGiftCard, useAdminUpdateGiftCard } from "medusa-react"
 import moment from "moment"
+import { useTranslation } from "react-i18next"
 import { useParams } from "react-router-dom"
 import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import DollarSignIcon from "../../../components/fundamentals/icons/dollar-sign-icon"
 import EditIcon from "../../../components/fundamentals/icons/edit-icon"
 import StatusSelector from "../../../components/molecules/status-selector"
@@ -11,12 +11,10 @@ import BodyCard from "../../../components/organisms/body-card"
 import RawJSON from "../../../components/organisms/raw-json"
 import useNotification from "../../../hooks/use-notification"
 import useToggleState from "../../../hooks/use-toggle-state"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorMessage } from "../../../utils/error-messages"
 import { formatAmountWithSymbol } from "../../../utils/prices"
 import EditGiftCardModal from "./edit-gift-card-modal"
 import UpdateBalanceModal from "./update-balance-modal"
-import { useTranslation } from "react-i18next"
 
 const GiftCardDetails = () => {
   const { id } = useParams()
@@ -27,8 +25,6 @@ const GiftCardDetails = () => {
   })
 
   const updateGiftCard = useAdminUpdateGiftCard(giftCard?.id!)
-
-  const { getWidgets } = useWidgets()
 
   const notification = useNotification()
 
@@ -95,17 +91,6 @@ const GiftCardDetails = () => {
       ) : (
         <>
           <div className="flex flex-col gap-y-xsmall">
-            {getWidgets("custom_gift_card.before").map((w, i) => {
-              return (
-                <WidgetContainer
-                  key={i}
-                  widget={w}
-                  entity={giftCard}
-                  injectionZone="custom_gift_card.before"
-                />
-              )
-            })}
-
             <BodyCard
               className={"h-auto min-h-0 w-full"}
               title={`${giftCard?.code}`}
@@ -172,17 +157,6 @@ const GiftCardDetails = () => {
                 </div>
               </div>
             </BodyCard>
-
-            {getWidgets("custom_gift_card.after").map((w, i) => {
-              return (
-                <WidgetContainer
-                  key={i}
-                  widget={w}
-                  entity={giftCard}
-                  injectionZone="custom_gift_card.after"
-                />
-              )
-            })}
 
             <RawJSON
               data={giftCard}

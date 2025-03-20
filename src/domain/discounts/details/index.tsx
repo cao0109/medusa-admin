@@ -1,14 +1,12 @@
 import { useAdminDeleteDiscount, useAdminDiscount } from "medusa-react"
 import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { useNavigate, useParams } from "react-router-dom"
 import BackButton from "../../../components/atoms/back-button"
 import Spinner from "../../../components/atoms/spinner"
-import WidgetContainer from "../../../components/extensions/widget-container"
 import DeletePrompt from "../../../components/organisms/delete-prompt"
 import RawJSON from "../../../components/organisms/raw-json"
 import useNotification from "../../../hooks/use-notification"
-import { useWidgets } from "../../../providers/widget-provider"
 import { getErrorMessage } from "../../../utils/error-messages"
 import { getErrorStatus } from "../../../utils/get-error-status"
 import { DiscountFormProvider } from "../new/discount-form/form/discount-form-context"
@@ -31,8 +29,6 @@ const Edit = () => {
   const [showDelete, setShowDelete] = useState(false)
   const deleteDiscount = useAdminDeleteDiscount(id!)
   const notification = useNotification()
-
-  const { getWidgets } = useWidgets()
 
   const handleDelete = () => {
     deleteDiscount.mutate(undefined, {
@@ -99,29 +95,10 @@ const Edit = () => {
       />
       <div className="flex flex-col gap-y-xsmall">
         <DiscountFormProvider>
-          {getWidgets("discount.details.before").map((w, index) => {
-            return (
-              <WidgetContainer
-                key={index}
-                entity={discount}
-                widget={w}
-                injectionZone="discount.details.before"
-              />
-            )
-          })}
           <General discount={discount} />
           <Configurations discount={discount} />
           <DiscountDetailsConditions discount={discount} />
-          {getWidgets("discount.details.after").map((w, index) => {
-            return (
-              <WidgetContainer
-                key={index}
-                entity={discount}
-                widget={w}
-                injectionZone="discount.details.after"
-              />
-            )
-          })}
+
           <RawJSON
             data={discount}
             title={t("details-raw-discount", "Raw discount")}
